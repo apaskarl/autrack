@@ -60,15 +60,19 @@ const Register = () => {
           </View>
 
           {/* Footer */}
-          <Text className="text-center leading-relaxed px-5 font-inter mt-4">
-            Already have an account?{" "}
-            <Text
-              onPress={() => router.back()}
-              className="text-primary underline font-inter-semibold"
-            >
-              Log in
+          <View className="flex-row items-center gap-x-1 justify-center">
+            <Text className="font-inter text-subtext">
+              Already have an account?
             </Text>
-          </Text>
+            <TouchableOpacity
+              onPress={() => router.push("/auth/login")}
+              activeOpacity={0.8}
+            >
+              <Text className="font-inter-semibold text-primary underline">
+                Log in
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

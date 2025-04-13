@@ -46,15 +46,17 @@ const LogIn = () => {
           <AuthButton label="Log In" onPress={handleLogin} />
         </View>
 
-        <Text className="text-center leading-relaxed px-5 font-inter">
-          No account?{" "}
-          <Text
+        <View className="flex-row items-center gap-x-1 justify-center">
+          <Text className="font-inter text-subtext">No account?</Text>
+          <TouchableOpacity
             onPress={() => router.push("/auth/register/register")}
-            className="text-primary underline font-inter-semibold"
+            activeOpacity={0.8}
           >
-            Register here
-          </Text>
-        </Text>
+            <Text className="font-inter-semibold text-primary underline">
+              Register here
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
