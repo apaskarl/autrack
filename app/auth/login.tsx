@@ -13,7 +13,7 @@ const LogIn = () => {
       <View className="h-full justify-between py-10">
         <View className="items-center gap-y-4">
           <Image
-            source={require("../../assets/images/logos/autrack-logo.png")}
+            source={require("../../assets/images/logos/logo-outline-primary.png")}
             className="size-16"
             resizeMode="contain"
           />

@@ -8,7 +8,7 @@ module.exports = {
       colors: {
         primary: "#EDAC22",
         white: "#FFFFFF",
-        subtext: "#9CA3AF",
+        subtext: "#808080",
         border: "#D1D5DB",
         red: "#dc2626",
         blue: "#155dfc",
