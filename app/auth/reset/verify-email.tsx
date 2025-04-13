@@ -1,15 +1,14 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   TextInput,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import AuthButton from "@/components/buttons/AuthButton";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthButton from "@/components/auth/AuthButton";
 
 const VerifyEmail = () => {
   const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
@@ -70,37 +69,19 @@ const VerifyEmail = () => {
     ));
 
   return (
-    <View className="bg-white p-8 h-full gap-y-10">
-      <View>
-        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.8}>
-          <Ionicons name="arrow-back-outline" size={24} color="black" />
-        </TouchableOpacity>
+    <AuthLayout
+      title="Check your email"
+      description="We sent a reset link to your email. Enter the 6-digit code that mentioned in the email."
+    >
+      <View className="gap-y-5">
+        <View className="flex-row justify-between">{renderInputs()}</View>
+
+        <AuthButton
+          label="Verify Code"
+          onPress={() => router.push("/auth/reset/new-password")}
+        />
       </View>
-
-      <View className="gap-y-10">
-        <View>
-          <Text className="font-inter-bold text-3xl mb-4">
-            Check your email
-          </Text>
-          <Text className="font-inter leading-relaxed text-subtext">
-            We sent a reset link to{" "}
-            <Text className="text-black font-inter-medium">
-              example@mail.com
-            </Text>{" "}
-            enter 6 digit code that mentioned in the email
-          </Text>
-        </View>
-
-        <View className="gap-y-5">
-          <View className="flex-row justify-between">{renderInputs()}</View>
-
-          <AuthButton
-            label="Reset Password"
-            onPress={() => router.push("/auth/new-password")}
-          />
-        </View>
-      </View>
-    </View>
+    </AuthLayout>
   );
 };
 

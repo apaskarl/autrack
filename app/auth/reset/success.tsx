@@ -2,13 +2,14 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
-import AuthButton from "@/components/buttons/AuthButton";
 import { router } from "expo-router";
+import AuthLayout from "@/components/auth/AuthLayout";
+import AuthButton from "@/components/auth/AuthButton";
 
 const Success = () => {
   return (
-    <View className="bg-white p-8 h-full">
-      <View className="h-[75%] justify-center items-center gap-y-10">
+    <AuthLayout success>
+      <View className="h-[90%] justify-center items-center gap-y-10">
         <Ionicons
           name="shield-checkmark-outline"
           size={75}
@@ -28,7 +29,7 @@ const Success = () => {
           label="Continue"
         />
       </View>
-    </View>
+    </AuthLayout>
   );
 };
 

@@ -10,7 +10,7 @@ const AuthButton = ({ label, onPress }: AuthButtonProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={0.7}
       className="bg-primary w-full rounded-lg p-5"
     >
       <Text className="font-inter-bold text-center text-white">{label}</Text>
