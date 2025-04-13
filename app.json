@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/autrack-adaptive-icon.png",
-        "backgroundColor": "#edac22"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
@@ -30,7 +30,7 @@
           "image": "./assets/images/autrack-splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#edac22"
+          "backgroundColor": "#ffffff"
         }
       ]
     ],

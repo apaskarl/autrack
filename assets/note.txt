@@ -1,0 +1,2 @@
+primary: #edac22
+subtext: #9CA3AF
