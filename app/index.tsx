@@ -10,7 +10,7 @@ import { ICONS } from "@/constants/icons";
 
 export default function Index() {
   return (
-    <View className="p-10 bg-white gap-y-10 h-full">
+    <View className="p-10 bg-white gap-y-16 h-full">
       <View className="flex-row items-center gap-x-2">
         <Image
           source={require("../assets/images/logos/logo-outline-primary.png")}
@@ -22,13 +22,11 @@ export default function Index() {
         </Text>
       </View>
 
-      <View>
+      <View className="gap-y-5">
         <Text className="text-center font-inter-medium text-subtext">
           Log in as
         </Text>
-      </View>
 
-      <View className="gap-y-5">
         <Button
           label="Admin"
           source={ICONS.admin}
@@ -43,7 +41,7 @@ export default function Index() {
 
       <Text className="font-inter-medium text-center text-subtext">
         Need help?{" "}
-        <Text className="text-primary font-inter-bold">Click Me</Text>
+        <Text className="text-primary underline font-inter-bold">Click Me</Text>
       </Text>
     </View>
   );
