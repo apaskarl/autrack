@@ -30,12 +30,12 @@ export default function Index() {
         <Button
           label="Admin"
           source={ICONS.admin}
-          onPress={() => router.push("/auth/login")}
+          onPress={() => router.push("/auth/login?role=admin")}
         />
         <Button
           label="Instructor"
           source={ICONS.employee}
-          onPress={() => router.push("/auth/login")}
+          onPress={() => router.push("/auth/login?role=instructor")}
         />
       </View>
 

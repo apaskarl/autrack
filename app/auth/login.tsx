@@ -8,13 +8,22 @@ import {
   Platform,
 } from "react-native";
 import React from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import AuthInput from "@/components/auth/AuthInput";
 import AuthButton from "@/components/auth/AuthButton";
 
 const LogIn = () => {
-  // Handle login logic here
-  const handleLogin = () => {};
+  const { role } = useLocalSearchParams();
+  const isAdmin = role === "admin";
+  const isInstructor = role === "instructor";
+
+  const handleLogin = () => {
+    if (isAdmin) {
+      router.push("/admin/home");
+    } else if (isInstructor) {
+      router.push("/instructor/home");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -58,10 +67,7 @@ const LogIn = () => {
                 </TouchableOpacity>
               </View>
 
-              <AuthButton
-                label="Log In"
-                onPress={() => router.push("/instructor/home")}
-              />
+              <AuthButton label="Log In" onPress={handleLogin} />
             </View>
 
             <View className="flex-row items-center gap-x-1 justify-center">

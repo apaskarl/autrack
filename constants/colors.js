@@ -1,8 +1,11 @@
 export const COLORS = {
   primary: "#EDAC22",
   white: "#FFFFFF",
-  subtext: "#9CA3AF",
+  black: "#000000",
+  light: "#EFF3FD",
+  dark: "#1E1E1E",
+  subtext: "#808080",
   border: "#D1D5DB",
-  red: "#dc2626",
-  blue: "#155dfc",
+  red: "#DC2626",
+  blue: "#1F72FA",
 };
