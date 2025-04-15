@@ -1,15 +1,25 @@
+// store/useUserStore.ts
 import { create } from "zustand";
 import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
 type User = {
   uid: string;
+  employeeId: number;
   firstName: string;
   lastName: string;
   email: string;
+  photoURL: string;
 };
 
 type UserStore = {
@@ -17,7 +27,7 @@ type UserStore = {
   setUser: (user: User) => void;
   clearUser: () => void;
   logout: () => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  login: (emailOrId: string, password: string) => Promise<void>;
 };
 
 const useUserStore = create<UserStore>((set) => ({
@@ -38,11 +48,33 @@ const useUserStore = create<UserStore>((set) => ({
     }
   },
 
-  login: async (email, password) => {
+  login: async (emailOrId, password) => {
     try {
+      let emailToUse = emailOrId;
+
+      // Check if the input is numeric (likely an employeeId)
+      if (/^\d+$/.test(emailOrId)) {
+        // Query users collection for this employeeId
+        const usersRef = collection(db, "users");
+        const q = query(
+          usersRef,
+          where("employeeId", "==", parseInt(emailOrId))
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          throw new Error("No user found with this employee ID");
+        }
+
+        // Get the first matching user (assuming employeeId is unique)
+        const userDoc = querySnapshot.docs[0];
+        emailToUse = userDoc.data().email;
+      }
+
+      // Proceed with email authentication
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        email,
+        emailToUse,
         password
       );
 
@@ -55,9 +87,11 @@ const useUserStore = create<UserStore>((set) => ({
         set({
           user: {
             uid: user.uid,
+            employeeId: userData.employeeId,
             firstName: userData.firstName,
             lastName: userData.lastName,
             email: userData.email,
+            photoURL: userData.photoURL,
           },
         });
 
@@ -66,7 +100,10 @@ const useUserStore = create<UserStore>((set) => ({
         Alert.alert("Login Failed", "User data not found in Firestore.");
       }
     } catch (error: any) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert(
+        "Login Failed",
+        error.message || "An error occurred during login"
+      );
       throw error;
     }
   },

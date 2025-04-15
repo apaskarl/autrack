@@ -1,3 +1,7 @@
+// components/auth/AuthInput.tsx (if you need to modify the input type)
+// No changes needed if it already supports both text and email input types
+
+// screens/auth/LogIn.tsx
 import {
   View,
   Text,
@@ -6,17 +10,17 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import AuthInput from "@/components/auth/AuthInput";
 import AuthButton from "@/components/auth/AuthButton";
-import { SafeAreaView } from "react-native-safe-area-context";
 import useUserStore from "@/store/useUserStore";
 
 const LogIn = () => {
   const { login } = useUserStore();
   const [formData, setFormData] = useState({
-    email: "",
+    emailOrId: "", // Changed from 'email' to 'emailOrId'
     password: "",
   });
   const [loading, setLoading] = useState(false);
@@ -27,10 +31,10 @@ const LogIn = () => {
 
   const handleLogin = async () => {
     setLoading(true);
-    const { email, password } = formData;
+    const { emailOrId, password } = formData;
 
     try {
-      await login(email, password);
+      await login(emailOrId, password);
     } catch (err) {
       // Error already handled in store
     }
@@ -45,27 +49,29 @@ const LogIn = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="py-24 gap-y-16 justify-center w-full">
-            <View className="items-center gap-y-4">
+          <View className="pb-24 pt-28 gap-y-16 justify-center w-full">
+            <View className="items-center gap-y-2">
               <Image
                 source={require("../../assets/images/logos/logo-outline-primary.png")}
-                className="size-16"
+                className="size-20"
                 resizeMode="contain"
               />
-              <Text className="font-inter-bold leading-relaxed text-4xl px-5 text-center">
-                Log in to your account
-              </Text>
-              <Text className="font-inter text-subtext">
-                Enter your email and password to log in
-              </Text>
+              <View className="gap-y-4">
+                <Text className="font-inter-bold leading-relaxed text-4xl px-5 text-center">
+                  Log In
+                </Text>
+                <Text className="font-inter text-subtext">
+                  Please enter your email and password to log in
+                </Text>
+              </View>
             </View>
 
             <View className="gap-y-5">
               <AuthInput
-                label="Email"
+                label="Email or ID Number"
                 email
-                value={formData.email}
-                onChangeText={(text) => handleChange("email", text)}
+                value={formData.emailOrId}
+                onChangeText={(text) => handleChange("emailOrId", text)}
               />
 
               <AuthInput

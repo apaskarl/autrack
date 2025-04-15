@@ -12,11 +12,10 @@ const Profile = () => {
     <InstructorLayout>
       <View className="items-center gap-y-4 justify-center pt-6 pb-14">
         <Image
-          source={require("../../assets/images/users/user.jpg")}
+          source={{ uri: user?.photoURL }}
           className="size-24 rounded-full"
           resizeMode="contain"
         />
-
         <View className="items-center gap-y-2">
           <Text className="font-inter-bold text-xl">
             {user?.firstName} {user?.lastName}

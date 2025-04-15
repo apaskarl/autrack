@@ -49,6 +49,13 @@ const Register = () => {
       return;
     }
 
+    // Check if employeeId is a number
+    if (isNaN(Number(employeeId))) {
+      Alert.alert("Error", "Employee ID must be a number.");
+      setLoading(false);
+      return;
+    }
+
     // Check if password and confirm password match
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match.");
@@ -65,10 +72,12 @@ const Register = () => {
       const user = userCredential.user;
 
       await setDoc(doc(db, "users", user.uid), {
-        employeeId,
+        employeeId: Number(employeeId),
         firstName,
         lastName,
         email,
+        photoURL:
+          "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg",
         createdAt: new Date(),
       });
 
@@ -134,6 +143,17 @@ const Register = () => {
           onPress={handleRegister}
           disabled={loading}
         />
+      </View>
+
+      <View className="flex-row items-center gap-x-1 justify-center">
+        <Text className="font-inter text-subtext">
+          Already have an account?
+        </Text>
+        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.8}>
+          <Text className="font-inter-semibold text-primary underline">
+            Log in
+          </Text>
+        </TouchableOpacity>
       </View>
     </AuthLayout>
   );
