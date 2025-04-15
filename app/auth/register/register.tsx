@@ -83,7 +83,6 @@ const Register = () => {
 
       Alert.alert("Success", "Account created successfully.");
       setLoading(false);
-      router.push("/instructor/home");
     } catch (error: any) {
       Alert.alert("Registration Failed", error.message);
     }
@@ -100,7 +99,7 @@ const Register = () => {
           value={formData.employeeId}
           onChangeText={(text) => handleChange("employeeId", text)}
         />
-        <View className="flex-row justify-between gap-x-5">
+        <View className="flex-row justify-between gap-x-4">
           <View className="flex-1">
             <AuthInput
               label="First Name"

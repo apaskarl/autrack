@@ -26,7 +26,7 @@ const AuthInput = ({
       </Text>
       <View className="relative">
         <TextInput
-          className={`border border-border rounded-lg p-5 font-inter-medium placeholder:text-border`}
+          className={`border border-border rounded-lg p-5 font-inter-medium placeholder:text-subtext`}
           placeholder={`Enter ${label.toLowerCase()}`}
           keyboardType={email ? "email-address" : "default"}
           autoCapitalize={email ? "none" : "sentences"}

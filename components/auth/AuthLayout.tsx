@@ -49,7 +49,7 @@ const AuthLayout = ({
 
             {/* Title */}
             <View>
-              <Text className="font-inter-bold text-2xl mb-2">{title}</Text>
+              <Text className="font-inter-bold text-2xl mb-4">{title}</Text>
               <Text className="font-inter text-subtext leading-relaxed">
                 {description}
               </Text>
