@@ -7,10 +7,11 @@ import {
   View,
 } from "react-native";
 import { ICONS } from "@/constants/icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
-    <View className="p-10 bg-white gap-y-16 h-full">
+    <SafeAreaView className="p-8 bg-white gap-y-16 h-full">
       <View className="flex-row items-center gap-x-2">
         <Image
           source={require("../assets/images/logos/logo-outline-primary.png")}
@@ -43,7 +44,7 @@ export default function Index() {
         Need help?{" "}
         <Text className="text-primary underline font-inter-bold">Click Me</Text>
       </Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

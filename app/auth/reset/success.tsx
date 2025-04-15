@@ -7,6 +7,11 @@ import AuthLayout from "@/components/auth/AuthLayout";
 import AuthButton from "@/components/auth/AuthButton";
 
 const Success = () => {
+  const handleSuccess = () => {
+    router.push("/auth/login");
+    router.dismissAll();
+  };
+
   return (
     <AuthLayout success>
       <View className="h-[90%] justify-center items-center gap-y-10">
@@ -24,10 +29,7 @@ const Success = () => {
           </Text>
         </View>
 
-        <AuthButton
-          onPress={() => router.push("/auth/login")}
-          label="Continue"
-        />
+        <AuthButton onPress={handleSuccess} label="Continue" />
       </View>
     </AuthLayout>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
-import { Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,9 +14,12 @@ const EmployeeLayout = () => {
         tabBarInactiveTintColor: COLORS.border,
         tabBarStyle: {
           borderTopColor: COLORS.light,
-          height: 68,
-          paddingTop: 10,
+          height: Platform.OS === "ios" ? 85 : 65,
+          paddingTop: 8,
         },
+        tabBarButton: (props) => (
+          <Pressable {...props} android_ripple={{ color: "transparent" }} />
+        ),
       }}
     >
       <Tabs.Screen
@@ -58,7 +61,7 @@ const EmployeeLayout = () => {
             <View className="items-center justify-center ">
               <View
                 className={`${
-                  focused ? "border" : "border"
+                  focused ? "border-2" : "border"
                 } mb-2 w-[55px] h-[55px] bg-white rounded-full justify-center items-center border-dark`}
                 style={{
                   elevation: 2,
@@ -71,7 +74,7 @@ const EmployeeLayout = () => {
                 />
               </View>
               <Text
-                className="font-inter-semibold mb-9 text-xs"
+                className="font-inter-bold mb-9 pb-1 text-xs"
                 style={{ color: color }}
               >
                 QR
@@ -133,7 +136,7 @@ const TabIcon = ({
   iconPack?: IconPack;
 }) => {
   const renderIcon = () => {
-    const size = name === "Scan" ? 26 : 24;
+    const size = name === "Scan" ? 30 : 26;
     switch (iconPack) {
       case "ionicons":
         return <Ionicons name={icon as any} size={size} color={color} />;
@@ -146,12 +149,12 @@ const TabIcon = ({
 
   return (
     <View className="items-center justify-center">
-      <View className="mb-1">{renderIcon()}</View>
+      <View>{renderIcon()}</View>
 
       {name !== "Scan" && (
         <Text
           numberOfLines={1}
-          className={`font-inter-semibold w-full text-xs`}
+          className={`font-inter-bold w-full text-xs`}
           style={{ color: color }}
         >
           {name}

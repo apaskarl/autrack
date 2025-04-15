@@ -1,11 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
+import InstructorLayout from "@/components/instructor/InstructorLayout";
 
 const Notifications = () => {
   return (
-    <View>
+    <InstructorLayout>
       <Text>Notifications</Text>
-    </View>
+    </InstructorLayout>
   );
 };
 

@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -24,35 +25,41 @@ const AuthLayout = ({
   success = false,
 }: AuthLayoutProps) => {
   return (
-    <ScrollView className="p-8 bg-white" showsVerticalScrollIndicator={false}>
-      <View className="gap-y-10">
-        {/* Header */}
-        <View>
-          {/* Back button */}
-          {!success && (
-            <View className="items-start">
-              <TouchableOpacity
-                onPress={() => router.back()}
-                activeOpacity={0.8}
-                className="p-1 items-start ml-[-4px]"
-              >
-                <Ionicons name="chevron-back-outline" size={32} color="black" />
-              </TouchableOpacity>
+    <SafeAreaView className="bg-white px-8 min-h-full">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View className="gap-y-10 py-5">
+          {/* Header */}
+          <View className="gap-y-4">
+            {/* Back button */}
+            {!success && (
+              <View className="items-start">
+                <TouchableOpacity
+                  onPress={() => router.back()}
+                  activeOpacity={0.8}
+                  className="p-1 items-start ml-[-4px]"
+                >
+                  <Ionicons
+                    name="chevron-back-outline"
+                    size={32}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* Title */}
+            <View>
+              <Text className="font-inter-bold text-2xl mb-2">{title}</Text>
+              <Text className="font-inter text-subtext leading-relaxed">
+                {description}
+              </Text>
             </View>
-          )}
-
-          {/* Title */}
-          <View>
-            <Text className="font-inter-bold text-2xl mt-4 mb-2">{title}</Text>
-            <Text className="font-inter text-subtext leading-relaxed">
-              {description}
-            </Text>
           </View>
-        </View>
 
-        {children}
-      </View>
-    </ScrollView>
+          {children}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

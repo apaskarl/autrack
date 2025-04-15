@@ -6,12 +6,16 @@ interface AuthInputProps {
   label: string;
   password?: boolean;
   email?: boolean;
+  value?: string;
+  onChangeText?: (text: string) => void;
 }
 
 const AuthInput = ({
   label,
   password = false,
   email = false,
+  value,
+  onChangeText,
 }: AuthInputProps) => {
   const [secure, setSecure] = useState(password);
 
@@ -22,12 +26,14 @@ const AuthInput = ({
       </Text>
       <View className="relative">
         <TextInput
-          className={`border border-border rounded-lg p-5 font-inter-medium`}
+          className={`border border-border rounded-lg p-5 font-inter-medium placeholder:text-border`}
           placeholder={`Enter ${label.toLowerCase()}`}
           keyboardType={email ? "email-address" : "default"}
-          autoCapitalize="none"
+          autoCapitalize={email ? "none" : "sentences"}
           numberOfLines={1}
           secureTextEntry={secure}
+          value={value}
+          onChangeText={onChangeText}
         />
         {password && (
           <TouchableOpacity
