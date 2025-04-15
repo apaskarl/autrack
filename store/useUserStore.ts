@@ -1,7 +1,7 @@
-import { auth } from "@/firebase";
-import { router } from "expo-router";
-import { signOut } from "firebase/auth";
 import { create } from "zustand";
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { router } from "expo-router";
 
 type User = {
   uid: string;
@@ -26,7 +26,6 @@ const useUserStore = create<UserStore>((set) => ({
       await signOut(auth);
       set({ user: null });
       router.replace("/auth/login");
-      router.dismissAll();
     } catch (error) {
       console.error("Logout Error:", error);
       throw error;

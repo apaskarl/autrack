@@ -36,7 +36,7 @@ const AuthLayout = ({
                 <TouchableOpacity
                   onPress={() => router.back()}
                   activeOpacity={0.8}
-                  className="p-1 items-start ml-[-4px]"
+                  className="p-1 items-start ml-[-8px]"
                 >
                   <Ionicons
                     name="chevron-back-outline"
