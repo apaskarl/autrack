@@ -1,12 +1,14 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import InstructorLayout from "@/components/instructor/InstructorLayout";
+import useUserStore from "@/store/useUserStore";
 
 const Home = () => {
+  const { user } = useUserStore();
+
   return (
     <InstructorLayout>
-      <Text>Home</Text>
+      <Text>Welcome, {user?.firstName}</Text>
     </InstructorLayout>
   );
 };

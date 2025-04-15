@@ -5,34 +5,68 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { router } from "expo-router";
 import AuthInput from "@/components/auth/AuthInput";
 import AuthButton from "@/components/auth/AuthButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import useUserStore from "@/store/useUserStore";
+import { doc, getDoc } from "firebase/firestore";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { role } = useLocalSearchParams();
-  const isAdmin = role === "admin";
-  const isInstructor = role === "instructor";
+  const { setUser } = useUserStore();
 
-  const handleLogin = () => {
-    router.push("/instructor/home");
+  const handleLogin = async () => {
+    setLoading(true);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Fetch user data from Firestore
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        setUser({
+          uid: user.uid,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+        });
+
+        router.replace("/instructor/home");
+      } else {
+        Alert.alert("Login Failed", "User data not found in Firestore.");
+      }
+    } catch (error: any) {
+      Alert.alert("Login Failed", error.message);
+    }
+
+    setLoading(false);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-8">
+    <SafeAreaView className="flex-1 bg-white px-8">
       <KeyboardAvoidingView className="flex-1">
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="gap-y-28 h-full pt-5 w-full">
+          <View className="py-24 gap-y-16 justify-center w-full">
             <View className="items-center gap-y-4">
               <Image
                 source={require("../../assets/images/logos/logo-outline-primary.png")}
@@ -48,9 +82,19 @@ const LogIn = () => {
             </View>
 
             <View className="gap-y-5">
-              <AuthInput label="Email" email />
+              <AuthInput
+                label="Email"
+                email
+                value={email}
+                onChangeText={setEmail}
+              />
 
-              <AuthInput label="Password" password />
+              <AuthInput
+                label="Password"
+                password
+                value={password}
+                onChangeText={setPassword}
+              />
 
               <View className="items-end">
                 <TouchableOpacity
@@ -63,7 +107,11 @@ const LogIn = () => {
                 </TouchableOpacity>
               </View>
 
-              <AuthButton label="Log In" onPress={handleLogin} />
+              <AuthButton
+                label={loading ? "Logging in..." : "Log In"}
+                onPress={handleLogin}
+                disabled={loading}
+              />
             </View>
 
             <View className="flex-row items-center gap-x-1 justify-center">

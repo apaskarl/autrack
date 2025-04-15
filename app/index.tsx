@@ -31,7 +31,7 @@ export default function Index() {
         <Button
           label="Admin"
           source={ICONS.admin}
-          onPress={() => router.push("/auth/login?role=admin")}
+          onPress={() => router.push("/instructor/home")}
         />
         <Button
           label="Instructor"

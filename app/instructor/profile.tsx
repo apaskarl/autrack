@@ -1,22 +1,12 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
-import InstructorLayout from "@/components/instructor/InstructorLayout";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
-import { auth } from "@/firebase";
-import { signOut } from "firebase/auth";
-import { router } from "expo-router";
+import useUserStore from "@/store/useUserStore";
+import InstructorLayout from "@/components/instructor/InstructorLayout";
 
 const Profile = () => {
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.replace("/auth/login");
-      router.dismissAll();
-    } catch (error: any) {
-      console.error("Logout Error:", error.message);
-    }
-  };
+  const { user, logout } = useUserStore();
 
   return (
     <InstructorLayout>
@@ -28,8 +18,10 @@ const Profile = () => {
         />
 
         <View className="items-center gap-y-2">
-          <Text className="font-inter-bold text-xl">John Doe</Text>
-          <Text className="font-inter text-subtext">example@mail.com</Text>
+          <Text className="font-inter-bold text-xl">
+            {user?.firstName} {user?.lastName}
+          </Text>
+          <Text className="font-inter text-subtext">{user?.email}</Text>
         </View>
       </View>
 
@@ -37,12 +29,8 @@ const Profile = () => {
         <ProfileLink icon="person-outline" label="Profile Information" />
         <ProfileLink icon="settings-outline" label="Settings" />
         <ProfileLink icon="help-outline" label="Help" />
-        <ProfileLink icon="document-outline" label="Terms and Conditons" />
-        <ProfileLink
-          icon="log-out-outline"
-          label="Log Out"
-          onPress={handleLogout}
-        />
+        <ProfileLink icon="document-outline" label="Terms and Conditions" />
+        <ProfileLink icon="log-out-outline" label="Log Out" onPress={logout} />
       </View>
     </InstructorLayout>
   );
