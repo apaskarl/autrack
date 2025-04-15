@@ -5,55 +5,34 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import AuthInput from "@/components/auth/AuthInput";
 import AuthButton from "@/components/auth/AuthButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import useUserStore from "@/store/useUserStore";
-import { doc, getDoc } from "firebase/firestore";
 
 const LogIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useUserStore();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
 
-  const { setUser } = useUserStore();
+  const handleChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleLogin = async () => {
     setLoading(true);
+    const { email, password } = formData;
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Fetch user data from Firestore
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        setUser({
-          uid: user.uid,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          email: userData.email,
-        });
-
-        router.replace("/instructor/home");
-      } else {
-        Alert.alert("Login Failed", "User data not found in Firestore.");
-      }
-    } catch (error: any) {
-      Alert.alert("Login Failed", error.message);
+      await login(email, password);
+    } catch (err) {
+      // Error already handled in store
     }
 
     setLoading(false);
@@ -85,15 +64,15 @@ const LogIn = () => {
               <AuthInput
                 label="Email"
                 email
-                value={email}
-                onChangeText={setEmail}
+                value={formData.email}
+                onChangeText={(text) => handleChange("email", text)}
               />
 
               <AuthInput
                 label="Password"
                 password
-                value={password}
-                onChangeText={setPassword}
+                value={formData.password}
+                onChangeText={(text) => handleChange("password", text)}
               />
 
               <View className="items-end">
