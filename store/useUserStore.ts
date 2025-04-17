@@ -10,7 +10,6 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { router } from "expo-router";
-import { Alert } from "react-native";
 
 type User = {
   uid: string;
@@ -51,9 +50,7 @@ const useUserStore = create<UserStore>((set) => ({
     try {
       let emailToUse = emailOrId;
 
-      // Check if the input is numeric (likely an employeeId)
       if (/^\d+$/.test(emailOrId)) {
-        // Query users collection for this employeeId
         const usersRef = collection(db, "users");
         const q = query(
           usersRef,
@@ -65,12 +62,10 @@ const useUserStore = create<UserStore>((set) => ({
           throw new Error("No user found with this employee ID");
         }
 
-        // Get the first matching user (assuming employeeId is unique)
         const userDoc = querySnapshot.docs[0];
         emailToUse = userDoc.data().email;
       }
 
-      // Proceed with email authentication
       const userCredential = await signInWithEmailAndPassword(
         auth,
         emailToUse,

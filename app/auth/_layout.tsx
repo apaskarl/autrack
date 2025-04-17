@@ -8,7 +8,6 @@ const AuthLayout = () => {
         name="login"
         options={{
           headerShown: false,
-          gestureEnabled: false,
         }}
       />
       <Stack.Screen

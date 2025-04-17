@@ -1,15 +1,9 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Pressable,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import useUserStore from "@/store/useUserStore";
 import InstructorLayout from "@/components/instructor/InstructorLayout";
 import ProfileLink from "@/components/instructor/ProfileLink";
+import { router } from "expo-router";
 
 const Profile = () => {
   const { user, logout } = useUserStore();
@@ -21,34 +15,39 @@ const Profile = () => {
   };
 
   return (
-    <InstructorLayout>
-      <View className="items-center gap-y-4 justify-center pt-6 pb-14">
-        <Image
-          source={{ uri: user?.photoURL }}
-          className="size-20 rounded-full"
-          resizeMode="contain"
-        />
-        <View className="items-center gap-y-1">
-          <Text className="font-inter-bold text-xl">
-            {user?.firstName} {user?.lastName}
-          </Text>
-          <Text className="font-inter text-subtext">{user?.email}</Text>
+    <>
+      <InstructorLayout>
+        <View className="items-center gap-y-4 justify-center pt-4 pb-10">
+          <Image
+            source={{ uri: user?.photoURL }}
+            className="size-28 rounded-full"
+            resizeMode="contain"
+          />
+          <View className="items-center gap-y-1">
+            <Text className="font-inter-bold text-xl">
+              {user?.firstName} {user?.lastName}
+            </Text>
+            <Text className="font-inter text-subtext">{user?.email}</Text>
+          </View>
         </View>
-      </View>
 
-      <View>
-        <ProfileLink icon="person-outline" label="Profile Information" />
-        <ProfileLink icon="settings-outline" label="Settings" />
-        <ProfileLink icon="help-outline" label="Help" />
-        <ProfileLink icon="document-outline" label="Terms and Conditions" />
-        <ProfileLink
-          icon="log-out-outline"
-          label="Log Out"
-          onPress={() => setShowLogoutModal(true)}
-        />
-      </View>
+        <View>
+          <ProfileLink
+            icon="person-outline"
+            label="Profile Information"
+            onPress={() => router.push("/instructor/edit-profile")}
+          />
+          <ProfileLink icon="settings-outline" label="Settings" />
+          <ProfileLink icon="help-outline" label="Help" />
+          <ProfileLink icon="document-outline" label="Terms and Conditions" />
+          <ProfileLink
+            icon="log-out-outline"
+            label="Log Out"
+            onPress={() => setShowLogoutModal(true)}
+          />
+        </View>
+      </InstructorLayout>
 
-      {/* Logout Confirmation Modal */}
       <Modal
         transparent
         visible={showLogoutModal}
@@ -56,7 +55,7 @@ const Profile = () => {
         onRequestClose={() => setShowLogoutModal(false)}
       >
         <View className="flex-1 justify-center items-center bg-black/50 px-8">
-          <View className="bg-white rounded-3xl p-5 w-full max-w-md items-center">
+          <View className="bg-white rounded-3xl p-6 w-full max-w-md items-center">
             <Text className="text-lg font-inter-bold mb-4">Confirm</Text>
             <Text className="text-center font-inter mb-6 text-subtext">
               Are you sure you want to log out?
@@ -81,7 +80,7 @@ const Profile = () => {
           </View>
         </View>
       </Modal>
-    </InstructorLayout>
+    </>
   );
 };
 
