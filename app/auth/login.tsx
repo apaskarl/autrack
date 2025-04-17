@@ -1,7 +1,3 @@
-// components/auth/AuthInput.tsx (if you need to modify the input type)
-// No changes needed if it already supports both text and email input types
-
-// screens/auth/LogIn.tsx
 import {
   View,
   Text,
@@ -13,33 +9,54 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { router } from "expo-router";
+import useUserStore from "@/store/useUserStore";
 import AuthInput from "@/components/auth/AuthInput";
 import AuthButton from "@/components/auth/AuthButton";
-import useUserStore from "@/store/useUserStore";
 
 const LogIn = () => {
   const { login } = useUserStore();
   const [formData, setFormData] = useState({
-    emailOrId: "", // Changed from 'email' to 'emailOrId'
+    emailOrId: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (error) setError(null);
   };
 
   const handleLogin = async () => {
     setLoading(true);
-    const { emailOrId, password } = formData;
+    setError(null);
 
     try {
-      await login(emailOrId, password);
-    } catch (err) {
-      // Error already handled in store
-    }
+      const emailOrId = formData.emailOrId.trim();
+      const password = formData.password.trim();
 
-    setLoading(false);
+      if (!emailOrId || !password) {
+        throw new Error("Please enter all required fields.");
+      }
+
+      await login(emailOrId, password);
+    } catch (err: any) {
+      if (err.message === "Please enter all required fields.") {
+        setError(err.message);
+      } else if (
+        err.message.includes("No user found") ||
+        err.message.includes("invalid") ||
+        err.message.includes("wrong")
+      ) {
+        setError("Invalid email/ID number or password.");
+        setFormData({ emailOrId: "", password: "" });
+      } else {
+        setError("Something went wrong. Please try again later.");
+        setFormData({ emailOrId: "", password: "" });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,7 +66,7 @@ const LogIn = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="pb-24 pt-28 gap-y-16 justify-center w-full">
+          <View className="pb-14 pt-28 gap-y-16 justify-center w-full">
             <View className="items-center gap-y-2">
               <Image
                 source={require("../../assets/images/logos/logo-outline-primary.png")}
@@ -67,6 +84,12 @@ const LogIn = () => {
             </View>
 
             <View className="gap-y-5">
+              {error && (
+                <View className="bg-red/10 rounded-lg py-4 px-5">
+                  <Text className="text-sm font-inter-semibold">{error}</Text>
+                </View>
+              )}
+
               <AuthInput
                 label="Email or ID Number"
                 email

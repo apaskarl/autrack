@@ -1,4 +1,3 @@
-// store/useUserStore.ts
 import { create } from "zustand";
 import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -97,13 +96,9 @@ const useUserStore = create<UserStore>((set) => ({
 
         router.replace("/instructor/home");
       } else {
-        Alert.alert("Login Failed", "User data not found in Firestore.");
+        throw new Error("User data not found in Firestore.");
       }
     } catch (error: any) {
-      Alert.alert(
-        "Login Failed",
-        error.message || "An error occurred during login"
-      );
       throw error;
     }
   },
