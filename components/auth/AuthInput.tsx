@@ -8,6 +8,7 @@ interface AuthInputProps {
   email?: boolean;
   value?: string;
   onChangeText?: (text: string) => void;
+  error?: string | null;
 }
 
 const AuthInput = ({
@@ -16,6 +17,7 @@ const AuthInput = ({
   email = false,
   value,
   onChangeText,
+  error,
 }: AuthInputProps) => {
   const [secure, setSecure] = useState(password);
 
@@ -24,9 +26,12 @@ const AuthInput = ({
       <Text className="font-inter-semibold mb-2">
         {label} <Text className="text-red">*</Text>
       </Text>
+
       <View className="relative">
         <TextInput
-          className={`border border-border rounded-lg p-5 font-inter-medium placeholder:text-subtext`}
+          className={`${
+            error ? "border-red" : "border-border"
+          } border rounded-lg p-5 font-inter-medium placeholder:text-subtext`}
           placeholder={`Enter ${label.toLowerCase()}`}
           keyboardType={email ? "email-address" : "default"}
           autoCapitalize={email ? "none" : "sentences"}
@@ -35,6 +40,7 @@ const AuthInput = ({
           value={value}
           onChangeText={onChangeText}
         />
+
         {password && (
           <TouchableOpacity
             className="absolute right-2 top-1/2 -translate-y-1/2 p-3"
@@ -49,6 +55,12 @@ const AuthInput = ({
           </TouchableOpacity>
         )}
       </View>
+
+      {error && (
+        <Text className="text-red mt-2 font-inter text-sm">
+          This field is required.
+        </Text>
+      )}
     </View>
   );
 };

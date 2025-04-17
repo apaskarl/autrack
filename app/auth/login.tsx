@@ -20,39 +20,45 @@ const LogIn = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError(null);
   };
 
   const handleLogin = async () => {
     setLoading(true);
+    setEmailError("");
+    setPasswordError("");
     setError(null);
 
     try {
       const emailOrId = formData.emailOrId.trim();
       const password = formData.password.trim();
 
+      if (!emailOrId) setEmailError("This field is required");
+      if (!password) setPasswordError("This field is required");
+
       if (!emailOrId || !password) {
-        throw new Error("Please enter all required fields.");
+        throw new Error("empty-field");
       }
 
       await login(emailOrId, password);
     } catch (err: any) {
-      if (err.message === "Please enter all required fields.") {
-        setError(err.message);
+      if (err.message === "empty-field") {
+        setError("Please enter all required fields.");
       } else if (
         err.message.includes("No user found") ||
         err.message.includes("invalid") ||
         err.message.includes("wrong")
       ) {
         setError("Invalid email/ID number or password.");
-        setFormData({ emailOrId: "", password: "" });
+        setFormData((prev) => ({ ...prev, password: "" }));
       } else {
         setError("Something went wrong. Please try again later.");
-        setFormData({ emailOrId: "", password: "" });
+        setFormData((prev) => ({ ...prev, password: "" }));
       }
     } finally {
       setLoading(false);
@@ -73,9 +79,9 @@ const LogIn = () => {
                 className="size-20"
                 resizeMode="contain"
               />
-              <View className="gap-y-4">
+              <View className="gap-y-2">
                 <Text className="font-inter-bold leading-relaxed text-4xl px-5 text-center">
-                  Log In
+                  Log in
                 </Text>
                 <Text className="font-inter text-subtext">
                   Please enter your email and password to log in
@@ -86,7 +92,7 @@ const LogIn = () => {
             <View className="gap-y-5">
               {error && (
                 <View className="bg-red/10 rounded-lg py-4 px-5">
-                  <Text className="text-sm font-inter-semibold">{error}</Text>
+                  <Text className="text-sm font-inter-medium">{error}</Text>
                 </View>
               )}
 
@@ -95,6 +101,7 @@ const LogIn = () => {
                 email
                 value={formData.emailOrId}
                 onChangeText={(text) => handleChange("emailOrId", text)}
+                error={emailError}
               />
 
               <AuthInput
@@ -102,6 +109,7 @@ const LogIn = () => {
                 password
                 value={formData.password}
                 onChangeText={(text) => handleChange("password", text)}
+                error={passwordError}
               />
 
               <View className="items-end">
@@ -116,7 +124,7 @@ const LogIn = () => {
               </View>
 
               <AuthButton
-                label={loading ? "Logging in..." : "Log In"}
+                label={loading ? "" : "Log In"}
                 onPress={handleLogin}
                 disabled={loading}
               />
@@ -129,7 +137,7 @@ const LogIn = () => {
                 activeOpacity={0.8}
               >
                 <Text className="font-inter-semibold text-primary underline">
-                  Register here
+                  Register
                 </Text>
               </TouchableOpacity>
             </View>

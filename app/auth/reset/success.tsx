@@ -29,7 +29,9 @@ const Success = () => {
           </Text>
         </View>
 
-        <AuthButton onPress={handleSuccess} label="Continue" />
+        <View className="w-full">
+          <AuthButton onPress={handleSuccess} label="Continue" />
+        </View>
       </View>
     </AuthLayout>
   );

@@ -61,11 +61,11 @@ const EmployeeLayout = () => {
             <View className="items-center justify-center ">
               <View
                 className={`${
-                  focused ? "border-2" : "border"
-                } mb-2 w-[55px] h-[55px] bg-white rounded-full justify-center items-center border-dark`}
-                style={{
-                  elevation: 2,
-                }}
+                  focused ? "border-black" : "border-border"
+                } border mb-2 w-[55px] h-[55px] bg-white rounded-full justify-center items-center`}
+                // style={{
+                //   elevation: 1,
+                // }}
               >
                 <Ionicons
                   name="qr-code-outline"
@@ -99,6 +99,7 @@ const EmployeeLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="profile"
         options={{
