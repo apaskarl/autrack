@@ -1,6 +1,5 @@
 import React from "react";
 import { Stack } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
 
 const ProfileLayout = () => {
   return (
@@ -16,15 +15,27 @@ const ProfileLayout = () => {
           },
           headerTitleStyle: {
             fontFamily: "Inter-Bold",
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: "600",
             color: "#333",
           },
-          // headerRight: () => (
-          //   <TouchableOpacity onPress={() => alert("Save profile")}>
-          //     <Text className="mr-5 font-inter-semibold">Save</Text>
-          //   </TouchableOpacity>
-          // ),
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          headerTitleAlign: "center",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+          headerTitleStyle: {
+            fontFamily: "Inter-Bold",
+            fontSize: 17,
+            fontWeight: "600",
+            color: "#333",
+          },
         }}
       />
     </Stack>

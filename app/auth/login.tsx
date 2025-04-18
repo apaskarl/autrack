@@ -72,21 +72,19 @@ const LogIn = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="pb-14 pt-28 gap-y-16 justify-center w-full">
-            <View className="items-center gap-y-2">
+          <View className="pb-14 pt-32 gap-y-20 justify-center w-full">
+            <View className="items-center gap-y-1">
               <Image
                 source={require("../../assets/images/logos/logo-outline-primary.png")}
-                className="size-20"
+                className="size-16"
                 resizeMode="contain"
               />
-              <View className="gap-y-2">
-                <Text className="font-inter-bold leading-relaxed text-4xl px-5 text-center">
-                  Log in
-                </Text>
-                <Text className="font-inter text-subtext">
-                  Please enter your email and password to log in
-                </Text>
-              </View>
+              <Text className="font-inter-bold leading-relaxed text-3xl px-5 text-center">
+                Log In
+              </Text>
+              <Text className="font-inter text-subtext">
+                Please enter your email and password to log in
+              </Text>
             </View>
 
             <View className="gap-y-5">

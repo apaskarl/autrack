@@ -1,18 +1,28 @@
-import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Switch,
+} from "react-native";
 import React, { useState } from "react";
 import useUserStore from "@/store/useUserStore";
 import InstructorLayout from "@/components/instructor/InstructorLayout";
 import ProfileLink from "@/components/instructor/ProfileLink";
 import { router } from "expo-router";
+import { useColorScheme } from "nativewind";
 
 const Profile = () => {
   const { user, logout } = useUserStore();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
   const handleLogout = () => {
     setShowLogoutModal(false);
     logout();
   };
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  console.log(colorScheme);
 
   return (
     <>
@@ -37,7 +47,11 @@ const Profile = () => {
             label="Edit Profile"
             onPress={() => router.push("/instructor/edit-profile")}
           />
-          <ProfileLink icon="settings-outline" label="Settings" />
+          <ProfileLink
+            icon="settings-outline"
+            label="Settings"
+            onPress={() => router.push("/instructor/settings")}
+          />
           <ProfileLink icon="help-outline" label="Help" />
           <ProfileLink icon="document-outline" label="Terms and Conditions" />
           <ProfileLink
@@ -46,6 +60,8 @@ const Profile = () => {
             onPress={() => setShowLogoutModal(true)}
           />
         </View>
+
+        {/* <Switch value={colorScheme == "dark"} onChange={toggleColorScheme} /> */}
       </InstructorLayout>
 
       <Modal

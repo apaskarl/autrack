@@ -23,7 +23,7 @@ const AuthInput = ({
 
   return (
     <View>
-      <Text className="font-inter-semibold mb-2">
+      <Text className="font-inter-semibold mb-3">
         {label} <Text className="text-red">*</Text>
       </Text>
 
