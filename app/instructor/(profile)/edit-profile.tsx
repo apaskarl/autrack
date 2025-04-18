@@ -5,8 +5,6 @@ import {
   ActivityIndicator,
   Alert,
   Text,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import useUserStore from "@/store/useUserStore";
@@ -14,19 +12,19 @@ import { router, useNavigation } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import FormInput from "@/components/instructor/FormInput";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Modal from "react-native-modal";
 
 const EditProfile = () => {
   const { user, setUser } = useUserStore();
   const navigation = useNavigation();
-
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [image, setImage] = useState(user?.photoURL || null);
-
+  const [showModal, setShowModal] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [editing, setEditing] = useState(false);
   const hasChanges =
@@ -34,10 +32,8 @@ const EditProfile = () => {
     lastName !== user?.lastName ||
     (image !== user?.photoURL && image !== null);
 
-  const pickImage = async () => {
+  const choosePhoto = async () => {
     try {
-      setPreviewing(true);
-
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -49,11 +45,31 @@ const EditProfile = () => {
         const uri = result.assets[0].uri;
         setImage(uri);
       }
-
-      setPreviewing(false);
     } catch (error) {
       console.error("Image selection error:", error);
       Alert.alert("Error", "Failed to select image. Try again later.");
+    } finally {
+      setShowModal(false);
+    }
+  };
+
+  const takePhoto = async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        const uri = result.assets[0].uri;
+        setImage(uri);
+      }
+    } catch (error) {
+      console.error("Camera error:", error);
+      Alert.alert("Error", "Failed to take photo. Try again later.");
+    } finally {
+      setShowModal(false);
     }
   };
 
@@ -142,13 +158,13 @@ const EditProfile = () => {
   }, [navigation, handleSave, hasChanges, previewing, editing]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} className="bg-red">
+    <>
+      <SafeAreaView className="flex-1 bg-white">
         <View className="flex-1 p-8">
           <View className="items-center mb-8">
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={pickImage}
+              onPress={() => setShowModal(true)}
               disabled={previewing}
             >
               {previewing ? (
@@ -156,16 +172,18 @@ const EditProfile = () => {
                   <ActivityIndicator size="small" color="#000" />
                 </View>
               ) : (
-                <View className="relative">
+                <View className="relative items-center">
                   <Image
-                    source={{ uri: image || "https://via.placeholder.com/150" }}
-                    className="size-28 rounded-full opacity-60 bg-black"
+                    source={{
+                      uri: image || "https://via.placeholder.com/150",
+                    }}
+                    className="size-28 rounded-full  bg-black"
                   />
-                  <Ionicons
-                    name="camera-outline"
-                    size={30}
+                  <MaterialCommunityIcons
+                    name="pencil-outline"
+                    size={20}
                     color={COLORS.white}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                    className="absolute bottom-[-5px] right-[-5px] border-2 border-white bg-primary p-2 rounded-full"
                   />
                 </View>
               )}
@@ -186,8 +204,64 @@ const EditProfile = () => {
             />
           </View>
         </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+      </SafeAreaView>
+
+      <Modal
+        isVisible={showModal}
+        onBackButtonPress={() => setShowModal(false)}
+        onBackdropPress={() => setShowModal(false)}
+        backdropTransitionOutTiming={0}
+        backdropTransitionInTiming={0}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropOpacity={0}
+        statusBarTranslucent
+        style={{ margin: 0, padding: 0 }}
+      >
+        <View className="flex-1 bg-black/50 px-8 justify-center items-center ">
+          <View className="bg-white rounded-3xl p-6 w-full">
+            <Text className="text-lg font-inter-bold mb-4">
+              Change profile photo
+            </Text>
+
+            <View>
+              <TouchableOpacity
+                onPress={choosePhoto}
+                activeOpacity={0.5}
+                className="py-4"
+              >
+                <Text className="font-inter-medium text-black">
+                  Choose photo
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={takePhoto}
+                activeOpacity={0.5}
+                className="py-4"
+              >
+                <Text className="font-inter-medium text-black">Take photo</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  setImage(
+                    "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg"
+                  );
+                  setShowModal(false);
+                }}
+                className="py-4"
+              >
+                <Text className="font-inter-medium text-black">
+                  Remove current photo
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 

@@ -3,8 +3,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal,
-  Switch,
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
@@ -13,6 +11,7 @@ import InstructorLayout from "@/components/instructor/InstructorLayout";
 import ProfileLink from "@/components/instructor/ProfileLink";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
+import Modal from "react-native-modal";
 
 const Profile = () => {
   const { user, logout } = useUserStore();
@@ -76,32 +75,36 @@ const Profile = () => {
       </InstructorLayout>
 
       <Modal
-        transparent
-        visible={showLogoutModal}
-        animationType="fade"
-        onRequestClose={() => setShowLogoutModal(false)}
+        isVisible={showLogoutModal}
+        onBackButtonPress={() => setShowLogoutModal(false)}
+        onBackdropPress={() => setShowLogoutModal(false)}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        backdropOpacity={0}
+        statusBarTranslucent
+        style={{ margin: 0, padding: 0 }}
       >
         <View className="flex-1 justify-center items-center bg-black/50 px-8">
-          <View className="bg-white rounded-3xl p-6 w-full max-w-md items-center">
-            <Text className="text-lg font-inter-bold mb-4">Confirm</Text>
-            <Text className="text-center font-inter mb-6 text-subtext">
+          <View className="bg-white rounded-3xl p-6 w-full">
+            <Text className="text-lg font-inter-bold mb-4">Log out</Text>
+            <Text className="font-inter-medium mb-6 text-subtext">
               Are you sure you want to log out?
             </Text>
-            <View className="flex-row justify-between w-full">
+            <View className="flex-row justify-end items-center w-full">
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => setShowLogoutModal(false)}
-                className="flex-1 p-2 border-r border-border items-center"
+                className="px-5 py-3"
               >
-                <Text className="font-inter-medium">Cancel</Text>
+                <Text className="font-inter-medium ">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={handleLogout}
-                className="flex-1 p-2 items-center"
+                className="px-5 py-3 rounded-lg"
               >
-                <Text className="font-inter-semibold">Log out</Text>
+                <Text className="font-inter-bold">Log out</Text>
               </TouchableOpacity>
             </View>
           </View>

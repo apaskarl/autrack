@@ -24,14 +24,14 @@ export default function Index() {
       </View>
 
       <View className="gap-y-5">
-        <Text className="text-center text-lg font-inter-semibold mb-6">
+        <Text className="text-center text-subtext text-lg font-inter-semibold mb-6">
           Log in as
         </Text>
 
         <Button
           label="Admin"
           source={ICONS.admin}
-          onPress={() => router.push("/admin/home-admin")}
+          onPress={() => router.push("/instructor/profile")}
         />
 
         <Button
