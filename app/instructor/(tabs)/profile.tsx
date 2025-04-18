@@ -34,7 +34,7 @@ const Profile = () => {
         <View>
           <ProfileLink
             icon="person-outline"
-            label="Profile Information"
+            label="Edit Profile"
             onPress={() => router.push("/instructor/edit-profile")}
           />
           <ProfileLink icon="settings-outline" label="Settings" />

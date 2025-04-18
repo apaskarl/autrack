@@ -1,28 +1,36 @@
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
-  TextInput,
   ActivityIndicator,
   Alert,
+  Text,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import useUserStore from "@/store/useUserStore";
-import InstructorLayout from "@/components/instructor/InstructorLayout";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
+import FormInput from "@/components/instructor/FormInput";
 
 const EditProfile = () => {
   const { user, setUser } = useUserStore();
+  const navigation = useNavigation();
+
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
   const [image, setImage] = useState(user?.photoURL || null);
+  const [newImageUrl, setNewImageUrl] = useState<string | null>(null); // Store the new URL temporarily
+
   const [uploading, setUploading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const hasChanges =
+    firstName !== user?.firstName ||
+    lastName !== user?.lastName ||
+    (image !== user?.photoURL && image !== null);
 
   const pickImage = async () => {
     try {
@@ -36,7 +44,7 @@ const EditProfile = () => {
       if (!result.canceled) {
         setUploading(true);
         const uri = result.assets[0].uri;
-        setImage(uri);
+        setImage(uri); // Set the local image URI for preview
 
         // Upload to Cloudinary
         const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dsbbcevcp/upload`;
@@ -61,21 +69,8 @@ const EditProfile = () => {
         const data = await response.json();
 
         if (data.secure_url) {
-          // Update Firestore with new photoURL
-          if (user?.uid) {
-            const userRef = doc(db, "users", user.uid);
-            await updateDoc(userRef, {
-              photoURL: data.secure_url,
-            });
-
-            // Update local state
-            setUser({
-              ...user,
-              photoURL: data.secure_url,
-              firstName,
-              lastName,
-            });
-          }
+          // Store the new URL but don't update Firestore yet
+          setNewImageUrl(data.secure_url);
         }
       }
     } catch (error) {
@@ -87,29 +82,60 @@ const EditProfile = () => {
   };
 
   const handleSave = async () => {
+    setEditing(true);
+
     try {
       if (user?.uid) {
+        const updateData: {
+          firstName: string;
+          lastName: string;
+          photoURL?: string;
+        } = {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+        };
+
+        // Only include photoURL in the update if we have a new image URL
+        if (newImageUrl) {
+          updateData.photoURL = newImageUrl;
+        }
+
         const userRef = doc(db, "users", user.uid);
-        await updateDoc(userRef, {
-          firstName,
-          lastName,
-        });
+        await updateDoc(userRef, updateData);
 
         setUser({
           ...user,
-          firstName,
-          lastName,
-          photoURL: image || user.photoURL,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          photoURL: newImageUrl || user.photoURL,
         });
 
-        Alert.alert("Success", "Profile updated successfully");
         router.back();
       }
     } catch (error) {
       console.error("Update error:", error);
-      Alert.alert("Error", "Failed to update profile");
+    } finally {
+      setEditing(false);
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={handleSave}
+          disabled={!hasChanges || uploading || editing}
+          className={`${
+            !hasChanges || uploading || editing ? "opacity-40" : "opacity-100"
+          }`}
+        >
+          <Text className="mr-5 font-inter-semibold">
+            {editing ? <ActivityIndicator color="black" /> : "Save"}
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, handleSave, hasChanges, uploading, editing]);
 
   return (
     <View className="flex-1 bg-white p-8">
@@ -140,37 +166,19 @@ const EditProfile = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="mb-4">
-        <Text className="font-inter-medium mb-1">First Name</Text>
-        <TextInput
+      <View className="gap-y-5">
+        <FormInput
+          label="First Name"
           value={firstName}
           onChangeText={setFirstName}
-          className="border border-gray-300 rounded-lg p-3 font-inter"
-          placeholder="Enter first name"
         />
-      </View>
 
-      <View className="mb-6">
-        <Text className="font-inter-medium mb-1">Last Name</Text>
-        <TextInput
+        <FormInput
+          label="Last Name"
           value={lastName}
           onChangeText={setLastName}
-          className="border border-gray-300 rounded-lg p-3 font-inter"
-          placeholder="Enter last name"
         />
       </View>
-
-      <TouchableOpacity
-        onPress={handleSave}
-        className="bg-primary py-3 rounded-lg items-center"
-        disabled={uploading}
-      >
-        {uploading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text className="text-white font-inter-bold">Save Changes</Text>
-        )}
-      </TouchableOpacity>
     </View>
   );
 };
