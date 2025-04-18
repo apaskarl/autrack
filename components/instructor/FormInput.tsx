@@ -12,7 +12,7 @@ interface FormInputProps {
 const FormInput = ({ label, value, onChangeText, error }: FormInputProps) => {
   return (
     <View>
-      <Text className="font-inter-semibold mb-2">{label}</Text>
+      <Text className="font-inter-semibold mb-3">{label}</Text>
 
       <View className="relative">
         <TextInput

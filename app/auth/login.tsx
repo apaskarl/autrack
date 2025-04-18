@@ -72,7 +72,7 @@ const LogIn = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className="pb-14 pt-32 gap-y-20 justify-center w-full">
+          <View className="pb-14 pt-24 gap-y-20 justify-center w-full">
             <View className="items-center gap-y-1">
               <Image
                 source={require("../../assets/images/logos/logo-outline-primary.png")}

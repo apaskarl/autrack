@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
-    <SafeAreaView className="p-8 bg-white gap-y-16 h-full">
+    <SafeAreaView className="p-8 bg-white gap-y-14 h-full">
       <View className="flex-row items-center gap-x-2">
         <Image
           source={require("../assets/images/logos/logo-outline-primary.png")}
@@ -24,7 +24,7 @@ export default function Index() {
       </View>
 
       <View className="gap-y-5">
-        <Text className="text-center font-inter-medium text-subtext">
+        <Text className="text-center text-lg font-inter-semibold mb-6">
           Log in as
         </Text>
 
@@ -40,11 +40,6 @@ export default function Index() {
           onPress={() => router.push("/auth/login?role=instructor")}
         />
       </View>
-
-      <Text className="font-inter-medium text-center text-subtext">
-        Need help?{" "}
-        <Text className="text-primary underline font-inter-bold">Click Me</Text>
-      </Text>
     </SafeAreaView>
   );
 }

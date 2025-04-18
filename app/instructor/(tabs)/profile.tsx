@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Modal,
   Switch,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import useUserStore from "@/store/useUserStore";
@@ -21,6 +22,8 @@ const Profile = () => {
     logout();
   };
 
+  const [imageLoading, setImageLoading] = useState(true);
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
   console.log(colorScheme);
 
@@ -28,11 +31,21 @@ const Profile = () => {
     <>
       <InstructorLayout>
         <View className="items-center gap-y-4 justify-center pt-4 pb-10">
+          {imageLoading && (
+            <View className="size-28 rounded-full bg-light items-center justify-center">
+              <ActivityIndicator size="small" color="#999" />
+            </View>
+          )}
           <Image
             source={{ uri: user?.photoURL }}
-            className="size-28 rounded-full"
+            className={`${
+              imageLoading ? "absolute opacity-0" : "relative opacity-100"
+            } size-28 rounded-full`}
             resizeMode="contain"
+            onLoadStart={() => setImageLoading(true)}
+            onLoadEnd={() => setImageLoading(false)}
           />
+
           <View className="items-center gap-y-1">
             <Text className="font-inter-bold text-xl">
               {user?.firstName} {user?.lastName}
@@ -52,8 +65,6 @@ const Profile = () => {
             label="Settings"
             onPress={() => router.push("/instructor/settings")}
           />
-          <ProfileLink icon="help-outline" label="Help" />
-          <ProfileLink icon="document-outline" label="Terms and Conditions" />
           <ProfileLink
             icon="log-out-outline"
             label="Log Out"

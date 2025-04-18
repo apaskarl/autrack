@@ -38,6 +38,23 @@ const ProfileLayout = () => {
           },
         }}
       />
+      <Stack.Screen
+        name="appearance"
+        options={{
+          title: "Dark Mode",
+          headerTitleAlign: "center",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+          headerTitleStyle: {
+            fontFamily: "Inter-Bold",
+            fontSize: 17,
+            fontWeight: "600",
+            color: "#333",
+          },
+        }}
+      />
     </Stack>
   );
 };
