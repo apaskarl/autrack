@@ -13,6 +13,7 @@ module.exports = {
         subtext: "#808080",
         border: "#D1D5DB",
         red: "#DC2626",
+        green: "#25A925",
         blue: "#1F72FA",
       },
       fontFamily: {
