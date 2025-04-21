@@ -1,37 +1,77 @@
 Admin screen - add room - add instructor
 
-
-const { rooms, fetchRooms } = useRoomStore();
-  const [users, setUsers] = useState<any[]>([]);
-
-  const fetchUsers = async () => {
-    try {
-      const fetchedUsers = await getInstructors();
-      setUsers(fetchedUsers);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchRooms();
-    fetchUsers();
-  }, []);
-
-
-  {/* Instructors */}
-      <View>
-        <Text className="font-inter-semibold text-lg mb-4">Instructors</Text>
-        <FlatList
-          data={users}
+<FlatList
+          data={rooms}
           keyExtractor={(item) => item.id}
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <View className="mb-2 p-4 bg-light rounded-lg">
-              <Text className="font-inter-medium text-base">
-                {item.firstName} {item.lastName}
+            <View className="relative border border-border p-5 mb-6 rounded-lg">
+              <Text
+                className={`${
+                  item.is_available
+                    ? "bg-green/10 text-green"
+                    : "bg-red/10 text-red"
+                } absolute flex-row px-4 py-2 rounded-lg items-center gap-x-2 font-inter-semibold right-5 top-4 text-xs`}
+              >
+                {item.is_available ? "Available" : "Unavailable"}
               </Text>
-              <Text className="text-sm text-gray-600">{item.email}</Text>
+
+              <Text className="font-inter-bold border-b text-lg border-border pb-4 mb-4">
+                {item.room_name}
+              </Text>
+
+              <View className="gap-y-2 mb-3">
+                <Text className="text-subtext font-inter">
+                  Building:{" "}
+                  <Text className="text-black font-inter-medium">
+                    {item.building || "None"}
+                  </Text>
+                </Text>
+                <Text className="text-subtext font-inter">
+                  Occupant:{" "}
+                  <Text className="text-black font-inter-medium">
+                    {item.current_occupant || "None"}
+                  </Text>
+                </Text>
+                <Text className="text-subtext font-inter">
+                  Time:{" "}
+                  <Text className="text-black font-inter-medium">
+                    {item.current_occupant || "--:--"}
+                  </Text>
+                </Text>
+              </View>
+
+              <View className="flex-row items-center gap-x-3 ml-auto">
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className="flex-row items-center gap-x-2 border border-border self-start rounded-lg px-5 py-3"
+                >
+                  <Ionicons
+                    name="eye-outline"
+                    size={16}
+                    color={COLORS.subtext}
+                  />
+                  <Text className="font-inter-semibold text-sm text-subtext">
+                    View Details
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className="flex-row items-center gap-x-2 bg-blue self-start rounded-lg px-5 py-3"
+                >
+                  <Ionicons
+                    name="enter-outline"
+                    size={16}
+                    color={COLORS.white}
+                  />
+                  <Text className="font-inter-semibold text-sm text-white">
+                    Occupy
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         />
-      </View>
