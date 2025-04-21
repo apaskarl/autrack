@@ -1,0 +1,37 @@
+Admin screen - add room - add instructor
+
+
+const { rooms, fetchRooms } = useRoomStore();
+  const [users, setUsers] = useState<any[]>([]);
+
+  const fetchUsers = async () => {
+    try {
+      const fetchedUsers = await getInstructors();
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRooms();
+    fetchUsers();
+  }, []);
+
+
+  {/* Instructors */}
+      <View>
+        <Text className="font-inter-semibold text-lg mb-4">Instructors</Text>
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View className="mb-2 p-4 bg-light rounded-lg">
+              <Text className="font-inter-medium text-base">
+                {item.firstName} {item.lastName}
+              </Text>
+              <Text className="text-sm text-gray-600">{item.email}</Text>
+            </View>
+          )}
+        />
+      </View>

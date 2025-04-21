@@ -50,7 +50,7 @@ const Home = () => {
               </View>
             </View>
 
-            <Ionicons name="notifications-outline" size={30} />
+            <Ionicons name="menu" size={30} />
           </View>
 
           <Text className="mb-3 text-3xl font-inter-bold">Rooms</Text>

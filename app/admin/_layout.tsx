@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-const InstructorTabsLayout = () => {
+const AdminLayout = () => {
   return (
     <Stack>
       <Stack.Screen
@@ -10,14 +10,8 @@ const InstructorTabsLayout = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="(profile)"
-        options={{
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 };
 
-export default InstructorTabsLayout;
+export default AdminLayout;
