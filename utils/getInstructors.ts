@@ -1,6 +1,12 @@
-// utils/getNonAdminUsers.ts
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
+
+type InstructorData = {
+  firstName: string;
+  lastName: string;
+  employeeID: number;
+  is_admin: boolean;
+};
 
 export const getInstructors = async () => {
   const usersRef = collection(db, "users");
@@ -9,6 +15,6 @@ export const getInstructors = async () => {
 
   return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data(),
+    ...(doc.data() as InstructorData), // Explicitly cast the data to the expected type
   }));
 };

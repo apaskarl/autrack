@@ -10,6 +10,12 @@ const AdminLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="rooms"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
