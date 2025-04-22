@@ -31,7 +31,7 @@ export default function Index() {
         <Button
           label="Admin"
           source={ICONS.admin}
-          onPress={() => router.push("/admin/(tabs)/home-admin")}
+          onPress={() => router.push("/admin/tabs/home-admin")}
         />
 
         <Button

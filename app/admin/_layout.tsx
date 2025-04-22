@@ -5,7 +5,7 @@ const AdminLayout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="(tabs)"
+        name="tabs"
         options={{
           headerShown: false,
         }}

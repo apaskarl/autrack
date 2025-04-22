@@ -1,4 +1,11 @@
-import { View, Text, ActivityIndicator, Button } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
@@ -15,6 +22,8 @@ const Room = () => {
     schedules,
   } = useRoomStore();
 
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     if (id) {
       fetchRoom(id);
@@ -22,9 +31,52 @@ const Room = () => {
     }
   }, [id]);
 
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const timeSlots: string[] = [];
+  for (let hour = 7; hour < 18; hour++) {
+    const startTime = hour.toString().padStart(2, "0") + ":00";
+    const endTime = (hour + 1).toString().padStart(2, "0") + ":00";
+    timeSlots.push(`${startTime}-${endTime}`);
+  }
+
+  const buildScheduleMap = () => {
+    const map: Record<string, Record<string, any>> = {};
+
+    schedules.forEach((schedule) => {
+      const { day, start_time, end_time } = schedule;
+      if (!map[day]) map[day] = {};
+
+      const startHour = parseInt(start_time.split(":")[0], 10);
+      const endHour = parseInt(end_time.split(":")[0], 10);
+      const span = endHour - startHour;
+
+      for (let hour = startHour; hour < endHour; hour++) {
+        const timeStr = hour.toString().padStart(2, "0") + ":00";
+        map[day][timeStr] = {
+          ...schedule,
+          isStart: timeStr === start_time,
+          span,
+        };
+      }
+    });
+
+    return map;
+  };
+
+  const scheduleMap = buildScheduleMap();
+
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 bg-white justify-center items-center">
         <ActivityIndicator size="large" color="#007bff" />
       </View>
     );
@@ -32,39 +84,110 @@ const Room = () => {
 
   if (error || !currentRoom) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 bg-white justify-center items-center">
         <Text className="text-lg">{error || "Room not found."}</Text>
       </View>
     );
   }
 
   return (
-    <View className="p-6">
-      <Text className="text-2xl font-bold">{currentRoom.room_name}</Text>
-      <Text className="text-lg text-gray-600 mt-2">
-        Building: {currentRoom.building}
-      </Text>
+    <ScrollView className="flex-1 px-8 bg-white">
+      <View className="relative mb-5">
+        <Text className="text-2xl font-inter-bold mb-2">
+          {currentRoom.room_name}
+        </Text>
+        <Text className="font-inter-medium">2025/22/4 - 2025/22/4</Text>
 
-      <AddScheduleForm roomId={currentRoom.id} />
+        <TouchableOpacity
+          onPress={() => setShowModal(true)}
+          className="bg-blue absolute right-0 self-start px-4 py-2 rounded-lg"
+        >
+          <Text className="font-inter-semibold text-white">Add Schedule</Text>
+        </TouchableOpacity>
+      </View>
+
+      <AddScheduleForm
+        roomId={currentRoom.id}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
 
       <View className="mt-4">
-        <Text className="text-xl font-semibold mb-2">Weekly Schedule:</Text>
+        <Text className="text-xl font-inter-semibold mb-4">
+          Weekly Schedule:
+        </Text>
+
         {schedules.length === 0 ? (
           <Text className="text-gray-500">No schedule yet.</Text>
         ) : (
-          schedules.map((s) => (
-            <View key={s.id} className="mb-2 p-2 bg-gray-100 rounded">
-              <Text className="font-semibold">{s.day}</Text>
-              <Text>
-                {s.start_time} - {s.end_time}
-              </Text>
-              <Text>Instructor: {s.instructor_name}</Text>
+          <View className="flex-row overflow-hidden mb-10">
+            {/* Time Column */}
+            <View className="z-10 bg-light">
+              <View className="p-2 justify-cente border-r items-center">
+                <Text className="text-black">Time</Text>
+              </View>
+              {timeSlots.map((timeSlot) => (
+                <View
+                  key={timeSlot}
+                  className="border-b p-2 min-h-[60px] justify-center border-r"
+                >
+                  <Text>{timeSlot}</Text>
+                </View>
+              ))}
             </View>
-          ))
+
+            {/* Schedule Grid */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+              <View>
+                {/* Day Headers */}
+                <View className="flex-row">
+                  {days.map((day) => (
+                    <View key={day} className="w-[120px] p-2 bg-blue">
+                      <Text className="text-white text-center">{day}</Text>
+                    </View>
+                  ))}
+                </View>
+
+                {/* Schedule Columns */}
+                <View className="flex-row relative">
+                  {days.map((day) => (
+                    <View
+                      key={day}
+                      className="w-[120px] border-r border-red"
+                      style={{
+                        height: timeSlots.length * 60,
+                      }}
+                    >
+                      {timeSlots.map((time, rowIndex) => {
+                        const schedule = scheduleMap[day]?.[time.split("-")[0]];
+                        if (!schedule || !schedule.isStart) return null;
+
+                        return (
+                          <View
+                            key={`${day}-${time}`}
+                            className="absolute bg-blue/80 justify-center items-center w-full"
+                            style={{
+                              top: rowIndex * 60,
+                              height: schedule.span * 60,
+                            }}
+                          >
+                            <View>
+                              <Text className="text-white">
+                                {schedule.instructor_name}
+                              </Text>
+                            </View>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+          </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
-
 export default Room;

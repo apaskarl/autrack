@@ -1,5 +1,12 @@
 import { create } from "zustand";
-import { collection, getDocs, addDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/firebase";
 
 type Schedule = {

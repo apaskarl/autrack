@@ -216,7 +216,7 @@ const EditProfile = () => {
         animationOut="fadeOut"
         backdropOpacity={0}
         statusBarTranslucent
-        style={{ margin: 0, padding: 0 }}
+        style={{ margin: 0 }}
       >
         <View className="flex-1 bg-black/50 px-8 justify-center items-center ">
           <View className="bg-white rounded-3xl p-6 w-full">
