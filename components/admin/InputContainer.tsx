@@ -9,7 +9,7 @@ const InputContainer = ({
   children: React.ReactNode;
 }) => {
   return (
-    <View>
+    <View className="">
       <Text className="font-inter-semibold text-sm mb-2">{title}</Text>
       {children}
     </View>

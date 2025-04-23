@@ -3,13 +3,14 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import AddScheduleForm from "@/components/admin/AddScheduleForm";
+import { RefreshControl } from "react-native";
+import IonicButton from "@/components/common/buttons/IonicButton";
 
 const Room = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -21,8 +22,16 @@ const Room = () => {
     fetchSchedulesForRoom,
     schedules,
   } = useRoomStore();
-
+  const [refreshing, setRefreshing] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const handleRefresh = async () => {
+    if (!id) return;
+    setRefreshing(true);
+    await fetchRoom(id);
+    await fetchSchedulesForRoom(id);
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     if (id) {
@@ -32,38 +41,38 @@ const Room = () => {
   }, [id]);
 
   const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    // "Sunday",
+    "Monday", // 1
+    "Tuesday", // 2
+    "Wednesday", // 3
+    "Thursday", // 4
+    "Friday", // 5
+    "Saturday", // 6
   ];
 
   const timeSlots: string[] = [];
-  for (let hour = 7; hour < 18; hour++) {
+  for (let hour = 7; hour < 21; hour++) {
     const startTime = hour.toString().padStart(2, "0") + ":00";
     const endTime = (hour + 1).toString().padStart(2, "0") + ":00";
     timeSlots.push(`${startTime}-${endTime}`);
   }
 
   const buildScheduleMap = () => {
-    const map: Record<string, Record<string, any>> = {};
+    const map: Record<number, Record<string, any>> = {};
 
     schedules.forEach((schedule) => {
-      const { day, start_time, end_time } = schedule;
+      const { day, startTime, endTime } = schedule;
       if (!map[day]) map[day] = {};
 
-      const startHour = parseInt(start_time.split(":")[0], 10);
-      const endHour = parseInt(end_time.split(":")[0], 10);
+      const startHour = parseInt(startTime.split(":")[0], 10);
+      const endHour = parseInt(endTime.split(":")[0], 10);
       const span = endHour - startHour;
 
       for (let hour = startHour; hour < endHour; hour++) {
         const timeStr = hour.toString().padStart(2, "0") + ":00";
         map[day][timeStr] = {
           ...schedule,
-          isStart: timeStr === start_time,
+          isStart: timeStr === startTime,
           span,
         };
       }
@@ -77,7 +86,7 @@ const Room = () => {
   if (loading) {
     return (
       <View className="flex-1 bg-white justify-center items-center">
-        <ActivityIndicator size="large" color="#007bff" />
+        <ActivityIndicator size="large" color="#000000" />
       </View>
     );
   }
@@ -91,58 +100,61 @@ const Room = () => {
   }
 
   return (
-    <ScrollView className="flex-1 px-8 bg-white">
-      <View className="relative mb-5">
-        <Text className="text-2xl font-inter-bold mb-2">
-          {currentRoom.room_name}
-        </Text>
-        <Text className="font-inter-medium">2025/22/4 - 2025/22/4</Text>
-
-        <TouchableOpacity
-          onPress={() => setShowModal(true)}
-          className="bg-blue absolute right-0 self-start px-4 py-2 rounded-lg"
-        >
-          <Text className="font-inter-semibold text-white">Add Schedule</Text>
-        </TouchableOpacity>
-      </View>
-
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+      className="flex-1 bg-white"
+    >
       <AddScheduleForm
         roomId={currentRoom.id}
         showModal={showModal}
         setShowModal={setShowModal}
       />
 
-      <View className="mt-4">
-        <Text className="text-xl font-inter-semibold mb-4">
-          Weekly Schedule:
-        </Text>
+      <View className="mb-6 flex-row items-center justify-between px-8">
+        <Text className="font-inter-bold text-2xl">{currentRoom.roomName}</Text>
+        <IonicButton
+          onPress={() => setShowModal(true)}
+          icon="calendar-outline"
+          label="Add Schedule"
+          size={16}
+          className="mr-[-8px]"
+        />
+      </View>
 
+      <View>
         {schedules.length === 0 ? (
-          <Text className="text-gray-500">No schedule yet.</Text>
+          <View className="flex-1 bg-white py-10 justify-center items-center">
+            <Text className="text-subtext">No schedule yet.</Text>
+          </View>
         ) : (
-          <View className="flex-row overflow-hidden mb-10">
-            {/* Time Column */}
-            <View className="z-10 bg-light">
-              <View className="p-2 justify-cente border-r items-center">
+          <View className="flex-row overflow-hidden border border-border">
+            {/* Time Colums */}
+            <View className="z-10 bg-light border-r border-border">
+              <View className="py-2 px-4 justify-center items-center">
                 <Text className="text-black">Time</Text>
               </View>
               {timeSlots.map((timeSlot) => (
                 <View
                   key={timeSlot}
-                  className="border-b p-2 min-h-[60px] justify-center border-r"
+                  className="py-2 px-4 border-t border-border min-h-[60px] justify-center items-center"
                 >
                   <Text>{timeSlot}</Text>
                 </View>
               ))}
             </View>
 
-            {/* Schedule Grid */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+            {/* Schedule Columns */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View>
                 {/* Day Headers */}
                 <View className="flex-row">
                   {days.map((day) => (
-                    <View key={day} className="w-[120px] p-2 bg-blue">
+                    <View
+                      key={day}
+                      className="w-[120px] p-2 border-b border-r border-border bg-blue"
+                    >
                       <Text className="text-white text-center">{day}</Text>
                     </View>
                   ))}
@@ -150,32 +162,32 @@ const Room = () => {
 
                 {/* Schedule Columns */}
                 <View className="flex-row relative">
-                  {days.map((day) => (
+                  {days.map((_, dayIndex) => (
                     <View
-                      key={day}
-                      className="w-[120px] border-r border-red"
-                      style={{
-                        height: timeSlots.length * 60,
-                      }}
+                      key={dayIndex}
+                      className="w-[120px] border-r border-border"
+                      style={{ height: timeSlots.length * 60 }}
                     >
                       {timeSlots.map((time, rowIndex) => {
-                        const schedule = scheduleMap[day]?.[time.split("-")[0]];
+                        const schedule =
+                          scheduleMap[dayIndex + 1]?.[time.split("-")[0]]; // Offset by 1
                         if (!schedule || !schedule.isStart) return null;
 
                         return (
                           <View
-                            key={`${day}-${time}`}
-                            className="absolute bg-blue/80 justify-center items-center w-full"
+                            key={`${dayIndex}-${time}`}
+                            className="absolute border-l-4 border-blue bg-blue/10 justify-center items-center w-full"
                             style={{
                               top: rowIndex * 60,
                               height: schedule.span * 60,
                             }}
                           >
-                            <View>
-                              <Text className="text-white">
-                                {schedule.instructor_name}
-                              </Text>
-                            </View>
+                            <Text className="text-black">
+                              {schedule.instructorName}
+                            </Text>
+                            <Text className="text-black">
+                              {schedule.startTime} - {schedule.endTime}
+                            </Text>
                           </View>
                         );
                       })}

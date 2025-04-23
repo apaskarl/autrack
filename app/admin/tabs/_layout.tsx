@@ -23,7 +23,7 @@ const AdminTabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="home-admin"
+        name="home"
         options={{
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
@@ -38,7 +38,7 @@ const AdminTabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="messages-admin"
+        name="messages"
         options={{
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (

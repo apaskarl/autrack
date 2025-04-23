@@ -31,12 +31,14 @@ const createScreenOptions = (title: string): NativeStackNavigationOptions => ({
   headerLeft: customBackButton,
 });
 
-const RoomDetailLayout = () => {
+const AdminScreensLayout = () => {
   return (
     <Stack>
+      <Stack.Screen name="rooms" options={createScreenOptions("")} />
       <Stack.Screen name="room" options={createScreenOptions("")} />
+      <Stack.Screen name="instructors" options={createScreenOptions("")} />
     </Stack>
   );
 };
 
-export default RoomDetailLayout;
+export default AdminScreensLayout;

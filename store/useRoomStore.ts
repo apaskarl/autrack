@@ -1,28 +1,19 @@
 import { create } from "zustand";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  getDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 type Schedule = {
   id: string;
-  day: string;
-  start_time: string;
-  end_time: string;
-  instructor_id: string;
-  instructor_name: string;
+  day: number;
+  startTime: string;
+  endTime: string;
+  instructorId: string;
+  instructorName: string;
 };
 
 type Room = {
   id: string;
-  room_name: string;
-  is_available: boolean;
-  current_occupant: string | null;
+  roomName: string;
   building: string;
 };
 
@@ -33,7 +24,7 @@ type RoomStore = {
   error: string | null;
   fetchRooms: () => Promise<void>;
   fetchRoom: (id: string) => Promise<void>;
-  addRoom: (room_name: string, building: string) => Promise<void>;
+  addRoom: (roomName: string, building: string) => Promise<void>;
   clearCurrentRoom: () => void;
   schedules: Schedule[];
   addScheduleToRoom: (
@@ -90,16 +81,14 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     }
   },
 
-  addRoom: async (room_name, building) => {
+  addRoom: async (roomName, building) => {
     try {
       set({ loading: true });
       await addDoc(collection(db, "rooms"), {
-        room_name,
+        roomName,
         building,
-        is_available: true,
-        current_occupant: null,
       });
-      await get().fetchRooms(); // refresh after adding
+      await get().fetchRooms();
     } catch (error) {
       set({ error: "Failed to add room" });
       console.error("Failed to add room:", error);
