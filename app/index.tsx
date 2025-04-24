@@ -1,72 +1,149 @@
-import { router } from "expo-router";
 import {
-  Image,
-  ImageSourcePropType,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
-import { ICONS } from "@/constants/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
+import { router } from "expo-router";
+import useUserStore from "@/store/useUserStore";
+import AuthInput from "@/components/auth/AuthInput";
+import AuthButton from "@/components/auth/AuthButton";
 
-export default function Index() {
+const Index = () => {
+  const { login } = useUserStore();
+  const [formData, setFormData] = useState({
+    emailOrId: "",
+    password: "",
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setEmailError("");
+    setPasswordError("");
+    setError(null);
+
+    try {
+      const emailOrId = formData.emailOrId.trim();
+      const password = formData.password.trim();
+
+      if (!emailOrId) setEmailError("This field is required");
+      if (!password) setPasswordError("This field is required");
+
+      if (!emailOrId || !password) {
+        throw new Error("empty-field");
+      }
+
+      await login(emailOrId, password);
+    } catch (err: any) {
+      if (err.message === "empty-field") {
+        setError("Please enter all required fields.");
+      } else if (
+        err.message.includes("No user found") ||
+        err.message.includes("invalid") ||
+        err.message.includes("wrong")
+      ) {
+        setError("Invalid email/ID number or password.");
+        setFormData((prev) => ({ ...prev, password: "" }));
+      } else {
+        setError("Something went wrong. Please try again later.");
+        setFormData((prev) => ({ ...prev, password: "" }));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <SafeAreaView className="p-8 bg-white gap-y-14 h-full">
-      <View className="flex-row items-center gap-x-2">
-        <Image
-          source={require("../assets/images/logos/logo-outline-primary.png")}
-          className="size-11"
-          resizeMode="contain"
-        />
-        <Text className="text-2xl mt-2 tracking-tight font-inter-bold">
-          AuTrack
-        </Text>
-      </View>
+    <SafeAreaView className="flex-1 bg-white px-8">
+      <KeyboardAvoidingView className="flex-1">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View className={`pb-14 pt-16 gap-y-16 justify-center w-full`}>
+            <View className="items-center">
+              <Image
+                source={require("../assets/images/logos/logo-outline-primary.png")}
+                className="size-20 mb-4"
+                resizeMode="contain"
+              />
+              <Text className="mb-3 font-inter-bold leading-[45px] text-4xl px-5 text-center">
+                Sign in to your account
+              </Text>
+              <Text className="font-inter text-subtext">
+                Enter your email and password to log in
+              </Text>
+            </View>
 
-      <View className="gap-y-5">
-        <Text className="text-center text-subtext text-lg font-inter-semibold mb-6">
-          Log in as
-        </Text>
+            <View className="gap-y-5">
+              {error && (
+                <View className="bg-red/10 rounded-lg py-4 px-5">
+                  <Text className="text-sm font-inter-medium">{error}</Text>
+                </View>
+              )}
 
-        <Button
-          label="Admin"
-          source={ICONS.admin}
-          onPress={() => router.push("/admin/tabs/home")}
-        />
+              <AuthInput
+                label="Email or ID Number"
+                email
+                value={formData.emailOrId}
+                onChangeText={(text) => handleChange("emailOrId", text)}
+                error={emailError}
+              />
 
-        <Button
-          label="Instructor"
-          source={ICONS.employee}
-          onPress={() => router.push("/auth/login?role=instructor")}
-        />
-      </View>
+              <AuthInput
+                label="Password"
+                password
+                value={formData.password}
+                onChangeText={(text) => handleChange("password", text)}
+                error={passwordError}
+              />
+
+              <View className="items-end">
+                <TouchableOpacity
+                  onPress={() => router.push("/auth/reset/forgot-password")}
+                  activeOpacity={0.8}
+                >
+                  <Text className="font-inter-semibold text-black underline">
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <AuthButton
+                label={loading ? "" : "Log In"}
+                onPress={handleLogin}
+                disabled={loading}
+              />
+            </View>
+
+            <View className="flex-row items-center gap-x-1 justify-center">
+              <Text className="font-inter text-subtext">No account?</Text>
+              <TouchableOpacity
+                onPress={() => router.push("/admin/tabs/home")}
+                activeOpacity={0.8}
+              >
+                <Text className="font-inter-semibold text-black underline">
+                  Register
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
-}
-
-const Button = ({
-  label,
-  source,
-  onPress,
-}: {
-  label: string;
-  source: ImageSourcePropType;
-  onPress?: () => void;
-}) => {
-  return (
-    <View className="relative">
-      <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.5}
-        className="border border-border w-full rounded-lg p-5"
-      >
-        <Text className="text-center text-lg font-inter-bold">{label}</Text>
-      </TouchableOpacity>
-      {source && (
-        <View className="absolute left-5 top-1/2 -translate-y-1/2">
-          <Image source={source} className="size-8" resizeMode="contain" />
-        </View>
-      )}
-    </View>
-  );
 };
+
+export default Index;

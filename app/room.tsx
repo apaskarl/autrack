@@ -112,7 +112,7 @@ const Room = () => {
         setShowModal={setShowModal}
       />
 
-      <View className="mb-6 flex-row items-center justify-between px-8">
+      <View className="pt-8 mb-6 flex-row items-center justify-between px-8">
         <Text className="font-inter-bold text-2xl">{currentRoom.roomName}</Text>
         <IonicButton
           onPress={() => setShowModal(true)}

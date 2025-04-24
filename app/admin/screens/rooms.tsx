@@ -36,7 +36,7 @@ const Rooms = () => {
     >
       <AddRoomModal showModal={showModal} setShowModal={setShowModal} />
 
-      <View className="mb-6 flex-row justify-between items-center">
+      <View className="mb-6 pt-8 flex-row justify-between items-center">
         <Text className="font-inter-bold text-3xl">Rooms</Text>
         <IonicButton
           onPress={() => setShowModal(true)}
@@ -82,7 +82,7 @@ const Rooms = () => {
               activeOpacity={0.5}
               onPress={() =>
                 router.push({
-                  pathname: "/admin/screens/room",
+                  pathname: "/room",
                   params: { id: room.id },
                 })
               }

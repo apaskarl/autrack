@@ -42,7 +42,7 @@ const Instructors = () => {
     >
       <AddInstructorModal showModal={showModal} setShowModal={setShowModal} />
 
-      <View className="mb-6 flex-row justify-between items-center">
+      <View className="pt-8 mb-6 flex-row justify-between items-center">
         <Text className="font-inter-bold text-xl">Instructors</Text>
         <IonicButton
           onPress={() => setShowModal(true)}

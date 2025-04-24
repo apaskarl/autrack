@@ -1,9 +1,8 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
-import { Platform, Pressable, Text, View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Platform, Pressable } from "react-native";
+import TabIcon from "@/components/common/TabIcon";
 
 const AdminTabsLayout = () => {
   return (
@@ -37,6 +36,7 @@ const AdminTabsLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="messages"
         options={{
@@ -57,47 +57,3 @@ const AdminTabsLayout = () => {
 };
 
 export default AdminTabsLayout;
-
-type IconPack = "material" | "ionicons";
-
-const TabIcon = ({
-  icon,
-  color,
-  name,
-  focused,
-  iconPack = "ionicons",
-}: {
-  icon: string;
-  color: string;
-  name: string;
-  focused?: boolean;
-  iconPack?: IconPack;
-}) => {
-  const renderIcon = () => {
-    const size = name === "Scan" ? 30 : 26;
-    switch (iconPack) {
-      case "ionicons":
-        return <Ionicons name={icon as any} size={size} color={color} />;
-      case "material":
-        return <MaterialIcons name={icon as any} size={size} color={color} />;
-      default:
-        return <Ionicons name={icon as any} size={size} color={color} />;
-    }
-  };
-
-  return (
-    <View className="items-center justify-center">
-      <View>{renderIcon()}</View>
-
-      {name !== "Scan" && (
-        <Text
-          numberOfLines={1}
-          className={`font-inter-bold w-full text-xs`}
-          style={{ color: color }}
-        >
-          {name}
-        </Text>
-      )}
-    </View>
-  );
-};

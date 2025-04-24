@@ -1,29 +1,59 @@
-import React from "react";
-import { Stack } from "expo-router";
+import { Drawer } from "expo-router/drawer";
+import { COLORS } from "@/constants/colors";
+import DrawerIcon from "@/components/common/DrawerIcon";
 
-const AdminLayout = () => {
+export default function DrawerLayout() {
   return (
-    <Stack>
-      <Stack.Screen
+    <Drawer
+      screenOptions={{
+        headerShown: false,
+        drawerType: "slide",
+        drawerActiveTintColor: COLORS.black,
+        drawerInactiveTintColor: COLORS.black,
+        drawerActiveBackgroundColor: "transparent",
+        drawerStyle: {
+          width: 270,
+          paddingTop: 25,
+        },
+      }}
+    >
+      <Drawer.Screen
         name="tabs"
         options={{
-          headerShown: false,
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <DrawerIcon icon="home-outline" iconPack="ionicons" name="Home" />
+          ),
         }}
       />
-      <Stack.Screen
-        name="rooms"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="screens"
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Stack>
-  );
-};
 
-export default AdminLayout;
+      <Drawer.Screen
+        name="screens/rooms"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <DrawerIcon
+              icon="door-closed"
+              iconPack="material-community"
+              name="Rooms"
+            />
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="screens/instructors"
+        options={{
+          title: "",
+          drawerIcon: ({ color, size }) => (
+            <DrawerIcon
+              icon="people-outline"
+              iconPack="ionicons"
+              name="Instructors"
+            />
+          ),
+        }}
+      />
+    </Drawer>
+  );
+}

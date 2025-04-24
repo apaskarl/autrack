@@ -28,6 +28,11 @@ type UserStore = {
   login: (emailOrId: string, password: string) => Promise<void>;
 };
 
+const roleRoutes: Record<string, string> = {
+  instructor: "/instructor/home",
+  admin: "/admin/tabs/home",
+};
+
 const useUserStore = create<UserStore>((set) => ({
   user: null,
 
@@ -39,7 +44,7 @@ const useUserStore = create<UserStore>((set) => ({
     try {
       await signOut(auth);
       set({ user: null });
-      router.replace("/auth/login");
+      router.replace("/");
     } catch (error) {
       console.error("Logout Error:", error);
       throw error;
@@ -78,6 +83,14 @@ const useUserStore = create<UserStore>((set) => ({
 
       if (docSnap.exists()) {
         const userData = docSnap.data();
+
+        const role = userData.role;
+        const route = roleRoutes[role];
+
+        if (!route) {
+          throw new Error("No route defined for this role.");
+        }
+
         set({
           user: {
             uid: user.uid,
@@ -89,7 +102,14 @@ const useUserStore = create<UserStore>((set) => ({
           },
         });
 
-        router.replace("/instructor/home");
+        router.replace(
+          route as typeof router.replace extends (
+            path: infer P,
+            ...args: any[]
+          ) => any
+            ? P
+            : never
+        );
       } else {
         throw new Error("User data not found in Firestore.");
       }

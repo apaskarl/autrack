@@ -10,12 +10,19 @@ import React, { useEffect, useState, useCallback } from "react";
 import useRoomStore from "@/store/useRoomStore";
 import { ActivityIndicator } from "react-native";
 import { router } from "expo-router";
-import { useInstructorStore } from "@/store/useInstructorStore"; // Import Zustand store
+import { useInstructorStore } from "@/store/useInstructorStore";
 import LogoName from "@/components/common/LogoName";
 import IonicButton from "@/components/common/buttons/IonicButton";
 import CardContainer from "@/components/admin/CardContainer";
+import { DrawerToggleButton } from "@react-navigation/drawer";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+
+type HomeAdminNavigationProp = DrawerNavigationProp<any>;
 
 const HomeAdmin = () => {
+  const navigation = useNavigation<HomeAdminNavigationProp>(); // Get the correct navigation prop type
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -34,7 +41,7 @@ const HomeAdmin = () => {
   useEffect(() => {
     const initialLoad = async () => {
       setLoading(true);
-      await fetchAllData(); // Fetch rooms and instructors
+      await fetchAllData();
       setLoading(false);
     };
 
@@ -63,8 +70,13 @@ const HomeAdmin = () => {
           <View className="px-8 pt-5">
             <View className="mb-8 flex-row items-center justify-between">
               <LogoName />
+
               <View className="mr-[-8px]">
-                <IonicButton icon="menu" />
+                <IonicButton
+                  icon="menu"
+                  size={28}
+                  onPress={() => navigation.openDrawer()}
+                />
               </View>
             </View>
 
@@ -82,7 +94,7 @@ const HomeAdmin = () => {
                 activeOpacity={0.5}
                 onPress={() =>
                   router.push({
-                    pathname: "/admin/screens/room",
+                    pathname: "/room",
                     params: { id: room.id },
                   })
                 }

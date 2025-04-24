@@ -2,10 +2,10 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
 import { Platform, Pressable, Text, View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import TabIcon from "@/components/common/TabIcon";
 
-const EmployeeLayout = () => {
+const InstructorTabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
@@ -64,9 +64,9 @@ const EmployeeLayout = () => {
                 className={`${
                   focused ? "border-black" : "border-border"
                 } border mb-2 w-[55px] h-[55px] bg-white rounded-full justify-center items-center`}
-                // style={{
-                //   elevation: 1,
-                // }}
+                style={{
+                  elevation: 1,
+                }}
               >
                 <Ionicons
                   name="qr-code-outline"
@@ -120,48 +120,4 @@ const EmployeeLayout = () => {
   );
 };
 
-export default EmployeeLayout;
-
-type IconPack = "material" | "ionicons";
-
-const TabIcon = ({
-  icon,
-  color,
-  name,
-  focused,
-  iconPack = "ionicons",
-}: {
-  icon: string;
-  color: string;
-  name: string;
-  focused?: boolean;
-  iconPack?: IconPack;
-}) => {
-  const renderIcon = () => {
-    const size = name === "Scan" ? 30 : 26;
-    switch (iconPack) {
-      case "ionicons":
-        return <Ionicons name={icon as any} size={size} color={color} />;
-      case "material":
-        return <MaterialIcons name={icon as any} size={size} color={color} />;
-      default:
-        return <Ionicons name={icon as any} size={size} color={color} />;
-    }
-  };
-
-  return (
-    <View className="items-center justify-center">
-      <View>{renderIcon()}</View>
-
-      {name !== "Scan" && (
-        <Text
-          numberOfLines={1}
-          className={`font-inter-bold w-full text-xs`}
-          style={{ color: color }}
-        >
-          {name}
-        </Text>
-      )}
-    </View>
-  );
-};
+export default InstructorTabsLayout;
