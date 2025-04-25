@@ -1,55 +1,54 @@
 import { Drawer } from "expo-router/drawer";
 import { COLORS } from "@/constants/colors";
-import DrawerIcon from "@/components/common/DrawerIcon";
+import DrawerIcon from "@/components/shared/ui/DrawerIcon";
+import { Text, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+
+const customBackButton = () => (
+  <TouchableOpacity
+    activeOpacity={0.5}
+    onPress={() => router.back()}
+    className="ml-8"
+  >
+    <Ionicons name="chevron-back" size={25} color="#333" />
+  </TouchableOpacity>
+);
 
 export default function DrawerLayout() {
   return (
     <Drawer
       screenOptions={{
         headerShown: false,
+        headerShadowVisible: false,
         drawerType: "slide",
         drawerActiveTintColor: COLORS.black,
         drawerInactiveTintColor: COLORS.black,
         drawerActiveBackgroundColor: "transparent",
         drawerStyle: {
-          width: 270,
           paddingTop: 25,
+          paddingLeft: 10,
         },
       }}
     >
       <Drawer.Screen
-        name="tabs"
+        name="(tabs)"
         options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <DrawerIcon icon="home-outline" iconPack="ionicons" name="Home" />
-          ),
+          drawerItemStyle: { display: "none" },
         }}
       />
 
       <Drawer.Screen
-        name="screens/rooms"
+        name="settings"
         options={{
           title: "",
+          headerShown: true,
+          headerLeft: customBackButton,
           drawerIcon: ({ color, size }) => (
             <DrawerIcon
-              icon="door-closed"
-              iconPack="material-community"
-              name="Rooms"
-            />
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="screens/instructors"
-        options={{
-          title: "",
-          drawerIcon: ({ color, size }) => (
-            <DrawerIcon
-              icon="people-outline"
+              icon="settings-outline"
               iconPack="ionicons"
-              name="Instructors"
+              name="Settings"
             />
           ),
         }}

@@ -17,7 +17,7 @@ const customBackButton = () => (
 // Reusable screen options
 const createScreenOptions = (title: string): NativeStackNavigationOptions => ({
   title,
-  headerTitleAlign: "center", // Now TypeScript knows this can only be "center", "left", or undefined
+  headerTitleAlign: "center",
   headerShadowVisible: false,
   headerStyle: {
     backgroundColor: "#ffffff",

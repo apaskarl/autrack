@@ -72,7 +72,7 @@ const Index = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className={`pb-14 pt-16 gap-y-16 justify-center w-full`}>
+          <View className={`pb-14 pt-20 gap-y-16 justify-center w-full`}>
             <View className="items-center">
               <Image
                 source={require("../assets/images/logos/logo-outline-primary.png")}

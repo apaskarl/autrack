@@ -30,7 +30,7 @@ type UserStore = {
 
 const roleRoutes: Record<string, string> = {
   instructor: "/instructor/home",
-  admin: "/admin/tabs/home",
+  admin: "/admin/(tabs)/home",
 };
 
 const useUserStore = create<UserStore>((set) => ({

@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
 import { Platform, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import TabIcon from "@/components/common/TabIcon";
+import TabIcon from "@/components/shared/ui/TabIcon";
 
 const InstructorTabsLayout = () => {
   return (

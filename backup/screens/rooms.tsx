@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import useRoomStore from "@/store/useRoomStore";
 import { router } from "expo-router";
-import IonicButton from "@/components/common/buttons/IonicButton";
+import IonicButton from "@/components/shared/ui/IonicButton";
 import AddRoomModal from "@/components/admin/AddRoomModal";
 
 const Rooms = () => {

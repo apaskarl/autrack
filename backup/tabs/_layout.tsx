@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
 import { Platform, Pressable } from "react-native";
-import TabIcon from "@/components/common/TabIcon";
+import TabIcon from "@/components/shared/ui/TabIcon";
 
 const AdminTabsLayout = () => {
   return (

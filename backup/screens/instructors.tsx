@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import IonicButton from "@/components/common/buttons/IonicButton";
+import IonicButton from "@/components/shared/ui/IonicButton";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import { useInstructorStore } from "@/store/useInstructorStore";

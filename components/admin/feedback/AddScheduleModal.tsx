@@ -31,7 +31,7 @@ type AddScheduleFormProps = {
   setShowModal: (value: boolean) => void;
 };
 
-const AddScheduleForm = ({
+const AddScheduleModal = ({
   roomId,
   showModal,
   setShowModal,
@@ -233,4 +233,4 @@ const AddScheduleForm = ({
   );
 };
 
-export default AddScheduleForm;
+export default AddScheduleModal;

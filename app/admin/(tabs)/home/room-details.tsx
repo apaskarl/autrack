@@ -1,18 +1,12 @@
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, ActivityIndicator, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
-import AddScheduleForm from "@/components/admin/AddScheduleForm";
 import { RefreshControl } from "react-native";
-import IonicButton from "@/components/common/buttons/IonicButton";
+import IonicButton from "@/components/shared/ui/IonicButton";
+import AddScheduleModal from "@/components/admin/feedback/AddScheduleModal";
 
-const Room = () => {
+const AdminRoomDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
     currentRoom,
@@ -106,7 +100,7 @@ const Room = () => {
       }
       className="flex-1 bg-white"
     >
-      <AddScheduleForm
+      <AddScheduleModal
         roomId={currentRoom.id}
         showModal={showModal}
         setShowModal={setShowModal}
@@ -202,4 +196,5 @@ const Room = () => {
     </ScrollView>
   );
 };
-export default Room;
+
+export default AdminRoomDetails;

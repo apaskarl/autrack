@@ -23,17 +23,17 @@ const DrawerIcon = ({
   const renderIcon = () => {
     switch (iconPack) {
       case "ionicons":
-        return <Ionicons name={icon as any} size={22} color={COLORS.primary} />;
+        return <Ionicons name={icon as any} size={22} color={COLORS.black} />;
       case "material":
         return (
-          <MaterialIcons name={icon as any} size={22} color={COLORS.primary} />
+          <MaterialIcons name={icon as any} size={22} color={COLORS.black} />
         );
       case "material-community":
         return (
           <MaterialCommunityIcons
             name={icon as any}
             size={22}
-            color={COLORS.primary}
+            color={COLORS.black}
           />
         );
       default:
@@ -42,16 +42,9 @@ const DrawerIcon = ({
   };
 
   return (
-    <View className="flex-row items-center gap-x-4 w-full">
-      <View
-        className="p-2 rounded-full"
-        style={{
-          backgroundColor: `${COLORS.primary}20`,
-        }}
-      >
-        {renderIcon()}
-      </View>
-      <Text className="font-inter-medium text-lg">{name}</Text>
+    <View className="flex-row items-center py-1 gap-x-5 w-full">
+      <View>{renderIcon()}</View>
+      <Text className="font-inter-semibold text-lg">{name}</Text>
     </View>
   );
 };
