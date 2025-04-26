@@ -32,6 +32,7 @@ type RoomStore = {
     schedule: Omit<Schedule, "id">
   ) => Promise<void>;
   fetchSchedulesForRoom: (roomId: string) => Promise<void>;
+  fetchSchedulesForRoomDirect: (roomId: string) => Promise<Schedule[]>;
 };
 
 const useRoomStore = create<RoomStore>((set, get) => ({
@@ -122,6 +123,22 @@ const useRoomStore = create<RoomStore>((set, get) => ({
       set({ schedules: scheduleList });
     } catch (error) {
       console.error("Error fetching schedules:", error);
+    }
+  },
+
+  fetchSchedulesForRoomDirect: async (roomId: string) => {
+    try {
+      const q = collection(db, "rooms", roomId, "schedules");
+      const querySnapshot = await getDocs(q);
+      const scheduleList: Schedule[] = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Schedule[];
+
+      return scheduleList; // directly return list
+    } catch (error) {
+      console.error("Error fetching schedules:", error);
+      return [];
     }
   },
 }));

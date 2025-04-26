@@ -12,6 +12,7 @@ import {
 import { router } from "expo-router";
 
 type User = {
+  id: string; // <-- Added Firestore document ID here
   uid: string;
   employeeId: number;
   firstName: string;
@@ -93,6 +94,7 @@ const useUserStore = create<UserStore>((set) => ({
 
         set({
           user: {
+            id: docSnap.id, // <-- Include document id here
             uid: user.uid,
             employeeId: userData.employeeId,
             firstName: userData.firstName,
