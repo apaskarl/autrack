@@ -3,7 +3,7 @@ import React from "react";
 
 const MessagesAdmin = () => {
   return (
-    <View>
+    <View className="flex-1 bg-white p-8">
       <Text>MessagesAdmin</Text>
     </View>
   );

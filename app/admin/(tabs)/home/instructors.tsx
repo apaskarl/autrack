@@ -31,12 +31,8 @@ const AdminInstructors = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => setShowModal(true)}
-          className="flex-row items-center gap-x-2"
-        >
-          <Ionicons name="add" size={20} />
-          <Text className="mr-5 font-inter-bold">Add Instructor</Text>
+        <TouchableOpacity className="flex-row items-center gap-x-2 pr-4">
+          <Ionicons name="search" size={20} />
         </TouchableOpacity>
       ),
     });
@@ -115,6 +111,16 @@ const AdminInstructors = () => {
           </View>
         </AdminHomeLayout>
       </ScrollView>
+
+      <TouchableOpacity
+        onPress={() => setShowModal(true)}
+        activeOpacity={0.7}
+        className="flex-row items-center gap-x-2 bg-blue px-5 py-4 absolute bottom-5 right-5 rounded-full"
+        style={{ elevation: 4 }}
+      >
+        <Ionicons name="add" size={16} color="white" />
+        <Text className="font-inter-bold text-white">Add Instructor</Text>
+      </TouchableOpacity>
 
       <AddInstructorModal showModal={showModal} setShowModal={setShowModal} />
     </>
