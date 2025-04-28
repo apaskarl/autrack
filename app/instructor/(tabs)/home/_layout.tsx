@@ -21,11 +21,11 @@ export default function InstructorHomeStack() {
       />
 
       <Stack.Screen
-        name="rooms"
+        name="schedule"
         options={{
           title: "",
           headerLeft: () => <HeaderBack />,
-          headerTitle: () => <HeaderTitle title="Rooms" />,
+          headerTitle: () => <HeaderTitle title="Class Schedule" />,
           headerShadowVisible: false,
         }}
       />

@@ -4,9 +4,10 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import { Ionicons } from "@expo/vector-icons";
 import IonicButton from "@/components/shared/ui/IonicButton";
@@ -28,6 +29,7 @@ const timeToMinutes = (time: string) => {
 };
 
 const AdminRoomDetails = () => {
+  const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { currentRoom, schedules, fetchRoom, fetchSchedulesForRoom } =
     useRoomStore();
@@ -42,9 +44,18 @@ const AdminRoomDetails = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [id]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity className="flex-row items-center gap-x-2 pr-4">
+          <Ionicons name="ellipsis-vertical" size={20} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
 
   if (loading || !currentRoom) {
     return <Loader />;
@@ -54,23 +65,29 @@ const AdminRoomDetails = () => {
     <>
       <ScrollView showsVerticalScrollIndicator={false} className="bg-white">
         {currentRoom && (
-          <View className="relative px-8 pb-6 py-2 gap-y-1">
-            <View className="flex-row items-center gap-x-4">
-              <Text className="font-inter-bold text-xl">
-                {currentRoom.roomName}
+          <View className="flex-row gap-x-5 px-8 pb-6 py-2 gap-y-1">
+            <Image
+              source={{ uri: currentRoom?.imageURL }}
+              className={`rounded-lg aspect-square`}
+              resizeMode="cover"
+            />
+            <View>
+              <View className="flex-row items-center gap-x-4">
+                <Text className="font-inter-bold text-xl">
+                  {currentRoom.roomName}
+                </Text>
+                <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-xs">
+                  Available
+                </Text>
+              </View>
+              <Text className="font-inter">Current Occuapant: None</Text>
+              <Text className="font-inter">
+                Department: {currentRoom.departmentId?.toUpperCase()}
               </Text>
-              <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-xs">
-                Available
+              <Text className="font-inter">
+                Building: {currentRoom.building}
               </Text>
             </View>
-            <Text className="font-inter">Current Occuapant: None</Text>
-            <Text className="font-inter">Building: {currentRoom.building}</Text>
-
-            <IonicButton
-              icon="ellipsis-vertical"
-              size={20}
-              className="absolute right-8 mr-[-8px]"
-            />
           </View>
         )}
 

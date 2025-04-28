@@ -1,5 +1,12 @@
 import { create } from "zustand";
-import { collection, getDocs, addDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "@/firebase";
 
 type Schedule = {
@@ -15,6 +22,8 @@ type Room = {
   id: string;
   roomName: string;
   building: string;
+  imageURL?: string;
+  departmentId?: string;
 };
 
 type RoomStore = {
@@ -24,7 +33,12 @@ type RoomStore = {
   error: string | null;
   fetchRooms: () => Promise<void>;
   fetchRoom: (id: string) => Promise<void>;
-  addRoom: (roomName: string, building: string) => Promise<void>;
+  addRoom: (
+    roomName: string,
+    building: string,
+    imageURL?: string,
+    departmentId?: string
+  ) => Promise<void>;
   clearCurrentRoom: () => void;
   schedules: Schedule[];
   addScheduleToRoom: (
@@ -82,12 +96,15 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     }
   },
 
-  addRoom: async (roomName, building) => {
+  addRoom: async (roomName, building, imageURL = "", departmentId = "") => {
     try {
       set({ loading: true });
       await addDoc(collection(db, "rooms"), {
         roomName,
         building,
+        imageURL,
+        departmentId, // ✅ include departmentId when saving
+        createdAt: serverTimestamp(),
       });
       await get().fetchRooms();
     } catch (error) {

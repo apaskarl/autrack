@@ -12,7 +12,6 @@ import React, {
   useCallback,
   useLayoutEffect,
 } from "react";
-import { ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -21,6 +20,9 @@ import { useInstructorStore } from "@/store/useInstructorStore";
 import IonicButton from "@/components/shared/ui/IonicButton";
 import CardContainer from "@/components/admin/layouts/CardContainer";
 import Loader from "@/components/shared/ui/Loader";
+import { styles } from "@/styles/styles";
+import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "@/constants/colors";
 
 type HomeAdminNavigationProp = DrawerNavigationProp<any>;
 
@@ -84,7 +86,67 @@ const HomeAdmin = () => {
       className="flex-1 bg-white"
     >
       <View className="px-8 pt-3">
-        <View className="mb-8 h-[25vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"></View>
+        <View
+          className="mb-8 p-5 w-full rounded-xl bg-white"
+          style={styles.shadow}
+        >
+          <View className="flex-row items-center justify-between mb-5">
+            <Text className="text-xl font-inter-bold">Daily Report</Text>
+            <IonicButton
+              icon="ellipsis-horizontal"
+              className="absolute right-0"
+              size={20}
+            />
+          </View>
+
+          <View className="flex-row gap-x-5 justify-between items-center">
+            <View className="flex-1 items-center">
+              <Image
+                source={require("../../../../assets/images/sample/chart1.png")}
+                className="size-36"
+                resizeMode="contain"
+              />
+            </View>
+
+            <View className="flex-1">
+              <Text className="font-inter-bold">Room Availabilty</Text>
+
+              <View className="mt-4 gap-y-2">
+                <Text className="font-inter-medium text-green">
+                  3 Available
+                </Text>
+                <Text className="font-inter-medium text-red">
+                  10 Unavailable
+                </Text>
+                <Text className="font-inter-medium text-yellow-500">
+                  5 Pending
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View className="mt-7">
+            <Text className="font-inter-bold mb-2">
+              Percent occupied by hours
+            </Text>
+            <Image
+              source={require("../../../../assets/images/sample/chart2.png")}
+              className="size-32 w-full mt-4"
+              resizeMode="cover"
+            />
+          </View>
+
+          <View className="border-t border-border mt-5 pt-4">
+            <TouchableOpacity className="ml-auto p-2 mr-[-8px] flex-row items-center gap-x-2">
+              <Text className="font-inter-bold text-blue">More</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={15}
+                color={COLORS.subtext}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       {/* Rooms */}
@@ -95,18 +157,23 @@ const HomeAdmin = () => {
         {rooms.map((room, index) => (
           <TouchableOpacity
             key={room.id}
-            activeOpacity={0.5}
+            activeOpacity={0.7}
             onPress={() =>
               router.push({
                 pathname: "/admin/(tabs)/home/room-details",
                 params: { id: room.id },
               })
             }
-            className={`p-5 mr-5 rounded-xl min-w-[240px] border border-border bg-white flex-row gap-x-4 ${
+            className={`p-5 mr-5 rounded-xl min-w-[240px] border  border-border bg-white flex-row gap-x-4 ${
               index === 0 ? "ml-8" : ""
             }`}
+            style={styles.shadow}
           >
-            <View className="p-5 rounded-lg bg-light aspect-square"></View>
+            <Image
+              source={{ uri: room?.imageURL }}
+              className={`rounded-lg aspect-square`}
+              resizeMode="cover"
+            />
             <View>
               <View className="mb-2 flex-row items-center gap-x-2">
                 <Text className="font-inter-bold">{room.roomName}</Text>
@@ -130,26 +197,27 @@ const HomeAdmin = () => {
         title="Instructors"
         route={() => router.push("/admin/(tabs)/home/instructors")}
       >
-        {instructors.map((item, index) => (
+        {instructors.map((instructor, index) => (
           <TouchableOpacity
-            key={item.id}
+            key={instructor.id}
+            activeOpacity={0.7}
             className={`items-center w-28 mr-2 gap-x-4 ${
               index === 0 ? "ml-8" : ""
             }`}
             onPress={() =>
               router.push({
                 pathname: "/admin/(tabs)/home/instructor-details",
-                params: { id: item.id },
+                params: { id: instructor.id },
               })
             }
           >
             <Image
-              source={{ uri: item?.photoURL }}
+              source={{ uri: instructor?.photoURL }}
               className="size-20 rounded-full mb-2"
               resizeMode="contain"
             />
             <Text className="font-inter-bold px-2 text-center">
-              {item.firstName} {item.lastName}
+              {instructor.firstName} {instructor.lastName}
             </Text>
           </TouchableOpacity>
         ))}
@@ -160,8 +228,18 @@ const HomeAdmin = () => {
           Ongoing Classes
         </Text>
 
-        <View className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"></View>
-        <View className="mb-10 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"></View>
+        <View
+          style={styles.shadow}
+          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
+        ></View>
+        <View
+          style={styles.shadow}
+          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
+        ></View>
+        <View
+          style={styles.shadow}
+          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
+        ></View>
       </View>
     </ScrollView>
   );

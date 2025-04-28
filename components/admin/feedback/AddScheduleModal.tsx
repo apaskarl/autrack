@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { getInstructors } from "@/utils/getInstructors";
 import useRoomStore from "@/store/useRoomStore";
-import { router } from "expo-router";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InputContainer from "./InputContainer";
@@ -72,7 +71,7 @@ const AddScheduleModal = ({
   };
 
   useEffect(() => {
-    setEndTime(null); // Reset endTime if startTime changes
+    setEndTime(null);
   }, [startTime]);
 
   useEffect(() => {
@@ -139,9 +138,9 @@ const AddScheduleModal = ({
     >
       <SafeAreaView className="flex-1 bg-black/50 px-8 justify-center items-center">
         <View className="bg-white p-8 w-full rounded-lg">
-          <Text className="font-inter-bold text-lg">Add New Schedule</Text>
+          <Text className="font-inter-bold text-lg mb-6">Add New Schedule</Text>
 
-          <View className="py-8 gap-y-5">
+          <View className="gap-y-5">
             <InputContainer title="Instructor">
               <View className="border border-border rounded-lg">
                 <Picker
@@ -216,17 +215,26 @@ const AddScheduleModal = ({
                 </InputContainer>
               </View>
             </View>
-          </View>
 
-          <TouchableOpacity
-            onPress={handleSubmit}
-            className="bg-blue rounded-lg px-6 items-center py-4"
-            disabled={loading}
-          >
-            <Text className="font-inter-bold text-white">
-              {loading ? "Adding..." : "Add Schedule"}
-            </Text>
-          </TouchableOpacity>
+            <View className="flex-row justify-between gap-x-4">
+              <TouchableOpacity
+                onPress={() => setShowModal(false)}
+                className="rounded-lg items-center py-4 flex-1 border border-border"
+                disabled={loading}
+              >
+                <Text className="font-inter-bold">Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSubmit}
+                className="bg-blue rounded-lg items-center py-4 flex-1"
+                disabled={loading}
+              >
+                <Text className="font-inter-bold text-white">
+                  {loading ? "Adding..." : "Add Schedule"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </SafeAreaView>
     </Modal>

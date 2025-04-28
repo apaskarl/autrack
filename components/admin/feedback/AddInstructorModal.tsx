@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/firebase";
-import {
-  collection,
-  doc,
-  getDocs,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
 import Modal from "react-native-modal";
+import useDepartmentStore from "@/store/useDepartmentStore";
+import { useInstructorStore } from "@/store/useInstructorStore";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface AddInstructorModalProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
 }
-
-type Department = {
-  id: string;
-  name: string;
-};
 
 const AddInstructorModal = ({
   showModal,
@@ -31,23 +20,11 @@ const AddInstructorModal = ({
   const [employeeID, setEmployeeID] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const { departments, fetchDepartments } = useDepartmentStore();
   const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
+  const { addInstructor, loading } = useInstructorStore();
 
   useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "departments"));
-        const deptList: Department[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          name: doc.data().departmentName,
-        }));
-        setDepartments(deptList);
-      } catch (error) {
-        console.error("Failed to fetch departments", error);
-      }
-    };
-
     if (showModal) {
       fetchDepartments();
     }
@@ -67,29 +44,26 @@ const AddInstructorModal = ({
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      const userData = {
+      await addInstructor(
         firstName,
         lastName,
-        employeeId: parseInt(employeeID),
+        parseInt(employeeID),
         email,
-        departmentId: selectedDepartmentId,
-        photoURL:
-          "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg",
-        role: "instructor",
-        createdAt: serverTimestamp(),
-      };
+        password,
+        selectedDepartmentId
+      );
 
-      await setDoc(doc(db, "users", user.uid), userData);
+      // Reset form
+      setFirstName("");
+      setLastName("");
+      setEmployeeID("");
+      setEmail("");
+      setPassword("");
+      setSelectedDepartmentId("");
+
       setShowModal(false);
-    } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to add instructor.");
+    } catch (error) {
+      // Error is already handled in the store
     }
   };
 
@@ -104,73 +78,94 @@ const AddInstructorModal = ({
       statusBarTranslucent
       style={{ margin: 0 }}
     >
-      <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="bg-white w-11/12 rounded-xl p-6">
-          <Text className="font-inter-bold text-lg mb-4">Add Instructor</Text>
+      <SafeAreaView className="flex-1 bg-black/50 px-8 justify-center items-center">
+        <View className="bg-white p-6 w-full rounded-xl">
+          <Text className="font-inter-bold text-lg mb-6">
+            Add New Instructor
+          </Text>
 
-          <TextInput
-            placeholder="First Name"
-            value={firstName}
-            onChangeText={setFirstName}
-            className="border border-gray-300 rounded-md p-3 mb-3"
-          />
-          <TextInput
-            placeholder="Last Name"
-            value={lastName}
-            onChangeText={setLastName}
-            className="border border-gray-300 rounded-md p-3 mb-3"
-          />
-          <TextInput
-            placeholder="Employee ID"
-            value={employeeID}
-            onChangeText={setEmployeeID}
-            keyboardType="numeric"
-            className="border border-gray-300 rounded-md p-3 mb-3"
-          />
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            className="border border-gray-300 rounded-md p-3 mb-3"
-          />
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            className="border border-gray-300 rounded-md p-3 mb-3"
-          />
+          <View className="gap-y-4 mb-6">
+            <TextInput
+              placeholder="First Name"
+              value={firstName}
+              onChangeText={setFirstName}
+              className="border border-border font-inter-medium rounded-lg p-4"
+            />
+            <TextInput
+              placeholder="Last Name"
+              value={lastName}
+              onChangeText={setLastName}
+              className="border border-border font-inter-medium rounded-lg p-4"
+            />
+            <TextInput
+              placeholder="Employee ID"
+              value={employeeID}
+              onChangeText={setEmployeeID}
+              keyboardType="numeric"
+              className="border border-border font-inter-medium rounded-lg p-4"
+            />
+            <TextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              className="border border-border font-inter-medium rounded-lg p-4"
+            />
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              className="border border-border font-inter-medium rounded-lg p-4"
+            />
 
-          <View className="border border-gray-300 rounded-md mb-5">
-            <Picker
-              selectedValue={selectedDepartmentId}
-              onValueChange={(itemValue) => setSelectedDepartmentId(itemValue)}
-            >
-              <Picker.Item label="Select Department" value="" />
-              {departments.map((dept) => (
-                <Picker.Item key={dept.id} label={dept.name} value={dept.id} />
-              ))}
-            </Picker>
+            <View className="border border-border rounded-lg">
+              <Picker
+                selectedValue={selectedDepartmentId}
+                onValueChange={(itemValue) =>
+                  setSelectedDepartmentId(itemValue)
+                }
+              >
+                <Picker.Item label="Select Department" value="" />
+                {departments.map((dept) => (
+                  <Picker.Item
+                    key={dept.id}
+                    label={dept.name}
+                    value={dept.id}
+                  />
+                ))}
+              </Picker>
+            </View>
           </View>
 
-          <View className="flex-row justify-end gap-x-3">
+          <View className="flex-row justify-between gap-x-4">
             <TouchableOpacity
-              className="px-4 py-2 bg-gray-200 rounded-lg"
+              activeOpacity={0.7}
+              className={`${
+                loading && "opacity-50"
+              } p-4 rounded-lg flex-1 border border-border items-center justify-center`}
               onPress={() => setShowModal(false)}
+              disabled={loading}
             >
               <Text className="text-gray-700 font-inter-semibold">Cancel</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
-              className="px-4 py-2 bg-blue rounded-lg"
+              activeOpacity={0.7}
+              className={`${
+                loading && "opacity-50"
+              } bg-blue p-4 rounded-lg flex-1 border border-border items-center justify-center`}
               onPress={handleAddInstructor}
+              disabled={loading}
             >
-              <Text className="text-white font-inter-semibold">Add</Text>
+              <Text className="text-white font-inter-semibold">
+                {loading ? "Adding..." : "Add"}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };

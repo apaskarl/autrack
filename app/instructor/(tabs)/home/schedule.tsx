@@ -10,6 +10,7 @@ import { useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import { Ionicons } from "@expo/vector-icons";
 import Loader from "@/components/shared/ui/Loader";
+import useUserStore from "@/store/useUserStore";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -26,6 +27,7 @@ const timeToMinutes = (time: string) => {
 };
 
 const InstructorSchedules = () => {
+  const { user } = useUserStore();
   const { id: instructorId } = useLocalSearchParams<{ id: string }>(); // now getting instructorId
   const { rooms, fetchRooms } = useRoomStore();
   const [loading, setLoading] = useState(true);
@@ -75,9 +77,10 @@ const InstructorSchedules = () => {
     <ScrollView showsVerticalScrollIndicator={false} className="bg-white">
       <View className="relative px-8 pb-6 py-2 gap-y-1">
         <View className="flex-row items-center gap-x-4">
-          <Text className="font-inter-bold text-xl">Instructor Schedules</Text>
+          <Text className="font-inter-bold text-lg">
+            Instructor: {user?.firstName} {user?.lastName}
+          </Text>
         </View>
-        <Text className="font-inter">Instructor ID: {instructorId}</Text>
       </View>
 
       {/* Timeable */}

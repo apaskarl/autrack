@@ -6,6 +6,7 @@ import {
   Switch,
   ScrollView,
   RefreshControl,
+  Image,
 } from "react-native";
 import React, { useState, useCallback, useLayoutEffect } from "react";
 import { router, useNavigation } from "expo-router";
@@ -93,16 +94,24 @@ const AdminRooms = () => {
                   }
                   className="flex-row gap-x-4 flex-1"
                 >
-                  <View className="p-5 rounded-lg bg-light aspect-square" />
+                  <Image
+                    source={{ uri: room?.imageURL }}
+                    className={`rounded-lg aspect-square`}
+                    resizeMode="cover"
+                  />
                   <View className="gap-y-1">
-                    <View className="mb-2 flex-row items-center gap-x-2">
+                    <View className="flex-row items-center gap-x-2">
                       <Text className="font-inter-bold text-lg">
                         {room.roomName}
                       </Text>
+
                       <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-xs">
                         Available
                       </Text>
                     </View>
+                    <Text className="uppercase font-inter-semibold text-sm">
+                      {room.departmentId}
+                    </Text>
                     <Text className="font-inter text-sm text-subtext">
                       Current Occupant: None
                     </Text>

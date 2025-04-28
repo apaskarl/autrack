@@ -87,7 +87,7 @@ const AdminInstructors = () => {
                 >
                   <Image
                     source={{ uri: instructor?.photoURL }}
-                    className="size-14 rounded-full"
+                    className="size-16 rounded-full"
                     resizeMode="contain"
                   />
 

@@ -12,19 +12,28 @@ import ProfileLink from "@/components/instructor/ProfileLink";
 import { router } from "expo-router";
 import { useColorScheme } from "nativewind";
 import Modal from "react-native-modal";
+import Loader from "@/components/shared/ui/Loader";
 
 const Profile = () => {
   const { user, logout } = useUserStore();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const handleLogout = () => {
+  const [loading, setLoading] = useState(false); // Loading state
+
+  const handleLogout = async () => {
     setShowLogoutModal(false);
-    logout();
+    setLoading(true); // Show loading indicator
+    await logout();
+    setLoading(false); // Hide loading indicator after logout is complete
   };
 
   const [imageLoading, setImageLoading] = useState(true);
 
   const { colorScheme, toggleColorScheme } = useColorScheme();
   console.log(colorScheme);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -57,12 +66,14 @@ const Profile = () => {
           <ProfileLink
             icon="person-outline"
             label="Edit Profile"
-            onPress={() => router.push("/instructor/edit-profile")}
+            onPress={() =>
+              router.push("/instructor/(tabs)/profile/edit-profile")
+            }
           />
           <ProfileLink
             icon="settings-outline"
             label="Settings"
-            onPress={() => router.push("/instructor/settings")}
+            onPress={() => router.push("/instructor/(tabs)/profile/settings")}
           />
           <ProfileLink
             icon="log-out-outline"
@@ -70,8 +81,6 @@ const Profile = () => {
             onPress={() => setShowLogoutModal(true)}
           />
         </View>
-
-        {/* <Switch value={colorScheme == "dark"} onChange={toggleColorScheme} /> */}
       </InstructorLayout>
 
       <Modal

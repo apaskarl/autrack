@@ -11,7 +11,7 @@ const Settings = () => {
         <ProfileLink
           icon="moon-outline"
           label="Dark Mode"
-          onPress={() => router.push("/instructor/appearance")}
+          onPress={() => router.push("/instructor/(tabs)/profile/appearance")}
         />
         <ProfileLink icon="headset-outline" label="Help and Support" />
         <ProfileLink icon="lock-closed-outline" label="Privacy and Security" />

@@ -1,17 +1,6 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Switch,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import React from "react";
 import useUserStore from "@/store/useUserStore";
-import useRoomStore from "@/store/useRoomStore";
-import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { COLORS } from "@/constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
@@ -22,7 +11,7 @@ const Home = () => {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="px-8 py-5">
-          <Text className="text-2xl font-inter-bold">
+          <Text className="text-2xl font-inter-bold mb-5">
             Welcome back, {user?.firstName}
           </Text>
 

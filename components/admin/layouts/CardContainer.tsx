@@ -27,7 +27,11 @@ const CardContainer = ({
       </View>
 
       <View className="mb-8">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          className="pb-1"
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           {children}
 
           <TouchableOpacity
