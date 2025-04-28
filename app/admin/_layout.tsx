@@ -4,16 +4,8 @@ import DrawerIcon from "@/components/shared/ui/DrawerIcon";
 import { Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-
-const customBackButton = () => (
-  <TouchableOpacity
-    activeOpacity={0.5}
-    onPress={() => router.back()}
-    className="ml-8"
-  >
-    <Ionicons name="chevron-back" size={25} color="#333" />
-  </TouchableOpacity>
-);
+import HeaderBack from "@/components/shared/header/HeaderBack";
+import HeaderTitle from "@/components/shared/header/HeaderTitle";
 
 export default function DrawerLayout() {
   return (
@@ -39,11 +31,29 @@ export default function DrawerLayout() {
       />
 
       <Drawer.Screen
+        name="dashboard"
+        options={{
+          title: "",
+          headerShown: true,
+          headerLeft: () => <HeaderBack />,
+          headerTitle: () => <HeaderTitle title="Dashboard" />,
+          drawerIcon: ({ color, size }) => (
+            <DrawerIcon
+              icon="grid-outline"
+              iconPack="ionicons"
+              name="Dashboard"
+            />
+          ),
+        }}
+      />
+
+      <Drawer.Screen
         name="settings"
         options={{
           title: "",
           headerShown: true,
-          headerLeft: customBackButton,
+          headerLeft: () => <HeaderBack />,
+          headerTitle: () => <HeaderTitle title="Settings" />,
           drawerIcon: ({ color, size }) => (
             <DrawerIcon
               icon="settings-outline"

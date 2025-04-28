@@ -1,16 +1,8 @@
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import { Ionicons } from "@expo/vector-icons";
-import IonicButton from "@/components/shared/ui/IonicButton";
 import AddScheduleModal from "@/components/admin/feedback/AddScheduleModal";
 import Loader from "@/components/shared/ui/Loader";
 

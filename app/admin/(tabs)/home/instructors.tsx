@@ -71,10 +71,8 @@ const AdminInstructors = () => {
               <View
                 key={instructor.id}
                 className={`${
-                  index !== instructors.length - 1
-                    ? "border-b border-border mb-5"
-                    : ""
-                } relative flex-row justify-between pb-5`}
+                  index !== instructors.length - 1 ? "" : ""
+                } relative flex-row justify-between pb-7`}
               >
                 <TouchableOpacity
                   onPress={() =>

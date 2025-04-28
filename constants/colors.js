@@ -8,4 +8,6 @@ export const COLORS = {
   border: "#D1D5DB",
   red: "#DC2626",
   blue: "#1F72FA",
+  green: "#25A925",
+  yellow: "#EAB308",
 };

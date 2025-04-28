@@ -79,10 +79,8 @@ const AdminRooms = () => {
               <View
                 key={room.id}
                 className={`${
-                  index !== rooms.length - 1
-                    ? "border-b border-border mb-5"
-                    : ""
-                } relative flex-row justify-between pb-5`}
+                  index !== rooms.length - 1 ? "" : ""
+                } relative flex-row justify-between pb-7`}
               >
                 <TouchableOpacity
                   activeOpacity={0.5}

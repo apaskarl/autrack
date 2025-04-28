@@ -23,6 +23,7 @@ import Loader from "@/components/shared/ui/Loader";
 import { styles } from "@/styles/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
+import { getCurrentDate } from "@/utils/getCurrentDate";
 
 type HomeAdminNavigationProp = DrawerNavigationProp<any>;
 
@@ -112,15 +113,24 @@ const HomeAdmin = () => {
               <Text className="font-inter-bold">Room Availabilty</Text>
 
               <View className="mt-4 gap-y-2">
-                <Text className="font-inter-medium text-green">
-                  3 Available
-                </Text>
-                <Text className="font-inter-medium text-red">
-                  10 Unavailable
-                </Text>
-                <Text className="font-inter-medium text-yellow-500">
-                  5 Pending
-                </Text>
+                <View className="flex-row items-center gap-x-2">
+                  <Ionicons name="ellipse" size={10} color={COLORS.green} />
+                  <Text className="font-inter-medium text-green">
+                    3 Available
+                  </Text>
+                </View>
+                <View className="flex-row items-center gap-x-2">
+                  <Ionicons name="ellipse" size={10} color={COLORS.red} />
+                  <Text className="font-inter-medium text-red">
+                    10 Unavailable
+                  </Text>
+                </View>
+                <View className="flex-row items-center gap-x-2">
+                  <Ionicons name="ellipse" size={10} color={COLORS.yellow} />
+                  <Text className="font-inter-medium text-yellow-500">
+                    5 Pending
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -131,13 +141,28 @@ const HomeAdmin = () => {
             </Text>
             <Image
               source={require("../../../../assets/images/sample/chart2.png")}
-              className="size-32 w-full mt-4"
+              className="size-32 w-full mt-4 rounded-xl"
               resizeMode="cover"
+              style={styles.shadow}
             />
           </View>
 
-          <View className="border-t border-border mt-5 pt-4">
-            <TouchableOpacity className="ml-auto p-2 mr-[-8px] flex-row items-center gap-x-2">
+          <View className="flex-row items-center justify-between border-t border-border mt-5 pt-5">
+            <View className="flex-row items-center gap-x-2">
+              <Ionicons
+                name="calendar-clear-outline"
+                size={16}
+                color={COLORS.subtext}
+              />
+              <Text className="font-inter-semibold text-subtext text-sm">
+                {getCurrentDate()}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => router.push("/admin/dashboard")}
+              className="mr-[-8px] flex-row items-center gap-x-2"
+            >
               <Text className="font-inter-bold text-blue">More</Text>
               <Ionicons
                 name="chevron-forward"

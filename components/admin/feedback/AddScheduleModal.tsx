@@ -218,15 +218,20 @@ const AddScheduleModal = ({
 
             <View className="flex-row justify-between gap-x-4">
               <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={() => setShowModal(false)}
                 className="rounded-lg items-center py-4 flex-1 border border-border"
                 disabled={loading}
               >
                 <Text className="font-inter-bold">Cancel</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={handleSubmit}
-                className="bg-blue rounded-lg items-center py-4 flex-1"
+                className={`${
+                  loading && "opacity-50"
+                } bg-blue rounded-lg items-center py-4 flex-1`}
                 disabled={loading}
               >
                 <Text className="font-inter-bold text-white">

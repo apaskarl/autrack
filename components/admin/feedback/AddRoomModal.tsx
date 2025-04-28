@@ -113,14 +113,14 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
         <View className="bg-white p-6 w-full rounded-xl">
           <Text className="font-inter-bold text-lg mb-6">Add New Room</Text>
 
-          <View className="gap-y-4 mb-6">
+          <View className="gap-y-4">
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={pickImage}
               className="relative"
             >
               {!image ? (
-                <View className="h-52 border border-dashed rounded-md border-border justify-center items-center bg-gray-100">
+                <View className="h-48 border border-dashed rounded-md border-border justify-center items-center bg-gray-100">
                   <Ionicons
                     name="images-outline"
                     size={30}
@@ -134,7 +134,7 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
                 <>
                   <Image
                     source={{ uri: image }}
-                    className="w-full h-52 rounded-lg"
+                    className="w-full h-48 rounded-lg"
                   />
                   <Text className="absolute bottom-3 right-3 bg-white text-sm px-5 py-3 rounded-lg shadow font-inter-semibold">
                     Change Image
@@ -162,7 +162,7 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
             </InputContainer>
 
             <InputContainer title="Department">
-              <View className="border border-border rounded-md mb-5">
+              <View className="border border-border rounded-md ">
                 <Picker
                   selectedValue={selectedDepartmentId}
                   onValueChange={(itemValue) =>
@@ -180,31 +180,31 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
                 </Picker>
               </View>
             </InputContainer>
-          </View>
 
-          <View className="flex-row justify-between gap-x-4">
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className={`${
-                uploading && "opacity-50"
-              } p-4 rounded-lg flex-1 border border-border items-center justify-center`}
-              onPress={() => setShowModal(false)}
-              disabled={uploading}
-            >
-              <Text className="font-inter-semibold">Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              className={`${
-                uploading && "opacity-50"
-              } px-4 py-2 bg-blue rounded-lg flex-1 items-center justify-center`}
-              onPress={handleAddRoom}
-              disabled={uploading}
-            >
-              <Text className="text-white font-inter-semibold">
-                {uploading ? "Adding..." : "Add Room"}
-              </Text>
-            </TouchableOpacity>
+            <View className="flex-row justify-between gap-x-4">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className={`${
+                  uploading && "opacity-50"
+                } p-4 rounded-lg flex-1 border border-border items-center justify-center`}
+                onPress={() => setShowModal(false)}
+                disabled={uploading}
+              >
+                <Text className="font-inter-semibold">Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className={`${
+                  uploading && "opacity-50"
+                } px-4 py-2 bg-blue rounded-lg flex-1 items-center justify-center`}
+                onPress={handleAddRoom}
+                disabled={uploading}
+              >
+                <Text className="text-white font-inter-semibold">
+                  {uploading ? "Adding..." : "Add Room"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </SafeAreaView>
