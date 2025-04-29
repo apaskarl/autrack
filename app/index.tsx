@@ -131,7 +131,7 @@ const Index = () => {
             <View className="flex-row items-center gap-x-1 justify-center">
               <Text className="font-inter text-subtext">No account?</Text>
               <TouchableOpacity
-                onPress={() => router.push("/admin/tabs/home")}
+                onPress={() => router.push("/")}
                 activeOpacity={0.8}
               >
                 <Text className="font-inter-semibold text-black underline">

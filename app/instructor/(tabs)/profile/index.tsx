@@ -10,7 +10,6 @@ import useUserStore from "@/store/useUserStore";
 import InstructorLayout from "@/components/instructor/InstructorLayout";
 import ProfileLink from "@/components/instructor/ProfileLink";
 import { router } from "expo-router";
-import { useColorScheme } from "nativewind";
 import Modal from "react-native-modal";
 import Loader from "@/components/shared/ui/Loader";
 
@@ -27,9 +26,6 @@ const Profile = () => {
   };
 
   const [imageLoading, setImageLoading] = useState(true);
-
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  console.log(colorScheme);
 
   if (loading) {
     return <Loader />;

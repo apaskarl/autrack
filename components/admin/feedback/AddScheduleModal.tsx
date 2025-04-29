@@ -60,7 +60,7 @@ const AddScheduleModal = ({
     const times = [];
     for (let hour = 7; hour <= 21; hour++) {
       for (let min = 0; min < 60; min += 30) {
-        if (hour === 21 && min > 0) continue; // Skip 21:30
+        if (hour === 22 && min > 0) continue; // Skip 21:30
         const formatted = `${String(hour).padStart(2, "0")}:${String(
           min
         ).padStart(2, "0")}`;
@@ -146,6 +146,7 @@ const AddScheduleModal = ({
                 <Picker
                   selectedValue={instructorId}
                   onValueChange={(itemValue) => setInstructorId(itemValue)}
+                  style={{ fontFamily: "Inter-Regular", fontSize: 16 }}
                 >
                   <Picker.Item label="Select instructor" value={null} />
                   {instructors.map((instructor) => (
