@@ -6,6 +6,8 @@ import {
   doc,
   getDoc,
   serverTimestamp,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
@@ -20,10 +22,20 @@ type Schedule = {
 
 type Room = {
   id: string;
-  roomName: string;
-  building: string;
-  imageURL?: string;
-  departmentId?: string;
+  name: string;
+  code: string;
+  capacity: number;
+  image: string;
+  buildingId: string;
+  departmentId: string;
+  isAvailable: boolean;
+  facilities?: {
+    airConditioned: boolean;
+    blackboard: boolean;
+    tv: boolean;
+    wifi: boolean;
+    projector: boolean;
+  };
 };
 
 type RoomStore = {
@@ -34,11 +46,29 @@ type RoomStore = {
   fetchRooms: () => Promise<void>;
   fetchRoom: (id: string) => Promise<void>;
   addRoom: (
-    roomName: string,
-    building: string,
-    imageURL?: string,
-    departmentId?: string
+    name: string,
+    imageURL: string,
+    buildingId: string,
+    departmentId: string,
+    code: string,
+    capacity: number,
+    facilities: Room["facilities"]
   ) => Promise<void>;
+
+  deleteRoom: (id: string) => Promise<void>;
+  updateRoom: (
+    id: string,
+    data: {
+      name: string;
+      image: string;
+      buildingId: string;
+      departmentId: string;
+      code: string;
+      capacity: number;
+      facilities: Room["facilities"];
+    }
+  ) => Promise<void>;
+
   clearCurrentRoom: () => void;
   schedules: Schedule[];
   addScheduleToRoom: (
@@ -58,10 +88,8 @@ const useRoomStore = create<RoomStore>((set, get) => ({
 
   fetchRooms: async () => {
     try {
-      set({ loading: true });
-      const roomsRef = collection(db, "rooms");
-      const querySnapshot = await getDocs(roomsRef);
-      const roomList: Room[] = querySnapshot.docs.map((doc) => ({
+      const snapshot = await getDocs(collection(db, "rooms"));
+      const roomList: Room[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Room[];
@@ -70,8 +98,6 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     } catch (error) {
       set({ error: "Failed to fetch rooms" });
       console.error("Failed to fetch rooms:", error);
-    } finally {
-      set({ loading: false });
     }
   },
 
@@ -96,20 +122,70 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     }
   },
 
-  addRoom: async (roomName, building, imageURL = "", departmentId = "") => {
+  addRoom: async (
+    name,
+    image,
+    buildingId,
+    departmentId,
+    code,
+    capacity,
+    facilities
+  ) => {
     try {
       set({ loading: true });
       await addDoc(collection(db, "rooms"), {
-        roomName,
-        building,
-        imageURL,
-        departmentId, // ✅ include departmentId when saving
+        name,
+        code,
+        capacity,
+        image,
+        buildingId,
+        departmentId,
+        facilities,
+        isAvailable: true,
         createdAt: serverTimestamp(),
       });
       await get().fetchRooms();
     } catch (error) {
       set({ error: "Failed to add room" });
       console.error("Failed to add room:", error);
+      throw error;
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  deleteRoom: async (id: string) => {
+    try {
+      set({ loading: true });
+      await deleteDoc(doc(db, "rooms", id));
+      await get().fetchRooms();
+    } catch (error) {
+      console.error("Failed to delete room:", error);
+      set({ error: "Failed to delete room" });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  updateRoom: async (
+    id: string,
+    data: {
+      name: string;
+      image: string;
+      buildingId: string;
+      departmentId: string;
+      code: string;
+      capacity: number;
+      facilities: Room["facilities"];
+    }
+  ) => {
+    try {
+      set({ loading: true });
+      const roomRef = doc(db, "rooms", id);
+      await updateDoc(roomRef, data);
+      await get().fetchRooms();
+    } catch (error) {
+      console.error("Failed to update room:", error);
       throw error;
     } finally {
       set({ loading: false });
@@ -152,7 +228,7 @@ const useRoomStore = create<RoomStore>((set, get) => ({
         ...doc.data(),
       })) as Schedule[];
 
-      return scheduleList; // directly return list
+      return scheduleList;
     } catch (error) {
       console.error("Error fetching schedules:", error);
       return [];

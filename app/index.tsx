@@ -72,7 +72,7 @@ const Index = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className={`pb-14 pt-20 gap-y-16 justify-center w-full`}>
+          <View className={`pb-14 pt-24 gap-y-16 justify-center w-full`}>
             <View className="items-center">
               <Image
                 source={require("../assets/images/logos/logo-outline-primary.png")}
@@ -115,7 +115,7 @@ const Index = () => {
                   onPress={() => router.push("/auth/reset/forgot-password")}
                   activeOpacity={0.8}
                 >
-                  <Text className="font-inter-semibold text-black underline">
+                  <Text className="font-inter-bold text-primary underline">
                     Forgot Password?
                   </Text>
                 </TouchableOpacity>
@@ -126,18 +126,6 @@ const Index = () => {
                 onPress={handleLogin}
                 disabled={loading}
               />
-            </View>
-
-            <View className="flex-row items-center gap-x-1 justify-center">
-              <Text className="font-inter text-subtext">No account?</Text>
-              <TouchableOpacity
-                onPress={() => router.push("/")}
-                activeOpacity={0.8}
-              >
-                <Text className="font-inter-semibold text-black underline">
-                  Register
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

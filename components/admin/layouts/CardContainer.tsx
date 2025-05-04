@@ -14,7 +14,7 @@ const CardContainer = ({
 }) => {
   return (
     <>
-      <View className="mb-4 px-8 flex-row items-center justify-between">
+      <View className="mb-4 px-6 flex-row items-center justify-between">
         <Text className="font-inter-bold text-2xl">{title}</Text>
 
         <TouchableOpacity

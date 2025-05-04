@@ -5,11 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const HeaderBack = () => {
   return (
-    <TouchableOpacity
-      activeOpacity={0.5}
-      onPress={() => router.back()}
-      className="ml-2"
-    >
+    <TouchableOpacity activeOpacity={0.5} onPress={() => router.back()}>
       <Ionicons name="chevron-back" size={24} color="#333" />
     </TouchableOpacity>
   );

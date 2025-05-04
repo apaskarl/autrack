@@ -63,13 +63,11 @@ const HomeAdmin = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View className="mr-2">
-          <IonicButton
-            icon="menu"
-            size={30}
-            onPress={() => navigation.openDrawer()}
-          />
-        </View>
+        <IonicButton
+          icon="menu"
+          size={28}
+          onPress={() => navigation.openDrawer()}
+        />
       ),
     });
   }, []);
@@ -86,13 +84,14 @@ const HomeAdmin = () => {
       }
       className="flex-1 bg-white"
     >
-      <View className="px-8 pt-3">
+      {/* Dashboard Card */}
+      <View className="px-6 pt-3">
         <View
           className="mb-8 p-5 w-full rounded-xl bg-white"
           style={styles.shadow}
         >
           <View className="flex-row items-center justify-between mb-5">
-            <Text className="text-xl font-inter-bold">Daily Report</Text>
+            <Text className="text-xl font-inter-bold">Report</Text>
             <IonicButton
               icon="ellipsis-horizontal"
               className="absolute right-0"
@@ -189,20 +188,20 @@ const HomeAdmin = () => {
                 params: { id: room.id },
               })
             }
-            className={`p-5 mr-5 rounded-xl min-w-[240px] border  border-border bg-white flex-row gap-x-4 ${
-              index === 0 ? "ml-8" : ""
+            className={`mr-5 rounded-xl min-w-[240px] bg-white flex-row ${
+              index === 0 ? "ml-6" : ""
             }`}
             style={styles.shadow}
           >
             <Image
-              source={{ uri: room?.imageURL }}
-              className={`rounded-lg aspect-square`}
+              source={{ uri: room?.image }}
+              className={`rounded-l-xl aspect-square`}
               resizeMode="cover"
             />
-            <View>
-              <View className="mb-2 flex-row items-center gap-x-2">
-                <Text className="font-inter-bold">{room.roomName}</Text>
-                <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-xs">
+            <View className="justify-between p-4">
+              <View className="flex-row items-center gap-x-3">
+                <Text className="font-inter-bold">{room.name}</Text>
+                <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-[10px]">
                   Available
                 </Text>
               </View>
@@ -227,7 +226,7 @@ const HomeAdmin = () => {
             key={instructor.id}
             activeOpacity={0.7}
             className={`items-center w-28 mr-2 gap-x-4 ${
-              index === 0 ? "ml-8" : ""
+              index === 0 ? "ml-6" : ""
             }`}
             onPress={() =>
               router.push({
@@ -247,25 +246,6 @@ const HomeAdmin = () => {
           </TouchableOpacity>
         ))}
       </CardContainer>
-
-      <View className="px-8">
-        <Text className="mb-6 rounded-lg font-inter-bold text-2xl">
-          Ongoing Classes
-        </Text>
-
-        <View
-          style={styles.shadow}
-          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
-        ></View>
-        <View
-          style={styles.shadow}
-          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
-        ></View>
-        <View
-          style={styles.shadow}
-          className="mb-5 h-[10vh] w-full rounded-xl shadow-md shadow-black/10 bg-light"
-        ></View>
-      </View>
     </ScrollView>
   );
 };

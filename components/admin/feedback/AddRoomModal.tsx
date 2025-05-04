@@ -16,6 +16,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import useDepartmentStore from "@/store/useDepartmentStore";
+import useBuildingStore from "@/store/useBuildingStore";
 
 interface AddRoomModalProps {
   showModal: boolean;
@@ -25,16 +26,18 @@ interface AddRoomModalProps {
 const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
   const { addRoom } = useRoomStore();
   const { departments, fetchDepartments } = useDepartmentStore();
+  const { buildings, fetchBuildings } = useBuildingStore();
 
   const [roomName, setRoomName] = useState("");
-  const [buildingName, setBuildingName] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState("");
   const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (showModal) {
       fetchDepartments();
+      fetchBuildings();
     }
   }, [showModal]);
 
@@ -50,7 +53,7 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
     }
   };
 
-  const uploadImageToCloudinary = async (imageUri: string) => {
+  const uploadImage = async (imageUri: string) => {
     const formData = new FormData();
     formData.append("file", {
       uri: imageUri,
@@ -74,7 +77,7 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
   };
 
   const handleAddRoom = async () => {
-    if (!roomName || !buildingName || !image || !selectedDepartmentId) {
+    if (!roomName || !image || !selectedBuildingId || !selectedDepartmentId) {
       Alert.alert(
         "Missing Fields",
         "Please fill in all fields, select a department, and upload an image."
@@ -84,12 +87,17 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
 
     try {
       setUploading(true);
-      const imageURL = await uploadImageToCloudinary(image);
-      await addRoom(roomName, buildingName, imageURL, selectedDepartmentId); // ✅ pass selectedDepartmentId
+      const imageURL = await uploadImage(image);
+      await addRoom(
+        roomName,
+        imageURL,
+        selectedBuildingId,
+        selectedDepartmentId
+      );
       setShowModal(false);
-      setRoomName("");
-      setBuildingName("");
       setImage(null);
+      setRoomName("");
+      setSelectedBuildingId("");
       setSelectedDepartmentId("");
     } catch (error) {
       Alert.alert("Error", "Failed to add room.");
@@ -152,13 +160,24 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
               />
             </InputContainer>
 
-            <InputContainer title="Building Name">
-              <TextInput
-                placeholder="Building Name"
-                value={buildingName}
-                onChangeText={setBuildingName}
-                className="border border-border rounded-md p-4 font-inter-medium"
-              />
+            <InputContainer title="Department">
+              <View className="border border-border rounded-md ">
+                <Picker
+                  selectedValue={selectedBuildingId}
+                  onValueChange={(itemValue) =>
+                    setSelectedBuildingId(itemValue)
+                  }
+                >
+                  <Picker.Item label="Select Building" value="" />
+                  {buildings.map((building) => (
+                    <Picker.Item
+                      key={building.id}
+                      label={building.buildingName}
+                      value={building.id}
+                    />
+                  ))}
+                </Picker>
+              </View>
             </InputContainer>
 
             <InputContainer title="Department">
@@ -170,11 +189,11 @@ const AddRoomModal = ({ showModal, setShowModal }: AddRoomModalProps) => {
                   }
                 >
                   <Picker.Item label="Select Department" value="" />
-                  {departments.map((dept) => (
+                  {departments.map((department) => (
                     <Picker.Item
-                      key={dept.id}
-                      label={dept.name}
-                      value={dept.id}
+                      key={department.id}
+                      label={department.departmentName}
+                      value={department.id}
                     />
                   ))}
                 </Picker>

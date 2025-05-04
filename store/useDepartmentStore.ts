@@ -17,11 +17,11 @@ const useDepartmentStore = create<DepartmentStore>((set) => ({
   fetchDepartments: async () => {
     try {
       const snapshot = await getDocs(collection(db, "departments"));
-      const deptList: Department[] = snapshot.docs.map((doc) => ({
+      const departmentList: Department[] = snapshot.docs.map((doc) => ({
         id: doc.id,
-        name: doc.data().departmentName,
+        name: doc.data().name,
       }));
-      set({ departments: deptList });
+      set({ departments: departmentList });
     } catch (error) {
       console.error("Failed to fetch departments", error);
     }

@@ -103,7 +103,7 @@ const AdminRoomDetails = () => {
         {currentRoom && (
           <View className="flex-row gap-x-5 px-8 pb-6 py-2 gap-y-1">
             <Image
-              source={{ uri: currentRoom?.imageURL }}
+              source={{ uri: currentRoom?.image }}
               className={`rounded-lg aspect-square`}
               resizeMode="cover"
             />
@@ -121,7 +121,7 @@ const AdminRoomDetails = () => {
                 Department: {currentRoom.departmentId?.toUpperCase()}
               </Text>
               <Text className="font-inter">
-                Building: {currentRoom.building}
+                Building: {currentRoom.buildingId}
               </Text>
             </View>
           </View>
