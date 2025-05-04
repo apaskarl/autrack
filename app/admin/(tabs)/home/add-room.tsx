@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Alert, Image } from "react-native";
 import useRoomStore from "@/store/useRoomStore";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import useDepartmentStore from "@/store/useDepartmentStore";
@@ -11,6 +10,9 @@ import { router } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import InputField from "@/components/shared/ui/InputField";
 import PickerField from "@/components/shared/ui/PickerField";
+import { uploadImage } from "@/utils/uploadImage";
+import { pickImage } from "@/utils/pickImage";
+import FormButton from "@/components/shared/ui/FormButton";
 
 const AddRoom = () => {
   const { addRoom } = useRoomStore();
@@ -30,7 +32,6 @@ const AddRoom = () => {
     wifi: false,
     projector: false,
   });
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -43,38 +44,9 @@ const AddRoom = () => {
     fetchBuildings();
   }, []);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets.length > 0) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const uploadImage = async (imageUri: string) => {
-    const formData = new FormData();
-    formData.append("file", {
-      uri: imageUri,
-      type: "image/jpeg",
-      name: `room_${Date.now()}.jpg`,
-    } as any);
-    formData.append("upload_preset", "autrack-rooms");
-    formData.append("cloud_name", "dsbbcevcp");
-
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dsbbcevcp/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    const data = await response.json();
-    return data.secure_url as string;
+  const handleImagePick = async () => {
+    const uri = await pickImage();
+    if (uri) setImage(uri);
   };
 
   const handleAddRoom = async () => {
@@ -97,7 +69,12 @@ const AddRoom = () => {
 
     try {
       setLoading(true);
-      const imageURL = await uploadImage(image);
+
+      const imageURL = await uploadImage(image, {
+        uploadPreset: "autrack-rooms",
+        cloudName: "dsbbcevcp",
+      });
+
       await addRoom(
         name,
         imageURL,
@@ -107,6 +84,14 @@ const AddRoom = () => {
         parseInt(capacity),
         facilities
       );
+
+      Alert.alert("Success", "Room added successfully.", [
+        {
+          text: "OK",
+          onPress: () => router.back(),
+        },
+      ]);
+
       setImage(null);
       setName("");
       setCode("");
@@ -120,13 +105,6 @@ const AddRoom = () => {
         wifi: false,
         projector: false,
       });
-
-      Alert.alert("Success", "Room added successfully.", [
-        {
-          text: "OK",
-          onPress: () => router.back(),
-        },
-      ]);
     } catch (error) {
       Alert.alert("Error", "Failed to add room.");
     } finally {
@@ -148,7 +126,7 @@ const AddRoom = () => {
 
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={pickImage}
+            onPress={handleImagePick}
             className="relative"
           >
             {!image ? (
@@ -260,18 +238,11 @@ const AddRoom = () => {
             </View>
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.7}
-            className={`${
-              loading && "opacity-50"
-            } p-5 bg-blue rounded-full items-center justify-center`}
+          <FormButton
+            label="Add Room"
             onPress={handleAddRoom}
-            disabled={loading}
-          >
-            <Text className="text-white font-inter-bold">
-              {loading ? "Adding..." : "Add Room"}
-            </Text>
-          </TouchableOpacity>
+            loading={loading}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -31,7 +31,7 @@ const AuthInput = ({
         <TextInput
           className={`${
             error ? "border-red" : "border-border"
-          } border rounded-lg p-5 font-inter-medium placeholder:text-subtext`}
+          } border rounded-xl p-5 font-inter-medium`}
           placeholder={`Enter ${label.toLowerCase()}`}
           keyboardType={email ? "email-address" : "default"}
           autoCapitalize={email ? "none" : "sentences"}

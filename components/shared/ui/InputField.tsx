@@ -1,5 +1,6 @@
-import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface InputFieldProps {
   label: string;
@@ -7,6 +8,8 @@ interface InputFieldProps {
   onChangeText: (text: string) => void;
   error?: boolean;
   numeric?: boolean;
+  email?: boolean;
+  password?: boolean;
 }
 
 const InputField = ({
@@ -15,23 +18,49 @@ const InputField = ({
   onChangeText,
   error,
   numeric,
+  email,
+  password,
 }: InputFieldProps) => {
+  const [secure, setSecure] = useState(password);
+
   return (
     <View className="flex-1">
       <Text className="text-sm font-inter-bold mb-2">{label}</Text>
-      <TextInput
-        placeholder={label}
-        value={value}
-        onChangeText={(text) =>
-          numeric
-            ? onChangeText(text.replace(/[^0-9]/g, ""))
-            : onChangeText(text)
-        }
-        keyboardType={numeric ? "numeric" : "default"}
-        className={`${
-          error ? "border-red" : "border-border"
-        } border rounded-xl p-5 font-inter-medium`}
-      />
+
+      <View className="relative">
+        <TextInput
+          placeholder={label}
+          value={value}
+          onChangeText={(text) =>
+            numeric
+              ? onChangeText(text.replace(/[^0-9]/g, ""))
+              : onChangeText(text)
+          }
+          keyboardType={
+            numeric ? "numeric" : email ? "email-address" : "default"
+          }
+          autoCapitalize={email ? "none" : "sentences"}
+          secureTextEntry={secure}
+          className={`${
+            error ? "border-red" : "border-border"
+          } border rounded-xl p-5 font-inter-medium`}
+        />
+
+        {password && (
+          <TouchableOpacity
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-3"
+            onPress={() => setSecure(!secure)}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={secure ? "eye-off-outline" : "eye-outline"}
+              size={22}
+              color="gray"
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+
       {error && (
         <Text className="text-xs text-red font-inter-medium mt-2">
           This field is required.

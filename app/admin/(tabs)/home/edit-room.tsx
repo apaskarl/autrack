@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -17,6 +17,9 @@ import useRoomStore from "@/store/useRoomStore";
 import { useLocalSearchParams, router } from "expo-router";
 import InputField from "@/components/shared/ui/InputField";
 import PickerField from "@/components/shared/ui/PickerField";
+import Loader from "@/components/shared/ui/Loader";
+import { uploadImage } from "@/utils/uploadImage";
+import FormButton from "@/components/shared/ui/FormButton";
 
 const EditRoom = () => {
   const { id } = useLocalSearchParams();
@@ -40,11 +43,62 @@ const EditRoom = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  const isUnchanged = useMemo(() => {
+    if (!currentRoom) return true;
+
+    const currentFacilities = currentRoom.facilities ?? {
+      airConditioned: false,
+      blackboard: false,
+      tv: false,
+      wifi: false,
+      projector: false,
+    };
+
+    const facilitiesUnchanged = Object.keys(facilities).every(
+      (key) =>
+        facilities[key as keyof typeof facilities] ===
+        currentFacilities[key as keyof typeof facilities]
+    );
+
+    return (
+      name === currentRoom.name &&
+      code === currentRoom.code &&
+      capacity === currentRoom.capacity.toString() &&
+      image === (currentRoom.image || null) &&
+      selectedBuildingId === currentRoom.buildingId &&
+      selectedDepartmentId === currentRoom.departmentId &&
+      facilitiesUnchanged
+    );
+  }, [
+    name,
+    code,
+    capacity,
+    image,
+    selectedBuildingId,
+    selectedDepartmentId,
+    facilities,
+    currentRoom,
+  ]);
 
   useEffect(() => {
-    fetchDepartments();
-    fetchBuildings();
-    fetchRoom(id as string);
+    const fetchingData = async () => {
+      setFetching(true);
+      try {
+        await Promise.all([
+          fetchDepartments(),
+          fetchBuildings(),
+          fetchRoom(id as string),
+        ]);
+      } catch (error) {
+        Alert.alert("Error", "Failed to fetch room data.");
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchingData();
   }, [id]);
 
   useEffect(() => {
@@ -83,28 +137,6 @@ const EditRoom = () => {
     }
   };
 
-  const uploadImage = async (imageUri: string) => {
-    const formData = new FormData();
-    formData.append("file", {
-      uri: imageUri,
-      type: "image/jpeg",
-      name: `room_${Date.now()}.jpg`,
-    } as any);
-    formData.append("upload_preset", "autrack-rooms");
-    formData.append("cloud_name", "dsbbcevcp");
-
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dsbbcevcp/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    const data = await response.json();
-    return data.secure_url as string;
-  };
-
   const handleEditRoom = async () => {
     if (
       !name ||
@@ -121,9 +153,11 @@ const EditRoom = () => {
       setLoading(true);
       let imageURL = image;
 
-      if (image && !image.startsWith("https://")) {
-        imageURL = await uploadImage(image);
-      }
+      if (image && !image.startsWith("https://"))
+        await uploadImage(image, {
+          uploadPreset: "autrack-rooms",
+          cloudName: "dsbbcevcp",
+        });
 
       await updateRoom(id as string, {
         name,
@@ -144,6 +178,8 @@ const EditRoom = () => {
       setLoading(false);
     }
   };
+
+  if (fetching) return <Loader />;
 
   return (
     <SafeAreaView className="flex-1 bg-white px-6">
@@ -255,18 +291,12 @@ const EditRoom = () => {
             </View>
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.7}
-            className={`p-5 bg-blue rounded-full items-center justify-center ${
-              loading && "opacity-50"
-            }`}
+          <FormButton
+            label="Save Changes"
             onPress={handleEditRoom}
-            disabled={loading}
-          >
-            <Text className="text-white font-inter-bold">
-              {loading ? "Updating..." : "Update Room"}
-            </Text>
-          </TouchableOpacity>
+            loading={loading}
+            isDisabled={isUnchanged}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

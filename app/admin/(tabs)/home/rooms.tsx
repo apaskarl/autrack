@@ -22,6 +22,7 @@ import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 import { styles } from "@/styles/styles";
 import { COLORS } from "@/constants/colors";
 import Loader from "@/components/shared/ui/Loader";
+import AddButton from "@/components/admin/ui/AddButton";
 
 type Facilities = {
   airConditioned: boolean;
@@ -35,7 +36,7 @@ const AdminRooms = () => {
   const navigation = useNavigation();
   const { rooms, fetchRooms, deleteRoom, loading } = useRoomStore();
   const [refreshing, setRefreshing] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [showSearch, setShowSearch] = useState(true);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
 
   const facilityIcons: {
@@ -63,8 +64,10 @@ const AdminRooms = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 0);
     await fetchRooms?.();
-    setRefreshing(false);
   }, [fetchRooms]);
 
   useLayoutEffect(() => {
@@ -73,7 +76,7 @@ const AdminRooms = () => {
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => setShowSearch(true)}
-          className="p-3 bg-gray-100 rounded-full mr-4"
+          className="p-3 bg-gray-100 rounded-full"
         >
           <Ionicons name="search" size={18} />
         </TouchableOpacity>
@@ -99,9 +102,15 @@ const AdminRooms = () => {
         <AdminHomeLayout>
           {showSearch && (
             <View className="relative mb-6">
+              <Ionicons
+                name="search"
+                size={20}
+                className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full"
+                color={COLORS.subtext}
+              />
               <TextInput
                 placeholder="Search"
-                className="px-5 py-4 border font-inter-medium border-border rounded-full"
+                className="pl-16 pr-5 py-4 border font-inter-medium border-border rounded-full"
               />
               <TouchableOpacity
                 activeOpacity={0.5}
@@ -124,7 +133,7 @@ const AdminRooms = () => {
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row items-center justify-between mb-8">
+          <View className="flex-row items-center justify-between mb-6">
             {rooms && (
               <Text className="text-sm text-subtext font-inter">
                 {rooms.length} rooms
@@ -140,7 +149,7 @@ const AdminRooms = () => {
             {rooms.map((room) => (
               <View key={room.id} className="relative mb-6">
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.7}
                   onPress={() =>
                     router.push({
                       pathname: "/admin/(tabs)/home/room-details",
@@ -219,13 +228,26 @@ const AdminRooms = () => {
                     style={styles.shadow}
                   >
                     <TouchableOpacity
-                      className="px-5 pt-4 pb-2"
+                      activeOpacity={0.5}
+                      onPress={() => {
+                        setActiveRoomId(null);
+                        router.push({
+                          pathname: "/admin/(tabs)/home/edit-room",
+                          params: { id: room.id },
+                        });
+                      }}
+                      className="px-5 pb-2 pt-4"
+                    >
+                      <Text className="font-inter-medium">Edit room</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
                       onPress={() => {
                         if (!activeRoomId) return;
 
                         Alert.alert(
                           "Delete Room",
-                          "Are you sure you want to delete this room?",
+                          `Are you sure you want to delete ${room.name}?`,
                           [
                             {
                               text: "Cancel",
@@ -243,20 +265,9 @@ const AdminRooms = () => {
                           { cancelable: true }
                         );
                       }}
+                      className="px-5 pb-4 pt-2"
                     >
                       <Text className="font-inter-medium">Delete room</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setActiveRoomId(null);
-                        router.push({
-                          pathname: "/admin/(tabs)/home/edit-room",
-                          params: { id: room.id },
-                        });
-                      }}
-                      className="px-5 pt-2 pb-4"
-                    >
-                      <Text className="font-inter-medium">Edit room</Text>
                     </TouchableOpacity>
                   </View>
                 )}
@@ -272,15 +283,10 @@ const AdminRooms = () => {
         )}
       </ScrollView>
 
-      <TouchableOpacity
+      <AddButton
+        label="Add Room"
         onPress={() => router.push("/admin/(tabs)/home/add-room")}
-        activeOpacity={0.7}
-        className="flex-row items-center gap-x-2 bg-blue px-6 py-4 absolute bottom-5 right-5 rounded-full"
-        style={{ elevation: 2 }}
-      >
-        <Text className="font-inter-bold text-white">Add Room</Text>
-        <Ionicons name="arrow-forward" size={16} color="white" />
-      </TouchableOpacity>
+      />
     </>
   );
 };

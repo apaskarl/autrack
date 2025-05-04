@@ -18,7 +18,7 @@ const AuthButton = ({
         activeOpacity={0.7}
         className={`${
           disabled ? "opacity-60" : ""
-        } bg-primary w-full relative rounded-lg p-5`}
+        } bg-primary w-full relative rounded-xl p-5`}
         disabled={disabled}
       >
         <Text className="font-inter-bold text-center text-white">{label}</Text>

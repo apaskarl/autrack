@@ -66,7 +66,7 @@ const Index = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-8">
+    <SafeAreaView className="flex-1 bg-white px-6">
       <KeyboardAvoidingView className="flex-1">
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -79,7 +79,7 @@ const Index = () => {
                 className="size-20 mb-4"
                 resizeMode="contain"
               />
-              <Text className="mb-3 font-inter-bold leading-[45px] text-4xl px-5 text-center">
+              <Text className="mb-3 font-inter-bold leading-[45px] text-4xl px-8 text-center">
                 Sign in to your account
               </Text>
               <Text className="font-inter text-subtext">
@@ -90,7 +90,9 @@ const Index = () => {
             <View className="gap-y-5">
               {error && (
                 <View className="bg-red/10 rounded-lg py-4 px-5">
-                  <Text className="text-sm font-inter-medium">{error}</Text>
+                  <Text className="text-sm text-red font-inter-medium">
+                    {error}
+                  </Text>
                 </View>
               )}
 

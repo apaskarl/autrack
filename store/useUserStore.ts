@@ -12,7 +12,7 @@ import {
 import { router } from "expo-router";
 
 type User = {
-  id: string; // <-- Added Firestore document ID here
+  id: string;
   uid: string;
   employeeId: number;
   firstName: string;

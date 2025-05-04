@@ -79,6 +79,26 @@ export default function AdminHomeStack() {
           headerShadowVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="add-instructor"
+        options={{
+          title: "",
+          headerLeft: () => <HeaderBack />,
+          headerTitle: () => <HeaderTitle title="Add New Instructor" />,
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="edit-instructor"
+        options={{
+          title: "",
+          headerLeft: () => <HeaderBack />,
+          headerTitle: () => <HeaderTitle title="Edit Instructor" />,
+          headerShadowVisible: false,
+        }}
+      />
     </Stack>
   );
 }
