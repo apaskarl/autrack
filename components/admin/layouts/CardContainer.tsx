@@ -14,19 +14,19 @@ const CardContainer = ({
 }) => {
   return (
     <>
-      <View className="mb-4 px-6 flex-row items-center justify-between">
+      <View className="mb-4 flex-row items-center justify-between px-6">
         <Text className="font-inter-bold text-2xl">{title}</Text>
 
         <TouchableOpacity
           onPress={route}
-          className="p-2 mr-[-8px] flex-row items-center gap-x-2"
+          className="mr-[-8px] flex-row items-center gap-x-2 p-2"
         >
-          <Text className="text-sm font-inter-bold text-subtext">View All</Text>
+          <Text className="font-inter-bold text-sm text-subtext">View All</Text>
           <Ionicons name="chevron-forward" size={15} color={COLORS.subtext} />
         </TouchableOpacity>
       </View>
 
-      <View className="mb-8">
+      <View className="mb-6">
         <ScrollView
           className="pb-1"
           horizontal
@@ -37,9 +37,9 @@ const CardContainer = ({
           <TouchableOpacity
             onPress={route}
             activeOpacity={0.5}
-            className="p-5 mr-8 justify-center items-center"
+            className="mr-8 items-center justify-center p-5"
           >
-            <Text className="font-inter-bold mb-2 text-sm text-subtext">
+            <Text className="mb-2 font-inter-bold text-sm text-subtext">
               View All
             </Text>
             <Ionicons name="arrow-forward" size={20} color={COLORS.subtext} />

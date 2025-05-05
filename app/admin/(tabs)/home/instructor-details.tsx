@@ -4,7 +4,6 @@ import { useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import { useInstructorStore } from "@/store/useInstructorStore";
 import Loader from "@/components/shared/ui/Loader";
-import { styles } from "@/styles/styles";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -59,7 +58,7 @@ const AdminInstructorDetails = () => {
           .filter((schedule) => schedule.instructorId === instructorId)
           .map((schedule) => ({
             ...schedule,
-            roomName: room.roomName,
+            roomName: room.name,
           }));
       });
 
@@ -79,17 +78,17 @@ const AdminInstructorDetails = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="bg-white">
-      <View className="relative px-8 pb-5 py-2 gap-y-1">
+      <View className="relative gap-y-1 px-8 py-2 pb-5">
         {/* Instructor Profile Header */}
-        <View className="items-center gap-y-3 mb-2">
+        <View className="mb-2 items-center gap-y-3">
           <Image
-            source={{ uri: currentInstructor?.photoURL }}
+            source={{ uri: currentInstructor?.image }}
             className="size-24 rounded-full"
             resizeMode="contain"
           />
 
           <View className="items-center">
-            <Text className="font-inter-bold text-lg mb-1">
+            <Text className="mb-1 font-inter-bold text-lg">
               {currentInstructor.firstName} {currentInstructor.lastName}
             </Text>
             <Text className="font-inter text-subtext">
@@ -98,7 +97,7 @@ const AdminInstructorDetails = () => {
             <Text className="font-inter text-subtext">
               Department:{" "}
               <Text className="uppercase">
-                {currentInstructor.departmentId}
+                {currentInstructor.departmentName}
               </Text>
             </Text>
             <Text className="font-inter text-subtext">
@@ -111,14 +110,14 @@ const AdminInstructorDetails = () => {
       {/* Timetable */}
       <View className="flex-row">
         {/* Time Column */}
-        <View className="bg-gray-200 border-r border-border">
-          <View className="py-2 justify-center items-center px-5 border-b border-border">
-            <Text className="text-subtext font-inter-semibold">Time</Text>
+        <View className="border-r border-border bg-gray-200">
+          <View className="items-center justify-center border-b border-border px-5 py-2">
+            <Text className="font-inter-semibold text-subtext">Time</Text>
           </View>
 
           {TIMES.map((time) => (
             <View
-              className="px-5 justify-center items-center border-b border-border"
+              className="items-center justify-center border-b border-border px-5"
               key={time}
               style={{ height: 30 }}
             >
@@ -135,8 +134,8 @@ const AdminInstructorDetails = () => {
             {DAYS.map((dayName, dayIndex) => (
               <View key={dayIndex}>
                 {/* Day Header */}
-                <View className="py-2 justify-center items-center px-10 bg-blue border-r border-b border-border">
-                  <Text className="text-white font-inter-bold">{dayName}</Text>
+                <View className="items-center justify-center border-b border-r border-border bg-blue px-10 py-2">
+                  <Text className="font-inter-bold text-white">{dayName}</Text>
                 </View>
 
                 {/* Time Slots */}
@@ -155,15 +154,15 @@ const AdminInstructorDetails = () => {
                     const matchingSchedule = instructorSchedules.find(
                       (schedule) =>
                         schedule.day === dayIndex + 1 &&
-                        schedule.startTime === currentTime
+                        schedule.startTime === currentTime,
                     );
 
                     if (matchingSchedule) {
                       const scheduleStart = timeToMinutes(
-                        matchingSchedule.startTime
+                        matchingSchedule.startTime,
                       );
                       const scheduleEnd = timeToMinutes(
-                        matchingSchedule.endTime
+                        matchingSchedule.endTime,
                       );
                       const durationMinutes = scheduleEnd - scheduleStart;
                       const blockHeight = (durationMinutes / 30) * 30;
@@ -174,27 +173,27 @@ const AdminInstructorDetails = () => {
                       cells.push(
                         <View
                           key={`${dayIndex}-${i}`}
-                          className="w-40 bg-blue/10 border-l-4 border-b border-r border-r-border border-l-blue border-b-border justify-center items-center"
+                          className="w-40 items-center justify-center border-b border-l-4 border-r border-b-border border-l-blue border-r-border bg-blue/10"
                           style={{
                             height: blockHeight,
                           }}
                         >
-                          <Text className="mb-1 font-inter-semibold leading-relaxed text-center">
+                          <Text className="mb-1 text-center font-inter-semibold leading-relaxed">
                             {matchingSchedule.roomName}
                           </Text>
                           <Text className="font-inter text-sm text-subtext">
                             {matchingSchedule.startTime} -{" "}
                             {matchingSchedule.endTime}
                           </Text>
-                        </View>
+                        </View>,
                       );
                     } else {
                       cells.push(
                         <View
-                          className="w-40 border-r border-b border-border"
+                          className="w-40 border-b border-r border-border"
                           key={`${dayIndex}-${i}`}
                           style={{ height: 30 }}
-                        />
+                        />,
                       );
                     }
                   }

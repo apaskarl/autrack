@@ -12,7 +12,7 @@ export default function AdminHomeStack() {
         options={{
           title: "",
           headerTitle: () => (
-            <View className="ml-1 w-full bg-white">
+            <View className="ml-1 w-full">
               <LogoName />
             </View>
           ),
@@ -34,9 +34,10 @@ export default function AdminHomeStack() {
         name="room-details"
         options={{
           title: "",
-          headerLeft: () => <HeaderBack />,
-          headerTitle: () => <HeaderTitle title="Room Details" />,
-          headerShadowVisible: false,
+          headerShown: false,
+          // headerLeft: () => <HeaderBack />,
+          // headerTitle: () => <HeaderTitle title="Room Details" />,
+          // headerShadowVisible: false,
         }}
       />
 

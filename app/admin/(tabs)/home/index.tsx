@@ -75,7 +75,7 @@ const HomeAdmin = () => {
   return (
     <>
       {loading && (
-        <View className="z-50 inset-0 absolute h-screen w-screen opacity-50">
+        <View className="absolute inset-0 z-50 h-screen w-screen opacity-50">
           <Loader />
         </View>
       )}
@@ -88,13 +88,13 @@ const HomeAdmin = () => {
         className="flex-1 bg-white"
       >
         {/* Dashboard Card */}
-        <View className="px-6 pt-3">
+        <View className="px-5 pt-3">
           <View
-            className="mb-8 p-5 w-full rounded-xl bg-white"
+            className="mb-6 w-full rounded-xl bg-white p-5"
             style={styles.shadow}
           >
-            <View className="flex-row items-center justify-between mb-5">
-              <Text className="text-xl font-inter-bold">Report</Text>
+            <View className="mb-5 flex-row items-center justify-between">
+              <Text className="font-inter-bold text-xl">Analytics</Text>
               <IonicButton
                 icon="ellipsis-horizontal"
                 className="absolute right-0"
@@ -102,14 +102,12 @@ const HomeAdmin = () => {
               />
             </View>
 
-            <View className="flex-row gap-x-5 justify-between items-center">
-              <View className="flex-1 items-center">
-                <Image
-                  source={require("../../../../assets/images/sample/chart1.png")}
-                  className="size-36"
-                  resizeMode="contain"
-                />
-              </View>
+            <View className="flex-row items-center justify-between gap-x-5">
+              <Image
+                source={require("../../../../assets/images/sample/chart1.png")}
+                className="size-36 flex-1"
+                resizeMode="contain"
+              />
 
               <View className="flex-1">
                 <Text className="font-inter-bold">Room Availabilty</Text>
@@ -137,26 +135,20 @@ const HomeAdmin = () => {
               </View>
             </View>
 
-            <View className="mt-7">
-              <Text className="font-inter-bold mb-2">
-                Percent occupied by hours
-              </Text>
-              <Image
-                source={require("../../../../assets/images/sample/chart2.png")}
-                className="size-32 w-full mt-4 rounded-xl"
-                resizeMode="cover"
-                style={styles.shadow}
-              />
-            </View>
+            <Image
+              source={require("../../../../assets/images/sample/chart2.png")}
+              className="mb-4 size-32 w-full rounded-xl"
+              resizeMode="stretch"
+            />
 
-            <View className="flex-row items-center justify-between border-t border-border mt-5 pt-5">
+            <View className="flex-row items-center justify-between border-t border-border pt-4">
               <View className="flex-row items-center gap-x-2">
                 <Ionicons
                   name="calendar-clear-outline"
                   size={16}
                   color={COLORS.subtext}
                 />
-                <Text className="font-inter-semibold text-subtext text-sm">
+                <Text className="font-inter-semibold text-sm text-subtext">
                   {getCurrentDate()}
                 </Text>
               </View>
@@ -191,28 +183,28 @@ const HomeAdmin = () => {
                   params: { id: room.id },
                 })
               }
-              className={`mr-5 rounded-xl min-w-[240px] bg-white flex-row ${
-                index === 0 ? "ml-6" : ""
+              className={`mr-5 min-w-[240px] flex-row rounded-xl bg-white ${
+                index === 0 ? "ml-5" : ""
               }`}
               style={styles.shadow}
             >
               <Image
                 source={{ uri: room?.image }}
-                className={`rounded-l-xl aspect-square`}
+                className={`aspect-square rounded-l-xl`}
                 resizeMode="cover"
               />
-              <View className="justify-between p-4">
+              <View className="justify-between gap-y-1 p-4">
                 <View className="flex-row items-center gap-x-3">
                   <Text className="font-inter-bold">{room.name}</Text>
-                  <Text className="bg-green/10 text-green self-start px-3 py-1 rounded-full font-inter-semibold text-[10px]">
+                  <Text className="self-start rounded-full bg-green/10 px-3 py-1 font-inter-semibold text-[10px] text-green">
                     Available
                   </Text>
                 </View>
                 <Text className="font-inter text-sm text-subtext">
-                  Occupant: None
+                  {room.buildingName}
                 </Text>
                 <Text className="font-inter text-sm text-subtext">
-                  Time: --:-- - --:--
+                  {room.departmentName}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -228,8 +220,8 @@ const HomeAdmin = () => {
             <TouchableOpacity
               key={instructor.id}
               activeOpacity={0.7}
-              className={`items-center w-28 mr-2 gap-x-4 ${
-                index === 0 ? "ml-6" : ""
+              className={`mr-2 w-28 items-center gap-x-4 ${
+                index === 0 ? "ml-5" : ""
               }`}
               onPress={() =>
                 router.push({
@@ -240,10 +232,10 @@ const HomeAdmin = () => {
             >
               <Image
                 source={{ uri: instructor?.image }}
-                className="size-20 rounded-full mb-2"
+                className="mb-2 size-20 rounded-full"
                 resizeMode="contain"
               />
-              <Text className="font-inter-bold px-2 text-center">
+              <Text className="px-2 text-center font-inter-bold">
                 {instructor.firstName} {instructor.lastName}
               </Text>
             </TouchableOpacity>

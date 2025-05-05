@@ -27,7 +27,9 @@ type Room = {
   capacity: number;
   image: string;
   buildingId: string;
+  buildingName: string;
   departmentId: string;
+  departmentName: string;
   isAvailable: boolean;
   facilities?: {
     airConditioned: boolean;
@@ -52,7 +54,7 @@ type RoomStore = {
     departmentId: string,
     code: string,
     capacity: number,
-    facilities: Room["facilities"]
+    facilities: Room["facilities"],
   ) => Promise<void>;
 
   deleteRoom: (id: string) => Promise<void>;
@@ -66,14 +68,14 @@ type RoomStore = {
       code: string;
       capacity: number;
       facilities: Room["facilities"];
-    }
+    },
   ) => Promise<void>;
 
   clearCurrentRoom: () => void;
   schedules: Schedule[];
   addScheduleToRoom: (
     roomId: string,
-    schedule: Omit<Schedule, "id">
+    schedule: Omit<Schedule, "id">,
   ) => Promise<void>;
   fetchSchedulesForRoom: (roomId: string) => Promise<void>;
   fetchSchedulesForRoomDirect: (roomId: string) => Promise<Schedule[]>;
@@ -90,10 +92,31 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     try {
       set({ loading: true });
       const snapshot = await getDocs(collection(db, "rooms"));
-      const roomList: Room[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Room[];
+
+      const roomList: Room[] = await Promise.all(
+        snapshot.docs.map(async (docSnap) => {
+          const roomData = docSnap.data() as Room;
+
+          const [buildingDoc, departmentDoc] = await Promise.all([
+            getDoc(doc(db, "buildings", roomData.buildingId)),
+            getDoc(doc(db, "departments", roomData.departmentId)),
+          ]);
+
+          const buildingName = buildingDoc.exists()
+            ? (buildingDoc.data().name ?? "")
+            : "";
+          const departmentName = departmentDoc.exists()
+            ? (departmentDoc.data().name ?? "")
+            : "";
+
+          return {
+            ...roomData,
+            id: docSnap.id,
+            buildingName,
+            departmentName,
+          };
+        }),
+      );
 
       set({ rooms: roomList, error: null });
     } catch (error) {
@@ -112,8 +135,32 @@ const useRoomStore = create<RoomStore>((set, get) => ({
       const roomSnap = await getDoc(roomRef);
 
       if (roomSnap.exists()) {
-        const data = roomSnap.data() as Omit<Room, "id">;
-        set({ currentRoom: { id: roomSnap.id, ...data }, error: null });
+        const data = roomSnap.data() as Omit<
+          Room,
+          "id" | "buildingName" | "departmentName"
+        >;
+
+        const [buildingDoc, departmentDoc] = await Promise.all([
+          getDoc(doc(db, "buildings", data.buildingId)),
+          getDoc(doc(db, "departments", data.departmentId)),
+        ]);
+
+        const buildingName = buildingDoc.exists()
+          ? (buildingDoc.data().name ?? "")
+          : "";
+        const departmentName = departmentDoc.exists()
+          ? (departmentDoc.data().name ?? "")
+          : "";
+
+        set({
+          currentRoom: {
+            id: roomSnap.id,
+            ...data,
+            buildingName,
+            departmentName,
+          },
+          error: null,
+        });
       } else {
         set({ currentRoom: null, error: "Room not found" });
       }
@@ -132,7 +179,7 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     departmentId,
     code,
     capacity,
-    facilities
+    facilities,
   ) => {
     try {
       set({ loading: true });
@@ -180,13 +227,14 @@ const useRoomStore = create<RoomStore>((set, get) => ({
       code: string;
       capacity: number;
       facilities: Room["facilities"];
-    }
+    },
   ) => {
     try {
       set({ loading: true });
       const roomRef = doc(db, "rooms", id);
       await updateDoc(roomRef, data);
       await get().fetchRooms();
+      await get().fetchRoom(id);
     } catch (error) {
       console.error("Failed to update room:", error);
       throw error;

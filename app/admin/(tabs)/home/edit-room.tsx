@@ -20,6 +20,7 @@ import PickerField from "@/components/shared/ui/PickerField";
 import Loader from "@/components/shared/ui/Loader";
 import { uploadImage } from "@/utils/uploadImage";
 import FormButton from "@/components/shared/ui/FormButton";
+import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 
 const EditRoom = () => {
   const { id } = useLocalSearchParams();
@@ -59,7 +60,7 @@ const EditRoom = () => {
     const facilitiesUnchanged = Object.keys(facilities).every(
       (key) =>
         facilities[key as keyof typeof facilities] ===
-        currentFacilities[key as keyof typeof facilities]
+        currentFacilities[key as keyof typeof facilities],
     );
 
     return (
@@ -116,7 +117,7 @@ const EditRoom = () => {
           tv: false,
           wifi: false,
           projector: false,
-        }
+        },
       );
     }
   }, [currentRoom]);
@@ -182,12 +183,12 @@ const EditRoom = () => {
   if (fetching) return <Loader />;
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <AdminHomeLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="gap-y-6 pb-6">
+        <View className="gap-y-6">
           {error && (
-            <View className="bg-red/10 rounded-full py-4 px-5">
-              <Text className="text-sm text-red font-inter-medium">
+            <View className="rounded-full bg-red/10 px-5 py-4">
+              <Text className="font-inter-medium text-sm text-red">
                 {error}
               </Text>
             </View>
@@ -195,13 +196,13 @@ const EditRoom = () => {
 
           <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
             {!image ? (
-              <View className="h-60 border border-dashed rounded-xl border-border justify-center items-center bg-gray-100">
+              <View className="h-60 items-center justify-center rounded-xl border border-dashed border-border bg-gray-100">
                 <Ionicons
                   name="images-outline"
                   size={30}
                   color={COLORS.subtext}
                 />
-                <Text className="mt-3 text-subtext font-inter-medium text-sm">
+                <Text className="mt-3 font-inter-medium text-sm text-subtext">
                   Choose an image
                 </Text>
               </View>
@@ -209,7 +210,7 @@ const EditRoom = () => {
               <>
                 <Image
                   source={{ uri: image }}
-                  className="w-full h-60 rounded-xl"
+                  className="inset-0 h-60 rounded-xl"
                 />
                 <View className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
                   <Ionicons
@@ -217,7 +218,7 @@ const EditRoom = () => {
                     size={30}
                     color={COLORS.white}
                   />
-                  <Text className="mt-3 text-white font-inter-medium text-sm">
+                  <Text className="mt-3 font-inter-medium text-sm text-white">
                     Change image
                   </Text>
                 </View>
@@ -264,7 +265,7 @@ const EditRoom = () => {
           />
 
           <View>
-            <Text className="text-sm font-inter-bold mb-4">
+            <Text className="mb-4 font-inter-bold text-sm">
               Facilities Included
             </Text>
             <View>
@@ -281,9 +282,9 @@ const EditRoom = () => {
                     color={value ? COLORS.blue : COLORS.white}
                     className={`${
                       value ? "border-blue" : "border-border"
-                    } border p-[2px] rounded-full`}
+                    } rounded-full border p-[2px]`}
                   />
-                  <Text className="ml-4 capitalize font-inter-medium">
+                  <Text className="ml-4 font-inter-medium capitalize">
                     {key.replace(/([A-Z])/g, " $1").toLowerCase()}
                   </Text>
                 </TouchableOpacity>
@@ -299,7 +300,7 @@ const EditRoom = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </AdminHomeLayout>
   );
 };
 

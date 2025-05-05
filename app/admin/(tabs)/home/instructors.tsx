@@ -27,7 +27,7 @@ const AdminInstructors = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [showSearch, setShowSearch] = useState(true);
   const [activeInstructorId, setActiveInstructorId] = useState<string | null>(
-    null
+    null,
   );
 
   const onRefresh = useCallback(async () => {
@@ -44,7 +44,7 @@ const AdminInstructors = () => {
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => setShowSearch(true)}
-          className="p-3 bg-gray-100 rounded-full"
+          className="rounded-full bg-gray-100 p-3"
         >
           <Ionicons name="search" size={18} />
         </TouchableOpacity>
@@ -55,7 +55,7 @@ const AdminInstructors = () => {
   return (
     <>
       {loading && (
-        <View className="z-50 inset-0 absolute h-screen w-screen opacity-50">
+        <View className="absolute inset-0 z-50 h-screen w-screen opacity-50">
           <Loader />
         </View>
       )}
@@ -73,33 +73,33 @@ const AdminInstructors = () => {
               <Ionicons
                 name="search"
                 size={20}
-                className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full"
+                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
                 color={COLORS.subtext}
               />
               <TextInput
                 placeholder="Search"
-                className="pl-16 pr-5 py-4 border font-inter-medium border-border rounded-full"
+                className="rounded-full border border-border bg-light py-4 pl-16 pr-5 font-inter-medium"
               />
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => setShowSearch(false)}
-                className="absolute right-5 top-1/2 -translate-y-1/2 p-3 mr-[-8px] rounded-full"
+                className="absolute right-5 top-1/2 mr-[-8px] -translate-y-1/2 rounded-full p-3"
               >
                 <Ionicons name="close" size={20} />
               </TouchableOpacity>
             </View>
           )}
 
-          <View className="flex-row gap-x-3 mb-6">
-            <TouchableOpacity className="flex-row items-center gap-x-2 border border-border px-4 py-2 rounded-full">
+          <View className="mb-6 flex-row gap-x-3">
+            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
               <Text className="font-inter-medium text-sm">Departments</Text>
               <Ionicons name="caret-down-outline" size={15} />
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row items-center justify-between mb-6">
+          <View className="mb-6 flex-row items-center justify-between">
             {instructors && (
-              <Text className="text-sm text-subtext font-inter">
+              <Text className="font-inter text-sm text-subtext">
                 {instructors.length} instructors
               </Text>
             )}
@@ -120,7 +120,7 @@ const AdminInstructors = () => {
                       params: { id: instructor.id },
                     })
                   }
-                  className="flex-row gap-x-4 flex-1"
+                  className="flex-1 flex-row gap-x-4"
                 >
                   <Image
                     source={{ uri: instructor.image }}
@@ -132,7 +132,7 @@ const AdminInstructors = () => {
                     <Text className="mb-2 font-inter-bold text-lg">
                       {instructor.firstName} {instructor.lastName}
                     </Text>
-                    <Text className="text-subtext font-inter">
+                    <Text className="font-inter text-subtext">
                       ID: {instructor.employeeId}
                     </Text>
                   </View>
@@ -143,17 +143,17 @@ const AdminInstructors = () => {
                     setActiveInstructorId(
                       activeInstructorId === instructor.id
                         ? null
-                        : instructor.id
+                        : instructor.id,
                     )
                   }
                   icon="ellipsis-vertical"
                   size={20}
-                  className="z-20 absolute right-0 top-0 mr-[-8px]"
+                  className="absolute right-0 top-0 z-20 mr-[-8px]"
                 />
 
                 {activeInstructorId === instructor.id && (
                   <View
-                    className="z-30 bg-white border border-border/30 rounded-xl absolute right-2 top-10"
+                    className="absolute right-2 top-10 z-30 rounded-xl border border-border/30 bg-white"
                     style={styles.shadow}
                   >
                     <TouchableOpacity
@@ -192,7 +192,7 @@ const AdminInstructors = () => {
                               style: "destructive",
                             },
                           ],
-                          { cancelable: true }
+                          { cancelable: true },
                         );
                       }}
                     >
@@ -209,7 +209,7 @@ const AdminInstructors = () => {
 
         {activeInstructorId && (
           <TouchableWithoutFeedback onPress={() => setActiveInstructorId(null)}>
-            <View className="z-10 absolute inset-0 h-screen w-screen" />
+            <View className="absolute inset-0 z-10 h-screen w-screen" />
           </TouchableWithoutFeedback>
         )}
       </ScrollView>

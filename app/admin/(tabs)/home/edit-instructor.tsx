@@ -10,6 +10,7 @@ import { uploadImage } from "@/utils/uploadImage";
 import useDepartmentStore from "@/store/useDepartmentStore";
 import { useInstructorStore } from "@/store/useInstructorStore";
 import FormButton from "@/components/shared/ui/FormButton";
+import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 
 const EditInstructor = () => {
   const { id } = useLocalSearchParams();
@@ -22,11 +23,11 @@ const EditInstructor = () => {
   const [firstName, setFirstName] = useState(instructor?.firstName || "");
   const [lastName, setLastName] = useState(instructor?.lastName || "");
   const [employeeID, setEmployeeID] = useState(
-    instructor?.employeeId?.toString() || ""
+    instructor?.employeeId?.toString() || "",
   );
   const [email, setEmail] = useState(instructor?.email || "");
   const [selectedDepartmentId, setSelectedDepartmentId] = useState(
-    instructor?.departmentId || ""
+    instructor?.departmentId || "",
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -113,31 +114,31 @@ const EditInstructor = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <AdminHomeLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="gap-y-6 pb-6">
+        <View className="gap-y-6">
           {error && (
-            <View className="bg-red/10 rounded-full py-4 px-5">
-              <Text className="text-sm text-red font-inter-medium">
+            <View className="rounded-full bg-red/10 px-5 py-4">
+              <Text className="font-inter-medium text-sm text-red">
                 {error}
               </Text>
             </View>
           )}
 
-          <View className="self-center items-center">
+          <View className="items-center self-center">
             <Image
               source={{
                 uri:
                   image ||
                   "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg",
               }}
-              className="h-28 aspect-square rounded-full mb-2"
+              className="mb-2 aspect-square h-28 rounded-full"
             />
 
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={handleImagePick}
-              className="px-4 py-2 mb-[-8px]"
+              className="mb-[-8px] px-4 py-2"
             >
               <Text className="font-inter-bold text-sm">
                 {image ? "Change image" : "Choose image"}
@@ -196,7 +197,7 @@ const EditInstructor = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </AdminHomeLayout>
   );
 };
 

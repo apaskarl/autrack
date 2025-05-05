@@ -13,6 +13,7 @@ import PickerField from "@/components/shared/ui/PickerField";
 import { uploadImage } from "@/utils/uploadImage";
 import { pickImage } from "@/utils/pickImage";
 import FormButton from "@/components/shared/ui/FormButton";
+import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 
 const AddRoom = () => {
   const { addRoom } = useRoomStore();
@@ -82,7 +83,7 @@ const AddRoom = () => {
         selectedDepartmentId,
         code,
         parseInt(capacity),
-        facilities
+        facilities,
       );
 
       Alert.alert("Success", "Room added successfully.", [
@@ -113,12 +114,12 @@ const AddRoom = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <AdminHomeLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="gap-y-6 pb-6">
+        <View className="gap-y-6">
           {error && (
-            <View className="bg-red/10 rounded-full py-4 px-5">
-              <Text className="text-sm text-red font-inter-medium">
+            <View className="rounded-full bg-red/10 px-5 py-4">
+              <Text className="font-inter-medium text-sm text-red">
                 {error}
               </Text>
             </View>
@@ -130,13 +131,13 @@ const AddRoom = () => {
             className="relative"
           >
             {!image ? (
-              <View className="h-60 border border-dashed rounded-xl border-border justify-center items-center bg-gray-100">
+              <View className="h-60 items-center justify-center rounded-xl border border-dashed border-border bg-gray-100">
                 <Ionicons
                   name="images-outline"
                   size={30}
                   color={COLORS.subtext}
                 />
-                <Text className="mt-3 text-subtext font-inter-medium text-sm ">
+                <Text className="mt-3 font-inter-medium text-sm text-subtext">
                   Choose an image
                 </Text>
               </View>
@@ -144,15 +145,15 @@ const AddRoom = () => {
               <>
                 <Image
                   source={{ uri: image }}
-                  className="w-full h-60 bg-black opacity-80 rounded-xl"
+                  className="h-60 w-full rounded-xl bg-black opacity-80"
                 />
-                <View className="items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <View className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
                   <Ionicons
                     name="images-outline"
                     size={30}
                     color={COLORS.white}
                   />
-                  <Text className="mt-3 text-white font-inter-medium text-sm ">
+                  <Text className="mt-3 font-inter-medium text-sm text-white">
                     Change image
                   </Text>
                 </View>
@@ -207,7 +208,7 @@ const AddRoom = () => {
           />
 
           <View>
-            <Text className="text-sm font-inter-bold mb-4">
+            <Text className="mb-4 font-inter-bold text-sm">
               Facilities Included
             </Text>
 
@@ -226,11 +227,11 @@ const AddRoom = () => {
                       color={value ? COLORS.blue : COLORS.white}
                       className={`${
                         value ? "border-blue" : "border-border"
-                      } border p-[2px] rounded-full`}
+                      } rounded-full border p-[2px]`}
                     />
                   </View>
 
-                  <Text className="ml-4 capitalize font-inter-medium">
+                  <Text className="ml-4 font-inter-medium capitalize">
                     {key.replace(/([A-Z])/g, " $1").toLowerCase()}
                   </Text>
                 </TouchableOpacity>
@@ -245,7 +246,7 @@ const AddRoom = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </AdminHomeLayout>
   );
 };
 

@@ -76,7 +76,7 @@ const AdminRooms = () => {
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => setShowSearch(true)}
-          className="p-3 bg-gray-100 rounded-full"
+          className="rounded-full bg-gray-100 p-3"
         >
           <Ionicons name="search" size={18} />
         </TouchableOpacity>
@@ -87,7 +87,7 @@ const AdminRooms = () => {
   return (
     <>
       {loading && (
-        <View className="z-50 inset-0 absolute h-screen w-screen opacity-50">
+        <View className="absolute inset-0 z-50 h-screen w-screen opacity-50">
           <Loader />
         </View>
       )}
@@ -105,37 +105,37 @@ const AdminRooms = () => {
               <Ionicons
                 name="search"
                 size={20}
-                className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full"
+                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
                 color={COLORS.subtext}
               />
               <TextInput
                 placeholder="Search"
-                className="pl-16 pr-5 py-4 border font-inter-medium border-border rounded-full"
+                className="rounded-full border border-border bg-light py-4 pl-16 pr-5 font-inter-medium"
               />
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => setShowSearch(false)}
-                className="absolute right-5 top-1/2 -translate-y-1/2 p-3 mr-[-8px] rounded-full"
+                className="absolute right-5 top-1/2 mr-[-8px] -translate-y-1/2 rounded-full p-3"
               >
                 <Ionicons name="close" size={20} />
               </TouchableOpacity>
             </View>
           )}
 
-          <View className="flex-row gap-x-3 mb-6">
-            <TouchableOpacity className="flex-row items-center gap-x-2 border border-border px-4 py-2 rounded-full">
+          <View className="mb-6 flex-row gap-x-3">
+            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
               <Text className="font-inter-medium text-sm">Departments</Text>
               <Ionicons name="caret-down-outline" size={15} />
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center gap-x-2 border border-border px-4 py-2 rounded-full">
+            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
               <Text className="font-inter-medium text-sm">Facilities</Text>
               <Ionicons name="caret-down-outline" size={15} />
             </TouchableOpacity>
           </View>
 
-          <View className="flex-row items-center justify-between mb-6">
+          <View className="mb-6 flex-row items-center justify-between">
             {rooms && (
-              <Text className="text-sm text-subtext font-inter">
+              <Text className="font-inter text-sm text-subtext">
                 {rooms.length} rooms
               </Text>
             )}
@@ -156,7 +156,7 @@ const AdminRooms = () => {
                       params: { id: room.id },
                     })
                   }
-                  className="flex-row w-full rounded-xl bg-white"
+                  className="w-full flex-row rounded-xl bg-white"
                   style={styles.shadow}
                 >
                   <Image
@@ -173,20 +173,20 @@ const AdminRooms = () => {
                           room.isAvailable
                             ? "bg-green/10 text-green"
                             : "bg-red/10 text-red"
-                        } px-3 py-1 rounded-full font-inter-semibold text-[10px]`}
+                        } rounded-full px-3 py-1 font-inter-semibold text-[10px]`}
                       >
                         {room.isAvailable ? "Available" : "Unavailble"}
                       </Text>
                     </View>
                     <Text className="font-inter-semibold text-sm">
-                      {room.departmentId}
+                      {room.buildingName}
                     </Text>
                     <Text className="font-inter text-sm text-subtext">
-                      Building: {room.buildingId}
+                      {room.departmentName}
                     </Text>
 
                     {/* Facilites */}
-                    <View className="flex-row items-center gap-x-2 mt-2">
+                    <View className="mt-2 flex-row items-center gap-x-2">
                       <View className="flex-row items-center gap-x-1">
                         <Ionicons
                           name="people-outline"
@@ -207,7 +207,7 @@ const AdminRooms = () => {
                               size={size}
                               color={COLORS.subtext}
                             />
-                          ) : null
+                          ) : null,
                       )}
                     </View>
                   </View>
@@ -219,12 +219,12 @@ const AdminRooms = () => {
                   }
                   icon="ellipsis-vertical"
                   size={20}
-                  className="z-50 absolute right-3 top-3"
+                  className="absolute right-3 top-3 z-50"
                 />
 
                 {activeRoomId === room.id && (
                   <View
-                    className="z-20 bg-white border border-border/30 rounded-xl absolute right-6 top-12"
+                    className="absolute right-6 top-12 z-20 rounded-xl border border-border/30 bg-white"
                     style={styles.shadow}
                   >
                     <TouchableOpacity
@@ -262,7 +262,7 @@ const AdminRooms = () => {
                               style: "destructive",
                             },
                           ],
-                          { cancelable: true }
+                          { cancelable: true },
                         );
                       }}
                       className="px-5 pb-4 pt-2"
@@ -278,7 +278,7 @@ const AdminRooms = () => {
 
         {activeRoomId && (
           <TouchableWithoutFeedback onPress={() => setActiveRoomId(null)}>
-            <View className="z-10 absolute inset-0 h-screen w-screen" />
+            <View className="absolute inset-0 z-10 h-screen w-screen" />
           </TouchableWithoutFeedback>
         )}
       </ScrollView>

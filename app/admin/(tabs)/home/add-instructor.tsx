@@ -13,6 +13,7 @@ import { router } from "expo-router";
 import FormButton from "@/components/shared/ui/FormButton";
 import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
+import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 
 const AddInstructor = () => {
   const { addInstructor } = useInstructorStore();
@@ -79,7 +80,7 @@ const AddInstructor = () => {
         parseInt(employeeID),
         email,
         password,
-        selectedDepartmentId
+        selectedDepartmentId,
       );
 
       Alert.alert("Success", "Instructor added successfully.", [
@@ -102,31 +103,31 @@ const AddInstructor = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <AdminHomeLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="gap-y-6 pb-6">
+        <View className="gap-y-6">
           {error && (
-            <View className="bg-red/10 rounded-full py-4 px-5">
-              <Text className="text-sm text-red font-inter-medium">
+            <View className="rounded-full bg-red/10 px-5 py-4">
+              <Text className="font-inter-medium text-sm text-red">
                 {error}
               </Text>
             </View>
           )}
 
-          <View className="self-center items-center">
+          <View className="items-center self-center">
             <Image
               source={{
                 uri:
                   image ||
                   "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg",
               }}
-              className="h-28 aspect-square rounded-full mb-2"
+              className="mb-2 aspect-square h-28 rounded-full"
             />
 
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => setShowPhotoModal(true)}
-              className="px-4 py-2 mb-[-8px]"
+              className="mb-[-8px] px-4 py-2"
             >
               <Text className="font-inter-bold text-sm">Choose Image</Text>
             </TouchableOpacity>
@@ -201,9 +202,9 @@ const AddInstructor = () => {
         statusBarTranslucent
         style={{ margin: 0, padding: 0 }}
       >
-        <View className="flex-1 justify-center items-center bg-black/50 px-8">
-          <View className="relative bg-white rounded-3xl p-5 w-full">
-            <Text className="text-lg font-inter-bold mb-4">Choose Image</Text>
+        <View className="flex-1 items-center justify-center bg-black/50 px-8">
+          <View className="relative w-full rounded-3xl bg-white p-5">
+            <Text className="mb-4 font-inter-bold text-lg">Choose Image</Text>
 
             <View>
               <TouchableOpacity
@@ -235,7 +236,7 @@ const AddInstructor = () => {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </AdminHomeLayout>
   );
 };
 

@@ -26,6 +26,7 @@ const AdminTabsLayout = () => {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: COLORS.dark,
         tabBarInactiveTintColor: COLORS.border,
@@ -43,7 +44,6 @@ const AdminTabsLayout = () => {
       <Tabs.Screen
         name="home"
         options={{
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={focused ? "home" : "home-outline"}
@@ -59,7 +59,6 @@ const AdminTabsLayout = () => {
       <Tabs.Screen
         name="messages/index"
         options={{
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}

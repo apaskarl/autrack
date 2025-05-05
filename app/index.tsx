@@ -66,20 +66,20 @@ const Index = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white px-6">
+    <SafeAreaView className="flex-1 bg-white px-5">
       <KeyboardAvoidingView className="flex-1">
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View className={`pb-14 pt-24 gap-y-16 justify-center w-full`}>
+          <View className={`w-full justify-center gap-y-16 pb-14 pt-24`}>
             <View className="items-center">
               <Image
                 source={require("../assets/images/logos/logo-outline-primary.png")}
-                className="size-20 mb-4"
+                className="mb-4 size-20"
                 resizeMode="contain"
               />
-              <Text className="mb-3 font-inter-bold leading-[45px] text-4xl px-8 text-center">
+              <Text className="mb-3 px-8 text-center font-inter-bold text-4xl leading-[45px]">
                 Sign in to your account
               </Text>
               <Text className="font-inter text-subtext">
@@ -89,8 +89,8 @@ const Index = () => {
 
             <View className="gap-y-5">
               {error && (
-                <View className="bg-red/10 rounded-lg py-4 px-5">
-                  <Text className="text-sm text-red font-inter-medium">
+                <View className="rounded-lg bg-red/10 px-5 py-4">
+                  <Text className="font-inter-medium text-sm text-red">
                     {error}
                   </Text>
                 </View>
