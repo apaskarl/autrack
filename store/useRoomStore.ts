@@ -90,7 +90,6 @@ const useRoomStore = create<RoomStore>((set, get) => ({
 
   fetchRooms: async () => {
     try {
-      set({ loading: true });
       const snapshot = await getDocs(collection(db, "rooms"));
 
       const roomList: Room[] = await Promise.all(
@@ -122,8 +121,6 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     } catch (error) {
       set({ error: "Failed to fetch rooms" });
       console.error("Failed to fetch rooms:", error);
-    } finally {
-      set({ loading: false });
     }
   },
 

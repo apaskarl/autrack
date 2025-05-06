@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
 import useDepartmentStore from "@/store/useDepartmentStore";
 import { useInstructorStore } from "@/store/useInstructorStore";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import InputField from "@/components/shared/ui/InputField";
 import PickerField from "@/components/shared/ui/PickerField";
@@ -25,6 +24,7 @@ const AddInstructor = () => {
   const [employeeID, setEmployeeID] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [selectedDepartmentId, setSelectedDepartmentId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,12 +48,18 @@ const AddInstructor = () => {
   };
 
   const handleAddInstructor = async () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      return;
+    }
+
     if (
       !firstName ||
       !lastName ||
       !employeeID ||
       !email ||
       !password ||
+      !confirmPassword ||
       !selectedDepartmentId
     ) {
       setError("Please fill out all the fields.");
@@ -181,6 +187,14 @@ const AddInstructor = () => {
             value={password}
             onChangeText={setPassword}
             error={!password && !!error}
+            password
+          />
+
+          <InputField
+            label="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            error={!confirmPassword && !!error}
             password
           />
 

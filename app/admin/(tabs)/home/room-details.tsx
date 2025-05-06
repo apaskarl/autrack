@@ -349,7 +349,7 @@ const AdminRoomDetails = () => {
                         cells.push(
                           <View
                             key={`${dayIndex}-${i}`}
-                            className="w-40 items-center justify-center border-r border-border bg-gray-200"
+                            className="w-40 items-center justify-center border-r border-gray-200 bg-gray-200"
                             style={{ height: 30 }}
                           >
                             <Text className="font-inter text-xs text-yellow-700"></Text>

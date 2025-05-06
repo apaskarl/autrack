@@ -1,4 +1,4 @@
-import { View, Text, Touchable, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import useUserStore from "@/store/useUserStore";
 import Loader from "@/components/shared/ui/Loader";
@@ -14,10 +14,15 @@ const AdminSettings = () => {
   };
 
   if (loading) return <Loader />;
+
   return (
-    <View className="flex-1 bg-white justify-center items-center">
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Log out</Text>
+    <View className="flex-1 bg-white px-5">
+      <TouchableOpacity
+        onPress={handleLogout}
+        activeOpacity={0.7}
+        className="w-full items-center rounded-full bg-red p-5"
+      >
+        <Text className="font-inter-bold text-white">Log out</Text>
       </TouchableOpacity>
     </View>
   );

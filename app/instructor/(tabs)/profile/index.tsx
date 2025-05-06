@@ -34,14 +34,14 @@ const Profile = () => {
   return (
     <>
       <InstructorLayout>
-        <View className="items-center gap-y-4 justify-center pt-4 pb-10">
+        <View className="items-center justify-center gap-y-4 pb-10 pt-4">
           {imageLoading && (
-            <View className="size-28 rounded-full bg-light items-center justify-center">
+            <View className="size-28 items-center justify-center rounded-full bg-light">
               <ActivityIndicator size="small" color="#999" />
             </View>
           )}
           <Image
-            source={{ uri: user?.photoURL }}
+            source={{ uri: user?.image }}
             className={`${
               imageLoading ? "absolute opacity-0" : "relative opacity-100"
             } size-28 rounded-full`}
@@ -89,25 +89,25 @@ const Profile = () => {
         statusBarTranslucent
         style={{ margin: 0, padding: 0 }}
       >
-        <View className="flex-1 justify-center items-center bg-black/50 px-8">
-          <View className="bg-white rounded-3xl p-6 w-full">
-            <Text className="text-lg font-inter-bold mb-4">Log out</Text>
-            <Text className="font-inter-medium mb-6 text-subtext">
+        <View className="flex-1 items-center justify-center bg-black/50 px-8">
+          <View className="w-full rounded-3xl bg-white p-6">
+            <Text className="mb-4 font-inter-bold text-lg">Log out</Text>
+            <Text className="mb-6 font-inter-medium text-subtext">
               Are you sure you want to log out?
             </Text>
-            <View className="flex-row justify-end items-center w-full">
+            <View className="w-full flex-row items-center justify-end">
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => setShowLogoutModal(false)}
                 className="px-5 py-3"
               >
-                <Text className="font-inter-medium ">Cancel</Text>
+                <Text className="font-inter-medium">Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={handleLogout}
-                className="px-5 py-3 rounded-lg"
+                className="rounded-lg px-5 py-3"
               >
                 <Text className="font-inter-bold">Log out</Text>
               </TouchableOpacity>

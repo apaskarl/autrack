@@ -18,7 +18,7 @@ type User = {
   firstName: string;
   lastName: string;
   email: string;
-  photoURL: string;
+  image: string;
 };
 
 type UserStore = {
@@ -60,7 +60,7 @@ const useUserStore = create<UserStore>((set) => ({
         const usersRef = collection(db, "users");
         const q = query(
           usersRef,
-          where("employeeId", "==", parseInt(emailOrId))
+          where("employeeId", "==", parseInt(emailOrId)),
         );
         const querySnapshot = await getDocs(q);
 
@@ -75,7 +75,7 @@ const useUserStore = create<UserStore>((set) => ({
       const userCredential = await signInWithEmailAndPassword(
         auth,
         emailToUse,
-        password
+        password,
       );
 
       const user = userCredential.user;
@@ -100,7 +100,7 @@ const useUserStore = create<UserStore>((set) => ({
             firstName: userData.firstName,
             lastName: userData.lastName,
             email: userData.email,
-            photoURL: userData.photoURL,
+            image: userData.image,
           },
         });
 
@@ -110,7 +110,7 @@ const useUserStore = create<UserStore>((set) => ({
             ...args: any[]
           ) => any
             ? P
-            : never
+            : never,
         );
       } else {
         throw new Error("User data not found in Firestore.");

@@ -38,13 +38,13 @@ interface InstructorStore {
     employeeId: number,
     email: string,
     password: string,
-    departmentId: string
+    departmentId: string,
   ) => Promise<void>;
   loading: boolean;
   error: string | null;
   updateInstructor: (
     id: string,
-    updatedData: Partial<Omit<Instructor, "id" | "role" | "createdAt">>
+    updatedData: Partial<Omit<Instructor, "id" | "role" | "createdAt">>,
   ) => Promise<void>;
   deleteInstructor: (id: string) => Promise<void>;
 }
@@ -56,7 +56,6 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
 
   fetchInstructors: async () => {
     try {
-      set({ loading: true, error: null });
       const usersRef = collection(db, "users");
       const deptRef = collection(db, "departments");
 
@@ -66,10 +65,13 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
 
       // Fetch departments
       const deptSnap = await getDocs(deptRef);
-      const departments = deptSnap.docs.reduce((acc, doc) => {
-        acc[doc.id] = doc.data().name;
-        return acc;
-      }, {} as Record<string, string>);
+      const departments = deptSnap.docs.reduce(
+        (acc, doc) => {
+          acc[doc.id] = doc.data().name;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
 
       // Combine and format instructor data
       const instructors = userSnap.docs.map((doc) => {
@@ -85,8 +87,6 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
     } catch (err) {
       console.error("Failed to fetch instructors:", err);
       set({ error: "Failed to fetch instructors" });
-    } finally {
-      set({ loading: false });
     }
   },
 
@@ -97,7 +97,7 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
     employeeId,
     email,
     password,
-    departmentId
+    departmentId,
   ) => {
     try {
       set({ loading: true, error: null });
@@ -106,7 +106,7 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       const user = userCredential.user;
 
@@ -137,7 +137,7 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
 
   updateInstructor: async (
     id: string,
-    updatedData: Partial<Omit<Instructor, "id" | "role" | "createdAt">>
+    updatedData: Partial<Omit<Instructor, "id" | "role" | "createdAt">>,
   ) => {
     try {
       set({ loading: true, error: null });

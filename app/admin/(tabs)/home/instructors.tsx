@@ -32,10 +32,8 @@ const AdminInstructors = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 0);
     await fetchInstructors?.();
+    setRefreshing(false);
   }, [fetchInstructors]);
 
   useLayoutEffect(() => {

@@ -64,10 +64,8 @@ const AdminRooms = () => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 0);
     await fetchRooms?.();
+    setRefreshing(false);
   }, [fetchRooms]);
 
   useLayoutEffect(() => {
