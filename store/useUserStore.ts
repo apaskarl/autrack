@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { auth, db } from "@/firebase";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import {
   doc,
   getDoc,
@@ -82,39 +86,47 @@ const useUserStore = create<UserStore>((set) => ({
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-
-        const role = userData.role;
-        const route = roleRoutes[role];
-
-        if (!route) {
-          throw new Error("No route defined for this role.");
-        }
-
-        set({
-          user: {
-            id: docSnap.id, // <-- Include document id here
-            uid: user.uid,
-            employeeId: userData.employeeId,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            email: userData.email,
-            image: userData.image,
-          },
-        });
-
-        router.replace(
-          route as typeof router.replace extends (
-            path: infer P,
-            ...args: any[]
-          ) => any
-            ? P
-            : never,
-        );
-      } else {
+      if (!docSnap.exists()) {
         throw new Error("User data not found in Firestore.");
       }
+
+      const userData = docSnap.data();
+      const role = userData.role;
+
+      // Check for instructor with unverified email
+      if (role === "instructor" && !user.emailVerified) {
+        await sendEmailVerification(user);
+        await signOut(auth);
+        throw new Error(
+          "Please verify your email address. A verification link has been sent to your inbox.",
+        );
+      }
+
+      const route = roleRoutes[role];
+      if (!route) {
+        throw new Error("No route defined for this role.");
+      }
+
+      set({
+        user: {
+          id: docSnap.id,
+          uid: user.uid,
+          employeeId: userData.employeeId,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          image: userData.image,
+        },
+      });
+
+      router.replace(
+        route as typeof router.replace extends (
+          path: infer P,
+          ...args: any[]
+        ) => any
+          ? P
+          : never,
+      );
     } catch (error: any) {
       throw error;
     }

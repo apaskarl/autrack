@@ -8,7 +8,8 @@ interface AuthInputProps {
   email?: boolean;
   value?: string;
   onChangeText?: (text: string) => void;
-  error?: string | null;
+  // error?: string | null;
+  error?: boolean;
 }
 
 const AuthInput = ({
@@ -23,7 +24,7 @@ const AuthInput = ({
 
   return (
     <View>
-      <Text className="font-inter-semibold mb-3">
+      <Text className="mb-3 font-inter-semibold">
         {label} <Text className="text-red">*</Text>
       </Text>
 
@@ -31,7 +32,7 @@ const AuthInput = ({
         <TextInput
           className={`${
             error ? "border-red" : "border-border"
-          } border rounded-xl p-5 font-inter-medium`}
+          } rounded-xl border p-5 font-inter-medium`}
           placeholder={`Enter ${label.toLowerCase()}`}
           keyboardType={email ? "email-address" : "default"}
           autoCapitalize={email ? "none" : "sentences"}
@@ -57,7 +58,7 @@ const AuthInput = ({
       </View>
 
       {error && (
-        <Text className="text-red mt-2 font-inter text-sm">
+        <Text className="mt-2 font-inter-medium text-sm text-red">
           This field is required.
         </Text>
       )}

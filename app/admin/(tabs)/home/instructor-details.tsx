@@ -87,18 +87,15 @@ const AdminInstructorDetails = () => {
             resizeMode="contain"
           />
 
-          <View className="items-center">
-            <Text className="mb-1 font-inter-bold text-lg">
+          <View className="items-center gap-y-1">
+            <Text className="font-inter-bold text-lg">
               {currentInstructor.firstName} {currentInstructor.lastName}
             </Text>
             <Text className="font-inter text-subtext">
               Employee ID: {currentInstructor.employeeId}
             </Text>
             <Text className="font-inter text-subtext">
-              Department:{" "}
-              <Text className="uppercase">
-                {currentInstructor.departmentName}
-              </Text>
+              Department: {currentInstructor.departmentName}
             </Text>
             <Text className="font-inter text-subtext">
               Email: {currentInstructor.email}

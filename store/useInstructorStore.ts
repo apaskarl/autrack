@@ -1,4 +1,3 @@
-// @/store/useInstructorStore.ts
 import { create } from "zustand";
 import {
   collection,

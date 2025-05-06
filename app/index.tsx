@@ -15,50 +15,47 @@ import AuthButton from "@/components/auth/AuthButton";
 
 const Index = () => {
   const { login } = useUserStore();
-  const [formData, setFormData] = useState({
-    emailOrId: "",
-    password: "",
-  });
+
+  // Separate states for emailOrId and password
+  const [emailOrId, setEmailOrId] = useState("");
+  const [password, setPassword] = useState("");
+
   const [error, setError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleLogin = async () => {
+    if (!emailOrId || !password) {
+      setError("Please enter all required fields.");
+      return;
+    }
+
     setLoading(true);
     setEmailError("");
     setPasswordError("");
     setError(null);
 
     try {
-      const emailOrId = formData.emailOrId.trim();
-      const password = formData.password.trim();
+      const emailOrIdTrimmed = emailOrId.trim();
+      const passwordTrimmed = password.trim();
 
-      if (!emailOrId) setEmailError("This field is required");
-      if (!password) setPasswordError("This field is required");
-
-      if (!emailOrId || !password) {
-        throw new Error("empty-field");
-      }
-
-      await login(emailOrId, password);
+      await login(emailOrIdTrimmed, passwordTrimmed);
     } catch (err: any) {
-      if (err.message === "empty-field") {
-        setError("Please enter all required fields.");
-      } else if (
+      if (
         err.message.includes("No user found") ||
         err.message.includes("invalid") ||
         err.message.includes("wrong")
       ) {
         setError("Invalid email/ID number or password.");
-        setFormData((prev) => ({ ...prev, password: "" }));
+        setPassword("");
+      } else if (err.message.includes("Please verify your email address")) {
+        setError(
+          "Please verify your email address. Check your inbox for the verification link.",
+        );
       } else {
         setError("Something went wrong. Please try again later.");
-        setFormData((prev) => ({ ...prev, password: "" }));
+        setPassword("");
       }
     } finally {
       setLoading(false);
@@ -89,8 +86,8 @@ const Index = () => {
 
             <View className="gap-y-5">
               {error && (
-                <View className="rounded-lg bg-red/10 px-5 py-4">
-                  <Text className="font-inter-medium text-sm text-red">
+                <View className="rounded-xl bg-red/10 px-5 py-3">
+                  <Text className="font-inter-medium text-sm leading-relaxed text-red">
                     {error}
                   </Text>
                 </View>
@@ -99,17 +96,17 @@ const Index = () => {
               <AuthInput
                 label="Email or ID Number"
                 email
-                value={formData.emailOrId}
-                onChangeText={(text) => handleChange("emailOrId", text)}
-                error={emailError}
+                value={emailOrId}
+                onChangeText={setEmailOrId}
+                error={!emailOrId && !!error}
               />
 
               <AuthInput
                 label="Password"
                 password
-                value={formData.password}
-                onChangeText={(text) => handleChange("password", text)}
-                error={passwordError}
+                value={password}
+                onChangeText={setPassword}
+                error={!password && !!error}
               />
 
               <View className="items-end">

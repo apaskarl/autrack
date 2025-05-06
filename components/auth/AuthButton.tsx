@@ -18,19 +18,13 @@ const AuthButton = ({
         activeOpacity={0.7}
         className={`${
           disabled ? "opacity-60" : ""
-        } bg-primary w-full relative rounded-xl p-5`}
+        } relative w-full rounded-xl bg-primary p-5`}
         disabled={disabled}
       >
-        <Text className="font-inter-bold text-center text-white">{label}</Text>
+        <Text className="text-center font-inter-bold text-white">
+          {disabled ? <ActivityIndicator size="small" color="white" /> : label}
+        </Text>
       </TouchableOpacity>
-
-      {disabled && (
-        <ActivityIndicator
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          size="small"
-          color={COLORS.light}
-        />
-      )}
     </View>
   );
 };
