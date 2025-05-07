@@ -10,7 +10,7 @@ const InstructorTabsLayout = () => {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: COLORS.dark,
+        tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.border,
         tabBarStyle: {
           borderTopColor: COLORS.light,
@@ -50,37 +50,6 @@ const InstructorTabsLayout = () => {
               name="Messages"
               focused={focused}
             />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="scan"
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <View className="items-center justify-center ">
-              <View
-                className={`${
-                  focused ? "border-black" : "border-border"
-                } border mb-2 w-[55px] h-[55px] bg-white rounded-full justify-center items-center`}
-                style={{
-                  elevation: 1,
-                }}
-              >
-                <Ionicons
-                  name="qr-code-outline"
-                  size={26}
-                  color={COLORS.dark}
-                />
-              </View>
-              <Text
-                className="font-inter-bold mb-9 pb-1 text-xs"
-                style={{ color: color }}
-              >
-                QR
-              </Text>
-            </View>
           ),
         }}
       />

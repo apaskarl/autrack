@@ -12,13 +12,13 @@ interface FormInputProps {
 const FormInput = ({ label, value, onChangeText, error }: FormInputProps) => {
   return (
     <View>
-      <Text className="font-inter-semibold mb-3">{label}</Text>
+      <Text className="mb-2 font-inter-bold text-sm">{label}</Text>
 
       <View className="relative">
         <TextInput
           className={`${
             error ? "border-red" : "border-border"
-          } border rounded-lg p-5 font-inter-medium placeholder:text-subtext`}
+          } rounded-xl border p-5 font-inter-medium`}
           placeholder={`Enter ${label.toLowerCase()}`}
           numberOfLines={1}
           value={value}
@@ -27,7 +27,7 @@ const FormInput = ({ label, value, onChangeText, error }: FormInputProps) => {
       </View>
 
       {error && (
-        <Text className="text-red mt-2 font-inter text-sm">
+        <Text className="mt-2 font-inter text-sm text-red">
           This field is required.
         </Text>
       )}

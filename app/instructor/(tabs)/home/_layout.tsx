@@ -6,27 +6,24 @@ import { View } from "react-native";
 
 export default function InstructorHomeStack() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShadowVisible: false }}>
       <Stack.Screen
         name="index"
         options={{
-          title: "",
+          headerShown: false,
           headerTitle: () => (
             <View className="ml-2 w-full bg-white">
               <LogoName />
             </View>
           ),
-          headerShadowVisible: false,
         }}
       />
 
       <Stack.Screen
         name="schedule"
         options={{
-          title: "",
           headerLeft: () => <HeaderBack />,
           headerTitle: () => <HeaderTitle title="Class Schedule" />,
-          headerShadowVisible: false,
         }}
       />
     </Stack>

@@ -23,17 +23,13 @@ const Home = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="px-8 py-5">
-          <Text className="text-2xl font-inter-bold mb-5">
-            Hello, {user?.firstName}!
-          </Text>
-
+        <View className="px-5 py-5">
           <View
-            className="h-[20vh] p-5 rounded-xl bg-light mb-5"
+            className="mb-6 h-[20vh] rounded-xl bg-light p-5"
             style={styles.shadow}
           ></View>
 
-          <View className="items-center mb-5">
+          <View className="mb-5 items-center">
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() =>
@@ -42,32 +38,11 @@ const Home = () => {
                   params: { id: user?.id },
                 })
               }
-              className="bg-blue px-6 py-3 rounded-full"
+              className="rounded-full bg-blue px-6 py-3"
             >
-              <Text className="text-white font-inter-bold">View Schedules</Text>
+              <Text className="font-inter-bold text-white">View Schedules</Text>
             </TouchableOpacity>
           </View>
-
-          <View className="flex-row items-center justify-between">
-            <Text className="text-2xl font-inter-bold mb-5">Rooms</Text>
-            <View
-              className="font-inter-bold mb-5 px-10 py-5 bg-light rounded-lg"
-              style={styles.shadow}
-            ></View>
-          </View>
-
-          <View
-            className="h-[11vh] p-5 rounded-xl bg-light mb-5"
-            style={styles.shadow}
-          ></View>
-          <View
-            className="h-[11vh] p-5 rounded-xl bg-light mb-5"
-            style={styles.shadow}
-          ></View>
-          <View
-            className="h-[11vh] p-5 rounded-xl bg-light mb-5"
-            style={styles.shadow}
-          ></View>
         </View>
       </ScrollView>
     </SafeAreaView>

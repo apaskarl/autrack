@@ -17,20 +17,21 @@ import { COLORS } from "@/constants/colors";
 import FormInput from "@/components/instructor/FormInput";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Modal from "react-native-modal";
+import InputField from "@/components/shared/ui/InputField";
 
 const EditProfile = () => {
   const { user, setUser } = useUserStore();
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
-  const [image, setImage] = useState(user?.photoURL || null);
+  const [image, setImage] = useState(user?.image || null);
   const [showModal, setShowModal] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [editing, setEditing] = useState(false);
   const hasChanges =
     firstName !== user?.firstName ||
     lastName !== user?.lastName ||
-    (image !== user?.photoURL && image !== null);
+    (image !== user?.image && image !== null);
 
   const choosePhoto = async () => {
     try {
@@ -79,7 +80,7 @@ const EditProfile = () => {
     try {
       let uploadedImageUrl = null;
 
-      if (image && image !== user?.photoURL) {
+      if (image && image !== user?.image) {
         const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dsbbcevcp/upload`;
 
         const formData = new FormData();
@@ -126,7 +127,7 @@ const EditProfile = () => {
           ...user,
           firstName: updateData.firstName,
           lastName: updateData.lastName,
-          photoURL: uploadedImageUrl || user.photoURL,
+          image: uploadedImageUrl || user.image,
         });
 
         router.back();
@@ -159,50 +160,48 @@ const EditProfile = () => {
 
   return (
     <>
-      <SafeAreaView className="flex-1 bg-white">
-        <View className="flex-1 p-8">
-          <View className="items-center mb-8">
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => setShowModal(true)}
-              disabled={previewing}
-            >
-              {previewing ? (
-                <View className="size-28 rounded-full bg-light items-center justify-center">
-                  <ActivityIndicator size="small" color="#000" />
-                </View>
-              ) : (
-                <View className="relative items-center">
-                  <Image
-                    source={{
-                      uri: image || "https://via.placeholder.com/150",
-                    }}
-                    className="size-28 rounded-full  bg-black"
-                  />
-                  <MaterialCommunityIcons
-                    name="pencil-outline"
-                    size={20}
-                    color={COLORS.white}
-                    className="absolute bottom-[-5px] right-[-5px] border-2 border-white bg-primary p-2 rounded-full"
-                  />
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
+      <SafeAreaView className="flex-1 bg-white px-5 py-8">
+        <View className="mb-8 items-center">
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setShowModal(true)}
+            disabled={previewing}
+          >
+            {previewing ? (
+              <View className="size-28 items-center justify-center rounded-full bg-light">
+                <ActivityIndicator size="small" color="#000" />
+              </View>
+            ) : (
+              <View className="relative items-center">
+                <Image
+                  source={{
+                    uri: image || "https://via.placeholder.com/150",
+                  }}
+                  className="size-28 rounded-full bg-black"
+                />
+                <MaterialCommunityIcons
+                  name="pencil-outline"
+                  size={20}
+                  color={COLORS.white}
+                  className="absolute bottom-[-5px] right-[-5px] rounded-full border-2 border-white bg-primary p-2"
+                />
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
 
-          <View className="gap-y-5">
-            <FormInput
-              label="First Name"
-              value={firstName}
-              onChangeText={setFirstName}
-            />
+        <View className="gap-y-5">
+          <FormInput
+            label="First Name"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
 
-            <FormInput
-              label="Last Name"
-              value={lastName}
-              onChangeText={setLastName}
-            />
-          </View>
+          <FormInput
+            label="Last Name"
+            value={lastName}
+            onChangeText={setLastName}
+          />
         </View>
       </SafeAreaView>
 
@@ -218,9 +217,9 @@ const EditProfile = () => {
         statusBarTranslucent
         style={{ margin: 0 }}
       >
-        <View className="flex-1 bg-black/50 px-8 justify-center items-center ">
-          <View className="bg-white rounded-3xl p-6 w-full">
-            <Text className="text-lg font-inter-bold mb-4">
+        <View className="flex-1 items-center justify-center bg-black/50 px-8">
+          <View className="w-full rounded-3xl bg-white p-6">
+            <Text className="mb-4 font-inter-bold text-lg">
               Change profile photo
             </Text>
 
@@ -247,7 +246,7 @@ const EditProfile = () => {
                 activeOpacity={0.5}
                 onPress={() => {
                   setImage(
-                    "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg"
+                    "https://res.cloudinary.com/dsbbcevcp/image/upload/v1744735512/user_itndrd.jpg",
                   );
                   setShowModal(false);
                 }}

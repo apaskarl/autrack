@@ -8,8 +8,16 @@ import {
   serverTimestamp,
   deleteDoc,
   updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "@/firebase";
+
+type SortOption =
+  | "default"
+  | "date_asc"
+  | "date_desc"
+  | "name_asc"
+  | "name_desc";
 
 type Room = {
   id: string;
@@ -22,6 +30,7 @@ type Room = {
   departmentId: string;
   departmentName: string;
   isAvailable: boolean;
+  createdAt?: Timestamp;
   facilities?: {
     airConditioned: boolean;
     blackboard: boolean;
@@ -36,6 +45,7 @@ type RoomStore = {
   currentRoom: Room | null;
   loading: boolean;
   error: string | null;
+  sortOption: SortOption;
   fetchRooms: () => Promise<void>;
   fetchRoom: (id: string) => Promise<void>;
   addRoom: (
@@ -60,6 +70,11 @@ type RoomStore = {
       facilities: Room["facilities"];
     },
   ) => Promise<void>;
+  setSortOption: (option: SortOption) => void;
+  getSortedRooms: () => Room[];
+  departmentFilters: string[]; // Change from string | null to string[]
+  setDepartmentFilters: (departmentIds: string[]) => void; // Update this function
+  getFilteredRooms: () => Room[];
 };
 
 const useRoomStore = create<RoomStore>((set, get) => ({
@@ -67,7 +82,7 @@ const useRoomStore = create<RoomStore>((set, get) => ({
   currentRoom: null,
   loading: false,
   error: null,
-  schedules: [],
+  sortOption: "default",
 
   fetchRooms: async () => {
     try {
@@ -219,6 +234,102 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     } finally {
       set({ loading: false });
     }
+  },
+
+  setSortOption: (option: SortOption) => {
+    set({ sortOption: option });
+  },
+
+  getSortedRooms: () => {
+    const { rooms, sortOption, departmentFilters } = get();
+    let filteredRooms = [...rooms];
+
+    // Apply department filters if any are selected
+    if (departmentFilters.length > 0) {
+      filteredRooms = filteredRooms.filter((room) =>
+        departmentFilters.includes(room.departmentId),
+      );
+    }
+
+    switch (sortOption) {
+      case "date_asc":
+        filteredRooms = filteredRooms.sort(
+          (a, b) =>
+            (a.createdAt?.toDate().getTime() || 0) -
+            (b.createdAt?.toDate().getTime() || 0),
+        );
+        break;
+      case "date_desc":
+        filteredRooms = filteredRooms.sort(
+          (a, b) =>
+            (b.createdAt?.toDate().getTime() || 0) -
+            (a.createdAt?.toDate().getTime() || 0),
+        );
+        break;
+      case "name_asc":
+        filteredRooms = filteredRooms.sort((a, b) =>
+          a.name.localeCompare(b.name),
+        );
+        break;
+      case "name_desc":
+        filteredRooms = filteredRooms.sort((a, b) =>
+          b.name.localeCompare(a.name),
+        );
+        break;
+      case "default":
+      default:
+        break;
+    }
+
+    return filteredRooms;
+  },
+
+  // getSortedRooms: () => {
+  //   const { rooms, sortOption } = get();
+  //   let sortedRooms = [...rooms];
+
+  //   switch (sortOption) {
+  //     case "date_asc":
+  //       sortedRooms = sortedRooms.sort(
+  //         (a, b) =>
+  //           (a.createdAt?.toDate().getTime() || 0) -
+  //           (b.createdAt?.toDate().getTime() || 0),
+  //       );
+  //       break;
+  //     case "date_desc":
+  //       sortedRooms = sortedRooms.sort(
+  //         (a, b) =>
+  //           (b.createdAt?.toDate().getTime() || 0) -
+  //           (a.createdAt?.toDate().getTime() || 0),
+  //       );
+  //       break;
+  //     case "name_asc":
+  //       sortedRooms = sortedRooms.sort((a, b) => a.name.localeCompare(b.name));
+  //       break;
+  //     case "name_desc":
+  //       sortedRooms = sortedRooms.sort((a, b) => b.name.localeCompare(a.name));
+  //       break;
+  //     case "default":
+  //     default:
+  //       break;
+  //   }
+
+  //   return sortedRooms;
+  // },
+
+  // In your useRoomStore implementation (add these)
+
+  // Update the store implementation
+  departmentFilters: [],
+  setDepartmentFilters: (departmentIds: string[]) => {
+    set({ departmentFilters: departmentIds });
+  },
+  getFilteredRooms: () => {
+    const { rooms, departmentFilters } = get();
+    if (departmentFilters.length === 0) return rooms;
+    return rooms.filter((room) =>
+      departmentFilters.includes(room.departmentId),
+    );
   },
 }));
 

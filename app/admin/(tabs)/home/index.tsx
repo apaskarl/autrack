@@ -24,6 +24,8 @@ import { styles } from "@/styles/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
 import { getCurrentDate } from "@/utils/getCurrentDate";
+import FilterButton from "@/components/shared/ui/FilterButton";
+import { TextInput } from "react-native-gesture-handler";
 
 type HomeAdminNavigationProp = DrawerNavigationProp<any>;
 
@@ -72,176 +74,139 @@ const HomeAdmin = () => {
     });
   }, []);
 
+  if (loading) return <Loader />;
+
   return (
     <>
-      {loading && (
-        <View className="absolute inset-0 z-50 h-screen w-screen opacity-50">
-          <Loader />
-        </View>
-      )}
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
         }
-        className="flex-1 bg-white"
+        className="flex-1 bg-primary/10"
       >
-        {/* Dashboard Card */}
-        <View className="px-5 pt-3">
-          <View
-            className="mb-6 w-full rounded-xl bg-white p-5"
-            style={styles.shadow}
-          >
-            <View className="mb-5 flex-row items-center justify-between">
-              <Text className="font-inter-bold text-xl">Analytics</Text>
-              <IonicButton
-                icon="ellipsis-horizontal"
-                className="absolute right-0"
+        <View className="h-[30vh] p-5">
+          <View className="mb-6 w-full flex-row items-center gap-x-2">
+            <View className="relative flex-1">
+              <Ionicons
+                name="search"
                 size={20}
+                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
+                color={COLORS.subtext}
+              />
+              <TextInput
+                placeholder="Search"
+                className="rounded-full border border-border bg-white py-4 pl-16 pr-5 font-inter-medium"
               />
             </View>
 
-            <View className="flex-row items-center justify-between gap-x-5">
-              <Image
-                source={require("../../../../assets/images/sample/chart1.png")}
-                className="size-36 flex-1"
-                resizeMode="contain"
-              />
-
-              <View className="flex-1">
-                <Text className="font-inter-bold">Room Availabilty</Text>
-
-                <View className="mt-4 gap-y-2">
-                  <View className="flex-row items-center gap-x-2">
-                    <Ionicons name="ellipse" size={10} color={COLORS.green} />
-                    <Text className="font-inter-medium text-green">
-                      3 Available
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center gap-x-2">
-                    <Ionicons name="ellipse" size={10} color={COLORS.red} />
-                    <Text className="font-inter-medium text-red">
-                      10 Unavailable
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center gap-x-2">
-                    <Ionicons name="ellipse" size={10} color={COLORS.yellow} />
-                    <Text className="font-inter-medium text-yellow-500">
-                      5 Pending
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <Image
-              source={require("../../../../assets/images/sample/chart2.png")}
-              className="mb-4 size-32 w-full rounded-xl"
-              resizeMode="stretch"
+            <IonicButton
+              icon="menu"
+              size={28}
+              onPress={() => navigation.openDrawer()}
             />
-
-            <View className="flex-row items-center justify-between border-t border-border pt-4">
-              <View className="flex-row items-center gap-x-2">
-                <Ionicons
-                  name="calendar-clear-outline"
-                  size={16}
-                  color={COLORS.subtext}
-                />
-                <Text className="font-inter-semibold text-sm text-subtext">
-                  {getCurrentDate()}
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => router.push("/admin/dashboard")}
-                className="mr-[-8px] flex-row items-center gap-x-2"
-              >
-                <Text className="font-inter-bold text-blue">More</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={15}
-                  color={COLORS.subtext}
-                />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
 
-        {/* Rooms */}
-        <CardContainer
-          title="Rooms"
-          route={() => router.push("/admin/(tabs)/home/rooms")}
-        >
-          {rooms.map((room, index) => (
-            <TouchableOpacity
-              key={room.id}
-              activeOpacity={0.7}
-              onPress={() =>
-                router.push({
-                  pathname: "/admin/(tabs)/home/room-details",
-                  params: { id: room.id },
-                })
-              }
-              className={`mr-5 min-w-[240px] flex-row rounded-xl bg-white ${
-                index === 0 ? "ml-5" : ""
-              }`}
-              style={styles.shadow}
+        <View className="rounded-t-2xl bg-white" style={styles.shadow}>
+          <View className="mb-6 border-b border-border py-6">
+            <ScrollView
+              className="px-5"
+              horizontal
+              showsHorizontalScrollIndicator={false}
             >
-              <Image
-                source={{ uri: room?.image }}
-                className={`aspect-square rounded-l-xl`}
-                resizeMode="cover"
-              />
-              <View className="justify-between gap-y-1 p-4">
-                <View className="flex-row items-center gap-x-3">
-                  <Text className="font-inter-bold">{room.name}</Text>
-                  <Text className="self-start rounded-full bg-green/10 px-3 py-1 font-inter-semibold text-[10px] text-green">
-                    Available
+              <FilterButton label="Sort by" />
+              <FilterButton label="Department" />
+              <FilterButton label="Facilites" />
+              <FilterButton label="Availability" />
+            </ScrollView>
+          </View>
+
+          {/* Rooms */}
+          <CardContainer
+            title="Rooms"
+            route={() => router.push("/admin/(tabs)/home/rooms")}
+          >
+            {rooms.map((room, index) => (
+              <TouchableOpacity
+                key={room.id}
+                activeOpacity={0.7}
+                onPress={() =>
+                  router.push({
+                    pathname: "/admin/(tabs)/home/room-details",
+                    params: { id: room.id },
+                  })
+                }
+                className={`mr-5 min-w-[250px] rounded-xl bg-white ${
+                  index === 0 ? "ml-5" : ""
+                }`}
+                style={styles.shadow}
+              >
+                <Image
+                  source={{ uri: room?.image }}
+                  className={`aspect-video rounded-t-xl`}
+                  resizeMode="cover"
+                />
+                <IonicButton
+                  icon="arrow-forward-outline"
+                  className="absolute right-2 top-2 rounded-full bg-white/40"
+                  size={18}
+                />
+                <View className="justify-between bg-light p-4">
+                  <View className="flex-row items-center gap-x-3">
+                    <Text className="mb-1 font-inter-bold">{room.name}</Text>
+                    <Text className="self-start rounded-full bg-green/10 px-3 py-1 font-inter-semibold text-[10px] text-green">
+                      Available
+                    </Text>
+                  </View>
+                  <Text className="font-inter-medium text-sm text-subtext">
+                    {room.buildingName}
+                  </Text>
+                  <Text className="font-inter-medium text-sm text-subtext">
+                    {room.departmentName}
                   </Text>
                 </View>
-                <Text className="font-inter text-sm text-subtext">
-                  {room.buildingName}
-                </Text>
-                <Text className="font-inter text-sm text-subtext">
-                  {room.departmentName}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </CardContainer>
+              </TouchableOpacity>
+            ))}
+          </CardContainer>
 
-        {/* Instructors */}
-        <CardContainer
-          title="Instructors"
-          route={() => router.push("/admin/(tabs)/home/instructors")}
-        >
-          {instructors.map((instructor, index) => (
-            <TouchableOpacity
-              key={instructor.id}
-              activeOpacity={0.7}
-              className={`mr-2 w-28 items-center gap-x-4 ${
-                index === 0 ? "ml-5" : ""
-              }`}
-              onPress={() =>
-                router.push({
-                  pathname: "/admin/(tabs)/home/instructor-details",
-                  params: { id: instructor.id },
-                })
-              }
-            >
-              <Image
-                source={{ uri: instructor?.image }}
-                className="mb-2 size-20 rounded-full bg-white"
-                resizeMode="contain"
-                style={styles.shadow}
-              />
-              <Text className="px-2 text-center font-inter-bold leading-relaxed">
-                {instructor.firstName} {instructor.lastName}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </CardContainer>
+          {/* Instructors */}
+          <CardContainer
+            title="Instructors"
+            route={() => router.push("/admin/(tabs)/home/instructors")}
+          >
+            {instructors.map((instructor, index) => (
+              <TouchableOpacity
+                key={instructor.id}
+                activeOpacity={0.7}
+                className={`mr-2 w-28 items-center gap-x-4 ${
+                  index === 0 ? "ml-5" : ""
+                }`}
+                onPress={() =>
+                  router.push({
+                    pathname: "/admin/(tabs)/home/instructor-details",
+                    params: { id: instructor.id },
+                  })
+                }
+              >
+                <Image
+                  source={{ uri: instructor?.image }}
+                  className="mb-2 size-20 rounded-full bg-white"
+                  resizeMode="contain"
+                  style={styles.shadow}
+                />
+                <Text className="px-2 text-center font-inter-bold leading-relaxed">
+                  {instructor.firstName} {instructor.lastName}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </CardContainer>
+        </View>
       </ScrollView>
     </>
   );

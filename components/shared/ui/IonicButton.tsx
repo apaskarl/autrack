@@ -7,11 +7,13 @@ const IonicButton = ({
   className,
   size = 30,
   onPress,
+  color = "black",
 }: {
   icon: string;
   className?: string;
   size?: number;
   onPress?: () => void;
+  color?: string;
 }) => {
   return (
     <TouchableOpacity
@@ -19,7 +21,7 @@ const IonicButton = ({
       activeOpacity={0.6}
       className={`${className} p-2`}
     >
-      <Ionicons name={icon as any} size={size} color="black" />
+      <Ionicons name={icon as any} size={size} color={color} />
     </TouchableOpacity>
   );
 };

@@ -16,7 +16,7 @@ const ProfileLink = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.5}
-      className="flex-row py-5 items-center justify-between"
+      className="flex-row items-center justify-between py-4"
     >
       <View className="flex-row items-center gap-x-5">
         <Ionicons name={icon as any} size={22} color={COLORS.subtext} />

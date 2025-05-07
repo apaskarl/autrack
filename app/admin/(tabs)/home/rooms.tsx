@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
@@ -9,8 +8,8 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from "react-native";
-import React, { useState, useCallback, useLayoutEffect } from "react";
-import { router, useNavigation } from "expo-router";
+import React, { useState, useCallback, useEffect } from "react";
+import { router } from "expo-router";
 import {
   FontAwesome5,
   Ionicons,
@@ -23,6 +22,11 @@ import { styles } from "@/styles/styles";
 import { COLORS } from "@/constants/colors";
 import Loader from "@/components/shared/ui/Loader";
 import AddButton from "@/components/admin/ui/AddButton";
+import FilterButton from "@/components/shared/ui/FilterButton";
+import Modal from "react-native-modal";
+import SortButton from "@/components/shared/ui/SortButton";
+import useDepartmentStore from "@/store/useDepartmentStore";
+import FormButton from "@/components/shared/ui/FormButton";
 
 type Facilities = {
   airConditioned: boolean;
@@ -33,11 +37,22 @@ type Facilities = {
 };
 
 const AdminRooms = () => {
-  const navigation = useNavigation();
-  const { rooms, fetchRooms, deleteRoom, loading } = useRoomStore();
+  const {
+    fetchRooms,
+    deleteRoom,
+    loading,
+    getSortedRooms,
+    setSortOption,
+    sortOption,
+    departmentFilters,
+    setDepartmentFilters,
+  } = useRoomStore();
+  const { departments, fetchDepartments } = useDepartmentStore();
+  const filteredRooms = getSortedRooms();
   const [refreshing, setRefreshing] = useState(false);
-  const [showSearch, setShowSearch] = useState(true);
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+  const [showSortModal, setShowSortModal] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
 
   const facilityIcons: {
     key: keyof Facilities;
@@ -62,25 +77,18 @@ const AdminRooms = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchDepartments?.();
+    fetchRooms?.();
+  }, []);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    setDepartmentFilters([]);
+    setSortOption("default");
     await fetchRooms?.();
     setRefreshing(false);
   }, [fetchRooms]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => setShowSearch(true)}
-          className="rounded-full bg-gray-100 p-3"
-        >
-          <Ionicons name="search" size={18} />
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
 
   return (
     <>
@@ -94,57 +102,60 @@ const AdminRooms = () => {
         className="bg-white"
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
         }
       >
         <AdminHomeLayout>
-          {showSearch && (
-            <View className="relative mb-6">
-              <Ionicons
-                name="search"
-                size={20}
-                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
-                color={COLORS.subtext}
-              />
-              <TextInput
-                placeholder="Search"
-                className="rounded-full border border-border bg-light py-4 pl-16 pr-5 font-inter-medium"
-              />
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => setShowSearch(false)}
-                className="absolute right-5 top-1/2 mr-[-8px] -translate-y-1/2 rounded-full p-3"
-              >
-                <Ionicons name="close" size={20} />
-              </TouchableOpacity>
+          <View className="mb-6 flex-row">
+            <FilterButton
+              onPress={() => setShowFilter(true)}
+              label="Departments"
+              number={departmentFilters.length}
+              active={departmentFilters.length > 0}
+            />
+            <FilterButton
+              onPress={() => setShowSortModal(true)}
+              label={`Sort by: ${sortOption}`}
+              active={sortOption !== "default"}
+            />
+          </View>
+
+          {departmentFilters.length > 0 && (
+            <View className="mb-6 flex-row flex-wrap items-center gap-3">
+              {departmentFilters.length > 0 && [
+                ...departmentFilters.map((id) => {
+                  const dept = departments.find((d) => d.id === id);
+                  if (!dept) return null;
+                  return (
+                    <View
+                      key={id}
+                      className="rounded-full bg-primary/10 px-3 py-1"
+                    >
+                      <Text className="font-inter-medium text-xs text-primary">
+                        {dept.name}
+                      </Text>
+                    </View>
+                  );
+                }),
+                <TouchableOpacity
+                  key="clear-all"
+                  onPress={() => setDepartmentFilters([])}
+                >
+                  <Text className="border-b font-inter-medium text-sm">
+                    Clear All
+                  </Text>
+                </TouchableOpacity>,
+              ]}
             </View>
           )}
 
-          <View className="mb-6 flex-row gap-x-3">
-            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
-              <Text className="font-inter-medium text-sm">Departments</Text>
-              <Ionicons name="caret-down-outline" size={15} />
-            </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
-              <Text className="font-inter-medium text-sm">Facilities</Text>
-              <Ionicons name="caret-down-outline" size={15} />
-            </TouchableOpacity>
-          </View>
-
-          <View className="mb-6 flex-row items-center justify-between">
-            {rooms && (
-              <Text className="font-inter text-sm text-subtext">
-                {rooms.length} rooms
-              </Text>
-            )}
-            <TouchableOpacity className="flex-row items-center gap-x-2">
-              <Text className="font-inter-medium text-sm">Sort by</Text>
-              <Ionicons name="caret-down-outline" size={15} />
-            </TouchableOpacity>
-          </View>
-
           <View>
-            {rooms.map((room) => (
+            {filteredRooms.map((room) => (
               <View key={room.id} className="relative mb-6">
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -154,7 +165,7 @@ const AdminRooms = () => {
                       params: { id: room.id },
                     })
                   }
-                  className="w-full flex-row rounded-xl bg-white"
+                  className="w-full flex-row rounded-xl bg-light"
                   style={styles.shadow}
                 >
                   <Image
@@ -285,6 +296,154 @@ const AdminRooms = () => {
         label="Add Room"
         onPress={() => router.push("/admin/(tabs)/home/add-room")}
       />
+
+      {/* FILTER MODAL */}
+      <Modal
+        isVisible={showFilter}
+        onBackButtonPress={() => setShowFilter(false)}
+        onBackdropPress={() => setShowFilter(false)}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        backdropOpacity={0.5}
+        statusBarTranslucent
+        style={{
+          justifyContent: "flex-end",
+          margin: 0,
+        }}
+      >
+        <View className="rounded-t-3xl bg-white px-5 py-8">
+          <View className="mb-5 flex-row items-center justify-between">
+            <Text className="font-inter-bold text-xl">Filter by</Text>
+            {departmentFilters.length > 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setDepartmentFilters([]);
+                  setShowFilter(false);
+                }}
+              >
+                <Text className="border-b font-inter-medium">Clear All</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <Text className="mb-2 font-inter-semibold text-lg">Departments</Text>
+
+          {/* List of departments with multi-select */}
+          {departments.map((department) => (
+            <TouchableOpacity
+              key={department.id}
+              activeOpacity={0.7}
+              onPress={() => {
+                const isSelected = departmentFilters.includes(department.id);
+                if (isSelected) {
+                  // Remove from filters
+                  setDepartmentFilters(
+                    departmentFilters.filter((id) => id !== department.id),
+                  );
+                } else {
+                  // Add to filters
+                  setDepartmentFilters([...departmentFilters, department.id]);
+                }
+              }}
+              className="flex-row items-center justify-between rounded-lg py-4"
+            >
+              <Text
+                className={`font-inter-medium ${departmentFilters.includes(department.id) ? "text-black" : "text-subtext"}`}
+              >
+                {department.name}
+              </Text>
+
+              <Ionicons
+                name="ellipse"
+                className={`${departmentFilters.includes(department.id) ? "border-primary" : "border-border"} rounded-full border p-[2px]`}
+                color={
+                  departmentFilters.includes(department.id)
+                    ? COLORS.primary
+                    : COLORS.white
+                }
+              />
+            </TouchableOpacity>
+          ))}
+
+          <View className="mt-1 border-t border-border pt-5">
+            <FormButton
+              label="Apply Filters"
+              onPress={() => setShowFilter(false)}
+            />
+          </View>
+        </View>
+      </Modal>
+
+      {/* SORT MODAL */}
+      <Modal
+        isVisible={showSortModal}
+        onBackButtonPress={() => setShowSortModal(false)}
+        onBackdropPress={() => setShowSortModal(false)}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        backdropOpacity={0.5}
+        statusBarTranslucent
+        style={{
+          justifyContent: "flex-end",
+          margin: 0,
+        }}
+      >
+        <View className="rounded-t-3xl bg-white px-5 py-8">
+          <Text className="mb-2 font-inter-bold text-xl">Sort by</Text>
+
+          <View>
+            <SortButton
+              label="Default"
+              value="default"
+              currentSortOption={sortOption}
+              onPress={() => {
+                setShowSortModal(false);
+                setSortOption("default");
+              }}
+            />
+
+            <SortButton
+              label="Date (oldest to latest)"
+              value="date_asc"
+              currentSortOption={sortOption}
+              onPress={() => {
+                setShowSortModal(false);
+                setSortOption("date_asc");
+              }}
+            />
+
+            <SortButton
+              label="Date (newest to oldest)"
+              value="date_desc"
+              currentSortOption={sortOption}
+              onPress={() => {
+                setShowSortModal(false);
+                setSortOption("date_desc");
+              }}
+            />
+
+            <SortButton
+              label="Name (A-Z)"
+              value="name_asc"
+              currentSortOption={sortOption}
+              onPress={() => {
+                setShowSortModal(false);
+                setSortOption("name_asc");
+              }}
+            />
+
+            <SortButton
+              label="Name (Z-A)"
+              value="name_desc"
+              currentSortOption={sortOption}
+              onPress={() => {
+                setShowSortModal(false);
+                setSortOption("name_desc");
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };

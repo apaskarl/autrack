@@ -5,7 +5,7 @@ import { COLORS } from "@/constants/colors";
 const Loader = () => {
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <ActivityIndicator size="large" color={COLORS.blue} />
+      <ActivityIndicator size="large" color={COLORS.primary} />
     </View>
   );
 };

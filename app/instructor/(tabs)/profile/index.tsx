@@ -34,7 +34,7 @@ const Profile = () => {
   return (
     <>
       <InstructorLayout>
-        <View className="items-center justify-center gap-y-4 pb-10 pt-4">
+        <View className="items-center justify-center gap-y-4 pb-6">
           {imageLoading && (
             <View className="size-28 items-center justify-center rounded-full bg-light">
               <ActivityIndicator size="small" color="#999" />

@@ -3,7 +3,7 @@ import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 
 interface FormButtonProps {
-  onPress: () => void;
+  onPress?: () => void;
   loading?: boolean;
   isDisabled?: boolean;
   label?: string;
@@ -21,12 +21,12 @@ const FormButton = ({
     <TouchableOpacity
       activeOpacity={0.7}
       className={`${
-        disabled ? "bg-blue/50" : "bg-blue"
-      } p-5 rounded-xl items-center justify-center`}
+        disabled ? "bg-primary/50" : "bg-primary"
+      } items-center justify-center rounded-xl p-5`}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className="text-white font-inter-bold">
+      <Text className="font-inter-bold text-white">
         {loading ? <ActivityIndicator size="small" color="white" /> : label}
       </Text>
     </TouchableOpacity>

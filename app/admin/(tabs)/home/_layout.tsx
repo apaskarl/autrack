@@ -11,6 +11,7 @@ export default function AdminHomeStack() {
         name="index"
         options={{
           title: "",
+          headerShown: false,
           headerTitle: () => (
             <View className="ml-1 w-full">
               <LogoName />

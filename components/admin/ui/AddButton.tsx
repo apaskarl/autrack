@@ -13,7 +13,7 @@ const AddButton = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className="flex-row items-center gap-x-2 bg-blue px-6 py-4 absolute bottom-5 right-5 rounded-full"
+      className="absolute bottom-5 right-5 flex-row items-center gap-x-2 rounded-full bg-primary px-6 py-4"
       style={{ elevation: 2 }}
     >
       <FontAwesome6 name="plus" size={15} color="white" />

@@ -10,11 +10,11 @@ const AdminTabsLayout = () => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
-      () => setKeyboardVisible(true)
+      () => setKeyboardVisible(true),
     );
     const keyboardDidHideListener = Keyboard.addListener(
       Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
-      () => setKeyboardVisible(false)
+      () => setKeyboardVisible(false),
     );
 
     return () => {
@@ -28,7 +28,7 @@ const AdminTabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: COLORS.dark,
+        tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.border,
         tabBarStyle: {
           borderTopColor: COLORS.light,
