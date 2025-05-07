@@ -19,7 +19,7 @@ const ProfileLink = ({
       className="flex-row items-center justify-between py-4"
     >
       <View className="flex-row items-center gap-x-5">
-        <Ionicons name={icon as any} size={22} color={COLORS.subtext} />
+        <Ionicons name={icon as any} size={20} color={COLORS.subtext} />
         <Text className="font-inter-semibold">{label}</Text>
       </View>
 

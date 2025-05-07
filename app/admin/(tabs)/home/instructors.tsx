@@ -9,9 +9,8 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from "react-native";
-import React, { useCallback, useLayoutEffect, useState } from "react";
-import { router, useNavigation } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useCallback, useEffect, useState } from "react";
+import { router } from "expo-router";
 import { COLORS } from "@/constants/colors";
 import { useInstructorStore } from "@/store/useInstructorStore";
 import IonicButton from "@/components/shared/ui/IonicButton";
@@ -19,36 +18,59 @@ import AdminHomeLayout from "@/components/admin/layouts/AdminHomeLayout";
 import AddButton from "@/components/admin/ui/AddButton";
 import { styles } from "@/styles/styles";
 import Loader from "@/components/shared/ui/Loader";
+import FilterButton from "@/components/shared/ui/FilterButton";
+import SortModal from "@/components/shared/modals/SortModal";
+import useDepartmentStore from "@/store/useDepartmentStore";
+import FilterModal from "@/components/shared/modals/FilterModal";
+import NoResultsFound from "@/components/shared/ui/NoResultsFound";
+import SearchInput from "@/components/shared/ui/SearchInput";
+
+const sortOptionLabels: Record<string, string> = {
+  default: "Default",
+  date_asc: "Date (oldest to latest)",
+  date_desc: "Date (latest to oldest)",
+  name_asc: "Alphabetical (A-Z)",
+  name_desc: "Alphabetical (Z-A)",
+};
 
 const AdminInstructors = () => {
-  const navigation = useNavigation();
-  const { instructors, fetchInstructors, deleteInstructor, loading } =
-    useInstructorStore();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
+  const [showSortModal, setShowSortModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [showSearch, setShowSearch] = useState(true);
   const [activeInstructorId, setActiveInstructorId] = useState<string | null>(
     null,
   );
 
+  const {
+    fetchInstructors,
+    deleteInstructor,
+    loading,
+    sortOption,
+    setSortOption,
+    getSortedInstructors,
+    departmentFilters,
+    setDepartmentFilters,
+  } = useInstructorStore();
+  const filteredInstructors = getSortedInstructors().filter((instructor) =>
+    `${instructor.firstName} ${instructor.lastName} ${instructor.employeeId}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()),
+  );
+  const { departments, fetchDepartments } = useDepartmentStore();
+
+  useEffect(() => {
+    fetchDepartments?.();
+    fetchInstructors?.();
+  }, []);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+    setDepartmentFilters([]);
+    setSortOption("default");
     await fetchInstructors?.();
     setRefreshing(false);
   }, [fetchInstructors]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => setShowSearch(true)}
-          className="rounded-full bg-gray-100 p-3"
-        >
-          <Ionicons name="search" size={18} />
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
 
   return (
     <>
@@ -62,53 +84,62 @@ const AdminInstructors = () => {
         className="bg-white"
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
         }
       >
         <AdminHomeLayout>
-          {showSearch && (
-            <View className="relative mb-6">
-              <Ionicons
-                name="search"
-                size={20}
-                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
-                color={COLORS.subtext}
-              />
-              <TextInput
-                placeholder="Search"
-                className="rounded-full border border-border bg-light py-4 pl-16 pr-5 font-inter-medium"
-              />
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => setShowSearch(false)}
-                className="absolute right-5 top-1/2 mr-[-8px] -translate-y-1/2 rounded-full p-3"
-              >
-                <Ionicons name="close" size={20} />
-              </TouchableOpacity>
+          <SearchInput value={searchQuery} onChangeText={setSearchQuery} />
+
+          <View className="my-6 flex-row">
+            <FilterButton
+              onPress={() => setShowFilter(true)}
+              label="Departments"
+              number={departmentFilters.length}
+              active={departmentFilters.length > 0}
+            />
+            <FilterButton
+              onPress={() => setShowSortModal(true)}
+              label={`Sort by: ${sortOptionLabels[sortOption] || "Default"}`}
+              active={sortOption !== "default"}
+            />
+          </View>
+
+          {departmentFilters.length > 0 && (
+            <View className="mb-6 flex-row flex-wrap items-center gap-x-2 gap-y-3">
+              {departmentFilters.length > 0 && [
+                ...departmentFilters.map((id) => {
+                  const dept = departments.find((d) => d.id === id);
+                  if (!dept) return null;
+                  return (
+                    <View
+                      key={id}
+                      className="rounded-full border border-border bg-light px-3 py-1"
+                    >
+                      <Text className="font-inter-medium text-sm text-subtext">
+                        {dept.name}
+                      </Text>
+                    </View>
+                  );
+                }),
+                <TouchableOpacity
+                  key="clear-all"
+                  onPress={() => setDepartmentFilters([])}
+                >
+                  <Text className="border-b font-inter-medium text-sm">
+                    Clear All
+                  </Text>
+                </TouchableOpacity>,
+              ]}
             </View>
           )}
 
-          <View className="mb-6 flex-row gap-x-3">
-            <TouchableOpacity className="flex-row items-center gap-x-2 rounded-full border border-border px-4 py-2">
-              <Text className="font-inter-medium text-sm">Departments</Text>
-              <Ionicons name="caret-down-outline" size={15} />
-            </TouchableOpacity>
-          </View>
-
-          <View className="mb-6 flex-row items-center justify-between">
-            {instructors && (
-              <Text className="font-inter text-sm text-subtext">
-                {instructors.length} instructors
-              </Text>
-            )}
-            <TouchableOpacity className="flex-row items-center gap-x-2">
-              <Text className="font-inter-medium text-sm">Sort by</Text>
-              <Ionicons name="caret-down-outline" size={15} />
-            </TouchableOpacity>
-          </View>
-
-          <View>
-            {instructors.map((instructor) => (
+          {filteredInstructors.length > 0 ? (
+            filteredInstructors.map((instructor) => (
               <View key={instructor.id} className="relative mb-6">
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -201,8 +232,10 @@ const AdminInstructors = () => {
                   </View>
                 )}
               </View>
-            ))}
-          </View>
+            ))
+          ) : (
+            <NoResultsFound />
+          )}
         </AdminHomeLayout>
 
         {activeInstructorId && (
@@ -215,6 +248,21 @@ const AdminInstructors = () => {
       <AddButton
         label="Add Instructor"
         onPress={() => router.push("/admin/(tabs)/home/add-instructor")}
+      />
+
+      <FilterModal
+        isVisible={showFilter}
+        onClose={() => setShowFilter(false)}
+        departments={departments}
+        departmentFilters={departmentFilters}
+        setDepartmentFilters={setDepartmentFilters}
+      />
+
+      <SortModal
+        isVisible={showSortModal}
+        onClose={() => setShowSortModal(false)}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
       />
     </>
   );

@@ -119,7 +119,12 @@ const AdminRoomDetails = () => {
         showsVerticalScrollIndicator={false}
         className="bg-white"
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
         }
       >
         {currentRoom && (

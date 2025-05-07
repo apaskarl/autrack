@@ -28,7 +28,7 @@ const AdminTabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: COLORS.primary,
+        tabBarActiveTintColor: COLORS.black,
         tabBarInactiveTintColor: COLORS.border,
         tabBarStyle: {
           borderTopColor: COLORS.light,

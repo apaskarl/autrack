@@ -32,7 +32,7 @@ const SortButton: React.FC<SortButtonProps> = ({
       onPress={onPress}
     >
       <Text
-        className={`font-inter-medium ${isSelected ? "text-black" : "text-subtext"}`}
+        className={`font-inter ${isSelected ? "font-inter-medium text-black" : "text-subtext"}`}
       >
         {label}
       </Text>

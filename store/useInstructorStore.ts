@@ -8,6 +8,7 @@ import {
   setDoc,
   serverTimestamp,
   deleteDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { auth } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -24,8 +25,15 @@ interface Instructor {
   departmentName?: string;
   photoURL?: string;
   role: string;
-  createdAt: any;
+  createdAt: Timestamp;
 }
+
+type SortOption =
+  | "default"
+  | "date_asc"
+  | "date_desc"
+  | "name_asc"
+  | "name_desc";
 
 interface InstructorStore {
   instructors: Instructor[];
@@ -46,12 +54,22 @@ interface InstructorStore {
     updatedData: Partial<Omit<Instructor, "id" | "role" | "createdAt">>,
   ) => Promise<void>;
   deleteInstructor: (id: string) => Promise<void>;
+
+  sortOption: SortOption;
+  setSortOption: (option: SortOption) => void;
+  getSortedInstructors: () => Instructor[];
+
+  departmentFilters: string[];
+  setDepartmentFilters: (departmentIds: string[]) => void;
+  getFilteredInstructor: () => Instructor[];
 }
 
 export const useInstructorStore = create<InstructorStore>((set, get) => ({
   instructors: [],
   loading: false,
   error: null,
+  sortOption: "default",
+  departmentFilters: [],
 
   fetchInstructors: async () => {
     try {
@@ -163,5 +181,64 @@ export const useInstructorStore = create<InstructorStore>((set, get) => ({
     } finally {
       set({ loading: false });
     }
+  },
+
+  setSortOption: (option: SortOption) => {
+    set({ sortOption: option });
+  },
+
+  getSortedInstructors: () => {
+    const { instructors, sortOption, departmentFilters } = get();
+    let filteredInstructors = [...instructors];
+
+    if (departmentFilters.length > 0) {
+      filteredInstructors = filteredInstructors.filter((room) =>
+        departmentFilters.includes(room.departmentId),
+      );
+    }
+
+    switch (sortOption) {
+      case "date_asc":
+        filteredInstructors = filteredInstructors.sort(
+          (a, b) =>
+            (a.createdAt?.toDate().getTime() || 0) -
+            (b.createdAt?.toDate().getTime() || 0),
+        );
+        break;
+      case "date_desc":
+        filteredInstructors = filteredInstructors.sort(
+          (a, b) =>
+            (b.createdAt?.toDate().getTime() || 0) -
+            (a.createdAt?.toDate().getTime() || 0),
+        );
+        break;
+      case "name_asc":
+        filteredInstructors = filteredInstructors.sort((a, b) =>
+          a.firstName.localeCompare(b.firstName),
+        );
+        break;
+      case "name_desc":
+        filteredInstructors = filteredInstructors.sort((a, b) =>
+          b.firstName.localeCompare(a.firstName),
+        );
+        break;
+      case "default":
+      default:
+        break;
+    }
+
+    return filteredInstructors;
+  },
+
+  setDepartmentFilters: (departmentIds: string[]) => {
+    set({ departmentFilters: departmentIds });
+  },
+
+  getFilteredInstructor: () => {
+    const { instructors, departmentFilters } = get();
+    if (departmentFilters.length === 0) return instructors;
+    return instructors.filter((instructor) =>
+      departmentFilters.includes(instructor.departmentId),
+    );
   },
 }));

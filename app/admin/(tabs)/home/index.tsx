@@ -23,15 +23,17 @@ import Loader from "@/components/shared/ui/Loader";
 import { styles } from "@/styles/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants/colors";
-import { getCurrentDate } from "@/utils/getCurrentDate";
 import FilterButton from "@/components/shared/ui/FilterButton";
 import { TextInput } from "react-native-gesture-handler";
+import SearchInput from "@/components/shared/ui/SearchInput";
+import { IMAGES } from "@/constants/images";
 
 type HomeAdminNavigationProp = DrawerNavigationProp<any>;
 
 const HomeAdmin = () => {
   const navigation = useNavigation<HomeAdminNavigationProp>();
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -80,6 +82,7 @@ const HomeAdmin = () => {
     <>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -88,32 +91,32 @@ const HomeAdmin = () => {
             tintColor={COLORS.primary}
           />
         }
-        className="flex-1 bg-primary/10"
+        className="bg-primary/10"
       >
-        <View className="h-[30vh] p-5">
-          <View className="mb-6 w-full flex-row items-center gap-x-2">
-            <View className="relative flex-1">
-              <Ionicons
-                name="search"
-                size={20}
-                className="absolute left-6 top-1/2 z-10 -translate-y-1/2 rounded-full"
-                color={COLORS.subtext}
-              />
-              <TextInput
-                placeholder="Search"
-                className="rounded-full border border-border bg-white py-4 pl-16 pr-5 font-inter-medium"
-              />
+        <View className="h-[32vh] p-5">
+          <View className="z-10 mb-6 w-full flex-row items-center gap-x-2">
+            <View className="flex-1">
+              <SearchInput value={searchQuery} onChangeText={setSearchQuery} />
             </View>
 
             <IonicButton
               icon="menu"
-              size={28}
+              size={25}
               onPress={() => navigation.openDrawer()}
+              className="rounded-full border border-border bg-white p-3"
             />
           </View>
+
+          <Image
+            source={IMAGES.ctuLogo}
+            resizeMode="contain"
+            className="absolute bottom-[-100px] right-[-100px] size-80 opacity-20"
+          />
         </View>
 
-        <View className="rounded-t-2xl bg-white" style={styles.shadow}>
+        <View className="rounded-t-[30px] bg-white" style={styles.shadow}>
+          <View className="mt-4 h-1.5 w-20 self-center rounded-full bg-border" />
+
           <View className="mb-6 border-b border-border py-6">
             <ScrollView
               className="px-5"
@@ -122,8 +125,8 @@ const HomeAdmin = () => {
             >
               <FilterButton label="Sort by" />
               <FilterButton label="Department" />
-              <FilterButton label="Facilites" />
               <FilterButton label="Availability" />
+              <FilterButton label="Facilites" />
             </ScrollView>
           </View>
 
@@ -142,14 +145,14 @@ const HomeAdmin = () => {
                     params: { id: room.id },
                   })
                 }
-                className={`mr-5 min-w-[250px] rounded-xl bg-white ${
+                className={`mr-5 min-w-[250px] rounded-xl bg-light ${
                   index === 0 ? "ml-5" : ""
                 }`}
                 style={styles.shadow}
               >
                 <Image
                   source={{ uri: room?.image }}
-                  className={`aspect-video rounded-t-xl`}
+                  className="h-48 rounded-t-xl"
                   resizeMode="cover"
                 />
                 <IonicButton
@@ -157,7 +160,7 @@ const HomeAdmin = () => {
                   className="absolute right-2 top-2 rounded-full bg-white/40"
                   size={18}
                 />
-                <View className="justify-between bg-light p-4">
+                <View className="justify-between p-3">
                   <View className="flex-row items-center gap-x-3">
                     <Text className="mb-1 font-inter-bold">{room.name}</Text>
                     <Text className="self-start rounded-full bg-green/10 px-3 py-1 font-inter-semibold text-[10px] text-green">

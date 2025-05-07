@@ -2,7 +2,6 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/constants/colors";
 import { Platform, Pressable, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import TabIcon from "@/components/shared/ui/TabIcon";
 
 const InstructorTabsLayout = () => {
@@ -10,7 +9,7 @@ const InstructorTabsLayout = () => {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: COLORS.primary,
+        tabBarActiveTintColor: COLORS.black,
         tabBarInactiveTintColor: COLORS.border,
         tabBarStyle: {
           borderTopColor: COLORS.light,

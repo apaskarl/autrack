@@ -42,7 +42,7 @@ const DrawerIcon = ({
   };
 
   return (
-    <View className="flex-row items-center py-1 gap-x-5 w-full">
+    <View className="w-full flex-row items-center gap-x-5 py-2">
       <View>{renderIcon()}</View>
       <Text className="font-inter-semibold text-lg">{name}</Text>
     </View>

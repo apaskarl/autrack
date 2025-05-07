@@ -76,25 +76,17 @@ const InstructorSchedules = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="bg-white">
-      <View className="relative gap-y-1 px-8 py-2 pb-6">
-        <View className="flex-row items-center gap-x-4">
-          <Text className="font-inter-bold text-lg">
-            Instructor: {user?.firstName} {user?.lastName}
-          </Text>
-        </View>
-      </View>
-
       {/* Timeable */}
       <View className="flex-row">
         {/* Time Column */}
         <View className="border-r border-border bg-gray-200">
-          <View className="items-center justify-center border-b border-border px-5 py-2">
+          <View className="items-center justify-center px-5 py-2">
             <Text className="font-inter-semibold text-subtext">Time</Text>
           </View>
 
           {TIMES.map((time) => (
             <View
-              className="items-center justify-center border-b border-border px-5"
+              className="items-center justify-center px-5"
               key={time}
               style={{ height: 30 }}
             >
@@ -111,7 +103,7 @@ const InstructorSchedules = () => {
             {DAYS.map((dayName, dayIndex) => (
               <View key={dayIndex}>
                 {/* Day Header */}
-                <View className="items-center justify-center border-b border-r border-border bg-blue px-10 py-2">
+                <View className="items-center justify-center bg-blue px-10 py-2">
                   <Text className="font-inter-bold text-white">{dayName}</Text>
                 </View>
 
@@ -150,7 +142,7 @@ const InstructorSchedules = () => {
                       cells.push(
                         <View
                           key={`${dayIndex}-${i}`}
-                          className="w-40 items-center justify-center border-b border-l-4 border-r border-b-border border-l-blue border-r-border bg-blue/10"
+                          className="w-40 items-center justify-center border-l-4 border-r border-b-border border-l-blue border-r-border bg-blue/10"
                           style={{
                             height: blockHeight,
                           }}
@@ -164,10 +156,23 @@ const InstructorSchedules = () => {
                           </Text>
                         </View>,
                       );
+                    } else if (
+                      currentTime === "12:00" ||
+                      currentTime === "12:30"
+                    ) {
+                      cells.push(
+                        <View
+                          key={`${dayIndex}-${i}`}
+                          className="w-40 items-center justify-center border-r border-gray-200 bg-gray-200"
+                          style={{ height: 30 }}
+                        >
+                          <Text className="font-inter text-xs text-yellow-700"></Text>
+                        </View>,
+                      );
                     } else {
                       cells.push(
                         <View
-                          className="w-40 border-b border-r border-border"
+                          className="w-40 border-r border-border"
                           key={`${dayIndex}-${i}`}
                           style={{ height: 30 }}
                         />,

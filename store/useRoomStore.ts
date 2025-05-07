@@ -12,13 +12,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
-type SortOption =
-  | "default"
-  | "date_asc"
-  | "date_desc"
-  | "name_asc"
-  | "name_desc";
-
 type Room = {
   id: string;
   name: string;
@@ -40,12 +33,18 @@ type Room = {
   };
 };
 
+type SortOption =
+  | "default"
+  | "date_asc"
+  | "date_desc"
+  | "name_asc"
+  | "name_desc";
+
 type RoomStore = {
   rooms: Room[];
   currentRoom: Room | null;
   loading: boolean;
   error: string | null;
-  sortOption: SortOption;
   fetchRooms: () => Promise<void>;
   fetchRoom: (id: string) => Promise<void>;
   addRoom: (
@@ -57,7 +56,6 @@ type RoomStore = {
     capacity: number,
     facilities: Room["facilities"],
   ) => Promise<void>;
-  deleteRoom: (id: string) => Promise<void>;
   updateRoom: (
     id: string,
     data: {
@@ -70,10 +68,14 @@ type RoomStore = {
       facilities: Room["facilities"];
     },
   ) => Promise<void>;
+  deleteRoom: (id: string) => Promise<void>;
+
+  sortOption: SortOption;
   setSortOption: (option: SortOption) => void;
   getSortedRooms: () => Room[];
-  departmentFilters: string[]; // Change from string | null to string[]
-  setDepartmentFilters: (departmentIds: string[]) => void; // Update this function
+
+  departmentFilters: string[];
+  setDepartmentFilters: (departmentIds: string[]) => void;
   getFilteredRooms: () => Room[];
 };
 
@@ -83,6 +85,7 @@ const useRoomStore = create<RoomStore>((set, get) => ({
   loading: false,
   error: null,
   sortOption: "default",
+  departmentFilters: [],
 
   fetchRooms: async () => {
     try {
@@ -244,7 +247,6 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     const { rooms, sortOption, departmentFilters } = get();
     let filteredRooms = [...rooms];
 
-    // Apply department filters if any are selected
     if (departmentFilters.length > 0) {
       filteredRooms = filteredRooms.filter((room) =>
         departmentFilters.includes(room.departmentId),
@@ -284,46 +286,10 @@ const useRoomStore = create<RoomStore>((set, get) => ({
     return filteredRooms;
   },
 
-  // getSortedRooms: () => {
-  //   const { rooms, sortOption } = get();
-  //   let sortedRooms = [...rooms];
-
-  //   switch (sortOption) {
-  //     case "date_asc":
-  //       sortedRooms = sortedRooms.sort(
-  //         (a, b) =>
-  //           (a.createdAt?.toDate().getTime() || 0) -
-  //           (b.createdAt?.toDate().getTime() || 0),
-  //       );
-  //       break;
-  //     case "date_desc":
-  //       sortedRooms = sortedRooms.sort(
-  //         (a, b) =>
-  //           (b.createdAt?.toDate().getTime() || 0) -
-  //           (a.createdAt?.toDate().getTime() || 0),
-  //       );
-  //       break;
-  //     case "name_asc":
-  //       sortedRooms = sortedRooms.sort((a, b) => a.name.localeCompare(b.name));
-  //       break;
-  //     case "name_desc":
-  //       sortedRooms = sortedRooms.sort((a, b) => b.name.localeCompare(a.name));
-  //       break;
-  //     case "default":
-  //     default:
-  //       break;
-  //   }
-
-  //   return sortedRooms;
-  // },
-
-  // In your useRoomStore implementation (add these)
-
-  // Update the store implementation
-  departmentFilters: [],
   setDepartmentFilters: (departmentIds: string[]) => {
     set({ departmentFilters: departmentIds });
   },
+
   getFilteredRooms: () => {
     const { rooms, departmentFilters } = get();
     if (departmentFilters.length === 0) return rooms;

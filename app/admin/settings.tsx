@@ -19,7 +19,7 @@ const AdminSettings = () => {
     <View className="flex-1 bg-white px-5">
       <TouchableOpacity
         onPress={handleLogout}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
         className="w-full items-center rounded-full bg-red p-5"
       >
         <Text className="font-inter-bold text-white">Log out</Text>

@@ -44,7 +44,7 @@ const Profile = () => {
             source={{ uri: user?.image }}
             className={`${
               imageLoading ? "absolute opacity-0" : "relative opacity-100"
-            } size-28 rounded-full`}
+            } size-24 rounded-full`}
             resizeMode="contain"
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
@@ -58,19 +58,43 @@ const Profile = () => {
           </View>
         </View>
 
-        <View>
-          <ProfileLink
-            icon="person-outline"
-            label="Edit Profile"
-            onPress={() =>
-              router.push("/instructor/(tabs)/profile/edit-profile")
-            }
-          />
-          <ProfileLink
-            icon="settings-outline"
-            label="Settings"
-            onPress={() => router.push("/instructor/(tabs)/profile/settings")}
-          />
+        <View className="px-2">
+          <View className="mb-5">
+            <Text className="mb-2 font-inter-semibold text-sm text-primary">
+              Activity
+            </Text>
+            <ProfileLink icon="enter-outline" label="My Requests" />
+            <ProfileLink icon="list-outline" label="Room Logs" />
+          </View>
+
+          <View className="mb-5">
+            <Text className="mb-2 font-inter-semibold text-sm text-primary">
+              Account Settings
+            </Text>
+
+            <ProfileLink
+              icon="create-outline"
+              label="Edit Profile"
+              onPress={() =>
+                router.push("/instructor/(tabs)/profile/edit-profile")
+              }
+            />
+            <ProfileLink icon="key-outline" label="Change Password" />
+            <ProfileLink
+              icon="notifications-outline"
+              label="Notification Preferences"
+            />
+          </View>
+
+          <View className="mb-5">
+            <Text className="mb-2 font-inter-semibold text-sm text-primary">
+              Support & Feedback
+            </Text>
+            <ProfileLink icon="headset-outline" label="Help Center & FAQ" />
+            <ProfileLink icon="document-outline" label="Terms & Conditions" />
+            <ProfileLink icon="lock-closed-outline" label="Privacy Policy" />
+          </View>
+
           <ProfileLink
             icon="log-out-outline"
             label="Log Out"
