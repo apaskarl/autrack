@@ -24,11 +24,11 @@ const PickerField: React.FC<PickerFieldProps> = ({
 }) => {
   return (
     <View>
-      <Text className="text-sm font-inter-bold mb-2">{title}</Text>
+      <Text className="mb-2 font-inter-bold text-sm">{title}</Text>
       <View
         className={`${
           error ? "border-red" : "border-border"
-        } border rounded-xl`}
+        } rounded-xl border`}
       >
         <Picker selectedValue={selectedValue} onValueChange={onValueChange}>
           <Picker.Item label={title} value="" />
@@ -42,7 +42,7 @@ const PickerField: React.FC<PickerFieldProps> = ({
         </Picker>
       </View>
       {error && (
-        <Text className="text-xs text-red font-inter-medium mt-2">
+        <Text className="mt-2 font-inter-medium text-sm text-red">
           This field is required.
         </Text>
       )}

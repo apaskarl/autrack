@@ -14,6 +14,7 @@ interface DepartmentStore {
 
 const useDepartmentStore = create<DepartmentStore>((set) => ({
   departments: [],
+
   fetchDepartments: async () => {
     try {
       const snapshot = await getDocs(collection(db, "departments"));

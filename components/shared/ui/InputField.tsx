@@ -25,7 +25,7 @@ const InputField = ({
 
   return (
     <View className="flex-1">
-      <Text className="text-sm font-inter-bold mb-2">{label}</Text>
+      <Text className="mb-2 font-inter-bold text-sm">{label}</Text>
 
       <View className="relative">
         <TextInput
@@ -43,7 +43,7 @@ const InputField = ({
           secureTextEntry={secure}
           className={`${
             error ? "border-red" : "border-border"
-          } border rounded-xl p-5 font-inter-medium`}
+          } rounded-xl border p-5 font-inter-medium`}
         />
 
         {password && (
@@ -62,7 +62,7 @@ const InputField = ({
       </View>
 
       {error && (
-        <Text className="text-xs text-red font-inter-medium mt-2">
+        <Text className="mt-2 font-inter-medium text-sm text-red">
           This field is required.
         </Text>
       )}

@@ -1,9 +1,19 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
 import { useInstructorStore } from "@/store/useInstructorStore";
 import Loader from "@/components/shared/ui/Loader";
+import useScheduleStore from "@/store/useScheduleStore";
+import IonicButton from "@/components/shared/ui/IonicButton";
+import { styles } from "@/styles/styles";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -27,6 +37,8 @@ const AdminInstructorDetails = () => {
   const [instructorSchedules, setInstructorSchedules] = useState<any[]>([]);
   const [currentInstructor, setCurrentInstructor] = useState<any>(null);
 
+  const [showActions, setShowActions] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!instructorId) return;
@@ -49,7 +61,7 @@ const AdminInstructorDetails = () => {
 
       // Fetch schedules for each room
       const schedulesPromises = updatedRooms.map(async (room) => {
-        const schedulesSnapshot = await useRoomStore
+        const schedulesSnapshot = await useScheduleStore
           .getState()
           .fetchSchedulesForRoomDirect(room.id);
 
@@ -78,12 +90,43 @@ const AdminInstructorDetails = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} className="bg-white">
-      <View className="relative gap-y-1 px-8 py-2 pb-5">
+      <View className="relative gap-y-1 px-5 py-2 pb-5">
         {/* Instructor Profile Header */}
         <View className="mb-2 items-center gap-y-3">
+          <IonicButton
+            onPress={() => setShowActions(showActions ? false : true)}
+            icon="ellipsis-vertical"
+            size={20}
+            className="absolute right-0 top-0 z-50"
+          />
+
+          {showActions && (
+            <View
+              className="absolute right-5 top-9 z-20 rounded-xl border border-border/30 bg-white"
+              style={styles.shadow}
+            >
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  setShowActions(false);
+                  router.push({
+                    pathname: "/admin/(tabs)/home/edit-instructor",
+                    params: { id: currentInstructor.id },
+                  });
+                }}
+                className="px-5 pb-2 pt-4"
+              >
+                <Text className="font-inter-medium">Edit instructor</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.5} className="px-5 pb-4 pt-2">
+                <Text className="font-inter-medium">Delete instructor</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           <Image
             source={{ uri: currentInstructor?.image }}
-            className="size-24 rounded-full"
+            className="size-32 rounded-full"
             resizeMode="contain"
           />
 
@@ -107,14 +150,14 @@ const AdminInstructorDetails = () => {
       {/* Timetable */}
       <View className="flex-row">
         {/* Time Column */}
-        <View className="border-r border-border bg-gray-200">
-          <View className="items-center justify-center border-b border-border px-5 py-2">
+        <View className="border-r border-border bg-gray-100">
+          <View className="items-center justify-center px-5 py-2">
             <Text className="font-inter-semibold text-subtext">Time</Text>
           </View>
 
           {TIMES.map((time) => (
             <View
-              className="items-center justify-center border-b border-border px-5"
+              className="items-center justify-center px-5"
               key={time}
               style={{ height: 30 }}
             >
@@ -131,7 +174,7 @@ const AdminInstructorDetails = () => {
             {DAYS.map((dayName, dayIndex) => (
               <View key={dayIndex}>
                 {/* Day Header */}
-                <View className="items-center justify-center border-b border-r border-border bg-blue px-10 py-2">
+                <View className="items-center justify-center bg-blue px-10 py-2">
                   <Text className="font-inter-bold text-white">{dayName}</Text>
                 </View>
 
@@ -170,7 +213,7 @@ const AdminInstructorDetails = () => {
                       cells.push(
                         <View
                           key={`${dayIndex}-${i}`}
-                          className="w-40 items-center justify-center border-b border-l-4 border-r border-b-border border-l-blue border-r-border bg-blue/10"
+                          className="w-40 items-center justify-center border-l-4 border-r border-l-blue border-r-border bg-blue/10"
                           style={{
                             height: blockHeight,
                           }}
@@ -184,10 +227,23 @@ const AdminInstructorDetails = () => {
                           </Text>
                         </View>,
                       );
+                    } else if (
+                      currentTime === "12:00" ||
+                      currentTime === "12:30"
+                    ) {
+                      cells.push(
+                        <View
+                          key={`${dayIndex}-${i}`}
+                          className="w-40 items-center justify-center border-r border-gray-200 bg-gray-200"
+                          style={{ height: 30 }}
+                        >
+                          <Text className="font-inter text-xs text-yellow-700"></Text>
+                        </View>,
+                      );
                     } else {
                       cells.push(
                         <View
-                          className="w-40 border-b border-r border-border"
+                          className="w-40 border-r border-border"
                           key={`${dayIndex}-${i}`}
                           style={{ height: 30 }}
                         />,

@@ -232,10 +232,11 @@ const HomeAdmin = () => {
             >
               <Image
                 source={{ uri: instructor?.image }}
-                className="mb-2 size-20 rounded-full"
+                className="mb-2 size-20 rounded-full bg-white"
                 resizeMode="contain"
+                style={styles.shadow}
               />
-              <Text className="px-2 text-center font-inter-bold">
+              <Text className="px-2 text-center font-inter-bold leading-relaxed">
                 {instructor.firstName} {instructor.lastName}
               </Text>
             </TouchableOpacity>

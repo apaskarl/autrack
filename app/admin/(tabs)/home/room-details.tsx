@@ -22,6 +22,7 @@ import { styles } from "@/styles/styles";
 import { COLORS } from "@/constants/colors";
 import HeaderBack from "@/components/shared/header/HeaderBack";
 import AddButton from "@/components/admin/ui/AddButton";
+import useScheduleStore from "@/store/useScheduleStore";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -45,40 +46,13 @@ type Facilities = {
   projector: boolean;
 };
 
-const instructorColors: string[] = [
-  "#FFCDD2",
-  "#F8BBD0",
-  "#E1BEE7",
-  "#D1C4E9",
-  "#C5CAE9",
-  "#BBDEFB",
-  "#B2EBF2",
-  "#C8E6C9",
-  "#DCEDC8",
-  "#FFF9C4",
-  "#FFE0B2",
-  "#FFCCBC",
-];
-
-const getInstructorColor = (instructorId: string) => {
-  let hash = 0;
-  for (let i = 0; i < instructorId.length; i++) {
-    hash = instructorId.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % instructorColors.length;
-  return instructorColors[index];
-};
-
 const AdminRoomDetails = () => {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const {
-    currentRoom,
-    schedules,
-    fetchRoom,
-    fetchSchedulesForRoom,
-    deleteRoom,
-  } = useRoomStore();
+
+  const { currentRoom, fetchRoom, deleteRoom } = useRoomStore();
+  const { schedules, fetchSchedulesForRoom } = useScheduleStore();
+
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -157,7 +131,7 @@ const AdminRoomDetails = () => {
                 resizeMode="cover"
               />
 
-              <View className="absolute left-5 top-5 rounded-full bg-light/50 p-2">
+              <View className="absolute left-5 top-5 rounded-full bg-light/50">
                 <HeaderBack />
               </View>
             </View>
@@ -236,6 +210,7 @@ const AdminRoomDetails = () => {
               <Text className="font-inter">
                 Capacity: {currentRoom.capacity}
               </Text>
+
               <View className="flex-row items-center gap-x-2">
                 <Text className="font-inter">Facilities:</Text>
                 {facilityIcons.map(
@@ -281,7 +256,7 @@ const AdminRoomDetails = () => {
               {DAYS.map((dayName, dayIndex) => (
                 <View key={dayIndex}>
                   {/* Day Header */}
-                  <View className="items-center justify-center border-b border-border bg-blue px-10 py-2">
+                  <View className="items-center justify-center bg-blue px-10 py-2">
                     <Text className="font-inter-bold text-white">
                       {dayName}
                     </Text>
@@ -318,25 +293,19 @@ const AdminRoomDetails = () => {
                         const rowsToSpan = durationMinutes / 30;
                         skipCount = rowsToSpan - 1;
 
-                        const backgroundColor = getInstructorColor(
-                          matchingSchedule.instructorId,
-                        );
-
                         // Schedule block
                         cells.push(
                           <View
                             key={`${dayIndex}-${i}`}
-                            className="w-40 items-center justify-center border-l-8 border-r border-b-border border-r-border"
+                            className="w-40 items-center justify-center border-l-4 border-r border-l-blue border-r-border bg-blue/10"
                             style={{
                               height: blockHeight,
-                              backgroundColor: `${backgroundColor}80`,
-                              borderLeftColor: backgroundColor, // keep blue border for consistency or change if needed
                             }}
                           >
-                            <Text className="mb-2 font-inter-semibold leading-relaxed">
+                            <Text className="mb-2 text-center font-inter-semibold leading-relaxed">
                               {matchingSchedule.instructorName}
                             </Text>
-                            <Text className="font-inter text-sm text-subtext">
+                            <Text className="text-center font-inter text-sm text-subtext">
                               {matchingSchedule.startTime} -{" "}
                               {matchingSchedule.endTime}
                             </Text>

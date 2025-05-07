@@ -11,15 +11,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
-type Schedule = {
-  id: string;
-  day: number;
-  startTime: string;
-  endTime: string;
-  instructorId: string;
-  instructorName: string;
-};
-
 type Room = {
   id: string;
   name: string;
@@ -56,7 +47,6 @@ type RoomStore = {
     capacity: number,
     facilities: Room["facilities"],
   ) => Promise<void>;
-
   deleteRoom: (id: string) => Promise<void>;
   updateRoom: (
     id: string,
@@ -70,15 +60,6 @@ type RoomStore = {
       facilities: Room["facilities"];
     },
   ) => Promise<void>;
-
-  clearCurrentRoom: () => void;
-  schedules: Schedule[];
-  addScheduleToRoom: (
-    roomId: string,
-    schedule: Omit<Schedule, "id">,
-  ) => Promise<void>;
-  fetchSchedulesForRoom: (roomId: string) => Promise<void>;
-  fetchSchedulesForRoomDirect: (roomId: string) => Promise<Schedule[]>;
 };
 
 const useRoomStore = create<RoomStore>((set, get) => ({
@@ -237,49 +218,6 @@ const useRoomStore = create<RoomStore>((set, get) => ({
       throw error;
     } finally {
       set({ loading: false });
-    }
-  },
-
-  clearCurrentRoom: () => set({ currentRoom: null }),
-
-  addScheduleToRoom: async (roomId, schedule) => {
-    try {
-      const scheduleRef = collection(db, "rooms", roomId, "schedules");
-      await addDoc(scheduleRef, schedule);
-      await get().fetchSchedulesForRoom(roomId);
-    } catch (error) {
-      console.error("Failed to add schedule:", error);
-    }
-  },
-
-  fetchSchedulesForRoom: async (roomId) => {
-    try {
-      const q = collection(db, "rooms", roomId, "schedules");
-      const querySnapshot = await getDocs(q);
-      const scheduleList: Schedule[] = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Schedule[];
-
-      set({ schedules: scheduleList });
-    } catch (error) {
-      console.error("Error fetching schedules:", error);
-    }
-  },
-
-  fetchSchedulesForRoomDirect: async (roomId: string) => {
-    try {
-      const q = collection(db, "rooms", roomId, "schedules");
-      const querySnapshot = await getDocs(q);
-      const scheduleList: Schedule[] = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Schedule[];
-
-      return scheduleList;
-    } catch (error) {
-      console.error("Error fetching schedules:", error);
-      return [];
     }
   },
 }));

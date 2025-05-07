@@ -21,8 +21,6 @@ const Index = () => {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -32,8 +30,6 @@ const Index = () => {
     }
 
     setLoading(true);
-    setEmailError("");
-    setPasswordError("");
     setError(null);
 
     try {
