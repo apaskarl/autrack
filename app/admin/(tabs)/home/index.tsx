@@ -114,7 +114,10 @@ const HomeAdmin = () => {
           />
         </View>
 
-        <View className="rounded-t-[30px] bg-white" style={styles.shadow}>
+        <View
+          className="flex-1 rounded-t-[30px] bg-white"
+          style={styles.shadow}
+        >
           <View className="mt-4 h-1.5 w-20 self-center rounded-full bg-border" />
 
           <View className="mb-6 border-b border-border py-6">
