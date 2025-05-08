@@ -148,19 +148,23 @@ const AddInstructor = () => {
           />
 
           <View className="flex-row gap-x-5">
-            <InputField
-              label="First Name"
-              value={firstName}
-              onChangeText={setFirstName}
-              error={!firstName && !!error}
-            />
+            <View className="flex-1">
+              <InputField
+                label="First Name"
+                value={firstName}
+                onChangeText={setFirstName}
+                error={!firstName && !!error}
+              />
+            </View>
 
-            <InputField
-              label="Last Name"
-              value={lastName}
-              onChangeText={setLastName}
-              error={!lastName && !!error}
-            />
+            <View className="flex-1">
+              <InputField
+                label="Last Name"
+                value={lastName}
+                onChangeText={setLastName}
+                error={!lastName && !!error}
+              />
+            </View>
           </View>
 
           <PickerField

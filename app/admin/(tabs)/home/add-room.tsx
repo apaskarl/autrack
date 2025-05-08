@@ -169,20 +169,24 @@ const AddRoom = () => {
           />
 
           <View className="flex-row gap-x-5">
-            <InputField
-              label="Room Code"
-              value={code}
-              onChangeText={setCode}
-              error={!code && !!error}
-            />
+            <View className="flex-1">
+              <InputField
+                label="Room Code"
+                value={code}
+                onChangeText={setCode}
+                error={!code && !!error}
+              />
+            </View>
 
-            <InputField
-              label="Capacity"
-              value={capacity}
-              onChangeText={setCapacity}
-              error={!capacity && !!error}
-              numeric
-            />
+            <View className="flex-1">
+              <InputField
+                label="Capacity"
+                value={capacity}
+                onChangeText={setCapacity}
+                error={!capacity && !!error}
+                numeric
+              />
+            </View>
           </View>
 
           <PickerField

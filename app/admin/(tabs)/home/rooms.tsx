@@ -204,7 +204,7 @@ const AdminRooms = () => {
                     <Text className="font-inter-semibold text-sm">
                       {room.buildingName}
                     </Text>
-                    <Text className="font-inter text-sm text-subtext">
+                    <Text className="font-inter text-xs text-subtext">
                       {room.departmentName}
                     </Text>
 
