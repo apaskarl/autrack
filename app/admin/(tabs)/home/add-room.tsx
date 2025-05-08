@@ -73,7 +73,7 @@ const AddRoom = () => {
 
       const imageURL = await uploadImage(image, {
         uploadPreset: "autrack-rooms",
-        cloudName: "dsbbcevcp",
+        cloudName: "dellkd4rb",
       });
 
       await addRoom(

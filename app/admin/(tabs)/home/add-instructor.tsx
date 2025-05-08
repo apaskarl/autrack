@@ -75,7 +75,7 @@ const AddInstructor = () => {
       if (image) {
         imageURL = await uploadImage(image, {
           uploadPreset: "autrack",
-          cloudName: "dsbbcevcp",
+          cloudName: "dellkd4rb",
         });
       }
 

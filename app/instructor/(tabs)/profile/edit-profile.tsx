@@ -90,7 +90,7 @@ const EditProfile = () => {
           name: `profile_${user?.uid}.jpg`,
         } as any);
         formData.append("upload_preset", "autrack");
-        formData.append("cloud_name", "dsbbcevcp");
+        formData.append("cloud_name", "dellkd4rb");
 
         const response = await fetch(cloudinaryUrl, {
           method: "POST",
