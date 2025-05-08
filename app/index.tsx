@@ -16,7 +16,6 @@ import AuthButton from "@/components/auth/AuthButton";
 const Index = () => {
   const { login } = useUserStore();
 
-  // Separate states for emailOrId and password
   const [emailOrId, setEmailOrId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -44,14 +43,12 @@ const Index = () => {
         err.message.includes("wrong")
       ) {
         setError("Invalid email/ID number or password.");
-        setPassword("");
       } else if (err.message.includes("Please verify your email address")) {
         setError(
           "Please verify your email address. Check your inbox for the verification link.",
         );
       } else {
         setError("Something went wrong. Please try again later.");
-        setPassword("");
       }
     } finally {
       setLoading(false);
@@ -80,7 +77,7 @@ const Index = () => {
               </Text>
             </View>
 
-            <View className="gap-y-5">
+            <View className="gap-y-6">
               {error && (
                 <View className="rounded-xl bg-red/10 px-5 py-3">
                   <Text className="font-inter-medium text-sm leading-relaxed text-red">

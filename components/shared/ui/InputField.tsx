@@ -24,7 +24,7 @@ const InputField = ({
   const [secure, setSecure] = useState(password);
 
   return (
-    <View className="flex-1">
+    <View className="w-full">
       <Text className="mb-2 font-inter-bold text-sm">{label}</Text>
 
       <View className="relative">

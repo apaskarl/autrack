@@ -6,7 +6,7 @@ interface FormButtonProps {
   onPress?: () => void;
   loading?: boolean;
   isDisabled?: boolean;
-  label?: string;
+  label: string;
 }
 
 const FormButton = ({

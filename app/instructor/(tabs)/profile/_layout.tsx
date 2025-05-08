@@ -23,6 +23,15 @@ export default function InstructorProfileStack() {
         }}
       />
       <Stack.Screen
+        name="change-password"
+        options={{
+          title: "",
+          headerLeft: () => <HeaderBack />,
+          headerTitle: () => <HeaderTitle title="Change Password" />,
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
         name="settings"
         options={{
           title: "",

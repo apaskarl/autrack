@@ -21,13 +21,21 @@ import { COLORS } from "@/constants/colors";
 import Modal from "react-native-modal";
 import FormButton from "@/components/shared/ui/FormButton";
 
+type Room = {
+  id: string;
+  image: string;
+  name: string;
+  buildingName: string;
+  departmentName: string;
+};
+
 const Home = () => {
   const { user } = useUserStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const { rooms, fetchRooms } = useRoomStore();
 
-  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -40,7 +48,7 @@ const Home = () => {
     setRefreshing(false);
   }, []);
 
-  const openModal = (room) => {
+  const openModal = (room: Room) => {
     setSelectedRoom(room);
     setModalVisible(true);
   };

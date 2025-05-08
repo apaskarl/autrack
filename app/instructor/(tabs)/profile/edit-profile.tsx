@@ -190,14 +190,13 @@ const EditProfile = () => {
           </TouchableOpacity>
         </View>
 
-        <View className="gap-y-5">
-          <FormInput
+        <View className="gap-y-6">
+          <InputField
             label="First Name"
             value={firstName}
             onChangeText={setFirstName}
           />
-
-          <FormInput
+          <InputField
             label="Last Name"
             value={lastName}
             onChangeText={setLastName}

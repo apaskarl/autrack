@@ -79,7 +79,13 @@ const Profile = () => {
                 router.push("/instructor/(tabs)/profile/edit-profile")
               }
             />
-            <ProfileLink icon="key-outline" label="Change Password" />
+            <ProfileLink
+              icon="key-outline"
+              label="Change Password"
+              onPress={() =>
+                router.push("/instructor/(tabs)/profile/change-password")
+              }
+            />
             <ProfileLink
               icon="notifications-outline"
               label="Notification Preferences"
