@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, Image, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import useRoomStore from "@/store/useRoomStore";
@@ -8,6 +15,7 @@ import { COLORS } from "@/constants/colors";
 import HeaderBack from "@/components/shared/header/HeaderBack";
 import AddButton from "@/components/admin/ui/AddButton";
 import useScheduleStore from "@/store/useScheduleStore";
+import { styles } from "@/styles/styles";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -265,7 +273,15 @@ const RoomSchedule = () => {
         </View>
       </ScrollView>
 
-      <AddButton label="Request Room" />
+      <TouchableOpacity
+        activeOpacity={0.7}
+        className="absolute bottom-5 w-[90%] self-center rounded-full bg-blue py-4"
+        style={styles.shadow}
+      >
+        <Text className="text-center font-inter-bold text-white">
+          Request Room
+        </Text>
+      </TouchableOpacity>
     </>
   );
 };

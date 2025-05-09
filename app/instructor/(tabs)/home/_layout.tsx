@@ -28,7 +28,7 @@ export default function InstructorHomeStack() {
       />
 
       <Stack.Screen
-        name="room-schedules"
+        name="room-schedule"
         options={{
           headerShown: false,
         }}

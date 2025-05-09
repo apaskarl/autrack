@@ -137,7 +137,10 @@ const Home = () => {
                   activeOpacity={0.7}
                   // onPress={() => openModal(room)}
                   onPress={() =>
-                    router.push("/instructor/(tabs)/home/room-schedule")
+                    router.push({
+                      pathname: "/instructor/(tabs)/home/room-schedule",
+                      params: { id: room.id },
+                    })
                   }
                   className="mb-5 flex-row rounded-xl bg-light"
                   style={styles.shadow}
