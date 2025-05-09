@@ -135,7 +135,10 @@ const Home = () => {
                 <TouchableOpacity
                   key={room.id}
                   activeOpacity={0.7}
-                  onPress={() => openModal(room)}
+                  // onPress={() => openModal(room)}
+                  onPress={() =>
+                    router.push("/instructor/(tabs)/home/room-schedule")
+                  }
                   className="mb-5 flex-row rounded-xl bg-light"
                   style={styles.shadow}
                 >

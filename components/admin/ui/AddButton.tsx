@@ -7,7 +7,7 @@ const AddButton = ({
   onPress,
 }: {
   label: string;
-  onPress: () => void;
+  onPress?: () => void;
 }) => {
   return (
     <TouchableOpacity

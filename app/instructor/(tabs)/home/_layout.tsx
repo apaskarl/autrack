@@ -26,6 +26,13 @@ export default function InstructorHomeStack() {
           headerTitle: () => <HeaderTitle title="Class Schedule" />,
         }}
       />
+
+      <Stack.Screen
+        name="room-schedules"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
